@@ -553,7 +553,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
+            flex-wrap: nowrap; /* Forces layout to stay in one single row */
             gap: 12px;
             padding: 14px 12px;
             border-bottom: 1px solid #f1f5f9;
@@ -566,8 +566,20 @@
         .feed-item > div:first-child {
             display: flex;
             align-items: center;
-            flex-wrap: wrap;
+            flex-wrap: nowrap; /* Ensures action and mode badges don't drop to a new line */
             gap: 6px;
+            overflow: hidden; /* Elegantly handles text overflow if space is tight */
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* Ensure the timestamp block retains its formatting and never wraps */
+        .feed-item > div:last-child {
+            white-space: nowrap;
+            flex-shrink: 0; /* Prevents the timestamp from squishing */
+            text-align: right;
+            color: var(--text-muted);
+            font-size: 0.85rem;
         }
 
         .badge-action {
