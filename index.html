@@ -148,6 +148,18 @@
             stroke-linejoin: round;
         }
 
+        .occupancy-mini-box {
+            background: var(--bg-canvas);
+            border: 1px solid var(--border-soft);
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
         .user-profile-chip {
             display: flex;
             align-items: center;
@@ -344,7 +356,6 @@
             box-shadow: var(--shadow-md);
         }
 
-        /* Fixes specifically for inner nested panels inside Admin board wrapper */
         #contentPanel .card {
             width: 100%;
             margin-bottom: 20px;
@@ -610,7 +621,6 @@
             overflow: hidden;
         }
 
-        /* Wraps the email/action text safely without dropping layout boxes */
         .feed-item .text-content-wrap {
             white-space: nowrap;
             overflow: hidden;
@@ -818,6 +828,9 @@
                     </svg>
                 </button>
 
+                <div class="occupancy-mini-box">Online <span id="onlineCountVal">--</span></div>
+                <div class="occupancy-mini-box">Onsite <span id="onsiteCountVal">--</span></div>
+
                 <div class="user-profile-chip">
                     <span class="user-email" id="userEmailLabel">...</span>
                     <span class="admin-badge hidden" id="adminBadge">Admin</span>
@@ -1004,8 +1017,6 @@
             document.getElementById('navMenu').classList.remove('show');
         });
 
-        /* Fixed: Re-configured view engine state behavior. Explicitly toggles .full-width-layout 
-           class on grid context to force cards out of choked track dimensions when panels hide. */
         function showPanel(panelName) {
             document.querySelectorAll('.select-panel-view').forEach(el => el.classList.add('hidden'));
             const dashboardLayout = document.getElementById('mainDashboard');
@@ -1118,6 +1129,8 @@
             }
 
             document.getElementById('hoursValue').innerText = Number(data.totalHours).toFixed(2);
+            document.getElementById('onlineCountVal').innerText = data.onlineCount || 0;
+            document.getElementById('onsiteCountVal').innerText = data.onsiteCount || 0;
             configureTrackingInterface(data.isClockedIn, data.lastActionTimestamp);
             populateRecentLogs(data.recentLogs);
         }
