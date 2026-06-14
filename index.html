@@ -344,6 +344,13 @@
             box-shadow: var(--shadow-md);
         }
 
+        /* Fixes specifically for inner nested panels inside Admin board wrapper */
+        #contentPanel .card {
+            width: 100%;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+
         .panel-heading {
             font-size: 1.05rem;
             font-weight: 600;
@@ -677,12 +684,18 @@
             font-size: 0.85rem;
         }
         
+        .roster-user-item {
+            width: 100%;
+            box-sizing: border-box;
+        }
+
         .roster-user-item .roster-email {
             font-weight: 600;
             color: var(--text-main);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            max-width: 100%;
             font-size: 0.85rem;
         }
         
@@ -699,7 +712,13 @@
         .roster-hours-sub { font-size: 0.75rem; color: #4f46e5; margin-top: 2px; font-weight: 600; }
         [data-theme="dark"] .roster-hours-sub { color: #818cf8; }
 
-        .roster-action-group { display: flex; gap: 4px; flex-shrink: 0; }
+        .roster-action-group { 
+            display: flex; 
+            gap: 6px; 
+            flex-shrink: 0; 
+            flex-wrap: wrap;
+        }
+        
         .action-sub-btn {
             border: none;
             padding: 6px 8px;
