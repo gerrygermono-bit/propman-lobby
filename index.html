@@ -291,7 +291,6 @@
                 grid-template-columns: 380px 1fr;
                 align-items: start;
             }
-            /* Specific helper to stretch out layout fully when sidebar is hidden */
             .app-layout.full-width-layout {
                 grid-template-columns: 1fr;
             }
@@ -553,34 +552,26 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-direction: row; /* Desktop default behavior preserved */
-            gap: 12px;
             padding: 14px 12px;
             border-bottom: 1px solid #f1f5f9;
             font-size: 0.9rem;
-            width: 100%;
         }
         .feed-item:last-child { border-bottom: none; }
         [data-theme="dark"] .feed-item { border-bottom-color: #334155; }
 
-        /* ADVANCED LAYOUT TRANSITION RULES OPTIMIZED FOR MOBILE PHONES */
+        /* MOBILE FIX FOR SQUEEZED TIMESTAMPS AND BADGES */
         @media (max-width: 576px) {
             .feed-item {
-                flex-direction: column !important;
-                align-items: flex-start !important;
-                gap: 6px !important;
-                padding: 12px 10px !important;
-            }
-            .feed-item > div:last-child {
-                width: 100%;
-                text-align: left !important;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 6px;
+                padding: 12px 10px;
             }
         }
 
         .feed-item > div:first-child {
             display: flex;
             align-items: center;
-            flex-wrap: wrap;
             gap: 6px;
         }
 
@@ -591,7 +582,6 @@
             font-size: 0.75rem;
             font-weight: 700;
             text-transform: uppercase;
-            white-space: nowrap;
         }
 
         .badge-in {
@@ -622,7 +612,6 @@
             padding: 2px 6px;
             border-radius: 4px;
             border: 1px solid var(--border-soft);
-            white-space: nowrap;
         }
 
         .board-user, .roster-user-item {
@@ -632,7 +621,6 @@
             gap: 12px;
             padding: 12px;
             border-bottom: 1px solid #f1f5f9;
-            flex-wrap: wrap;
         }
 
         [data-theme="dark"] .board-user, [data-theme="dark"] .roster-user-item {
@@ -647,7 +635,6 @@
         .board-user .email, .roster-user-item .roster-email {
             font-weight: 600;
             color: var(--text-main);
-            word-break: break-all;
         }
 
         .board-user .time-meta {
@@ -659,8 +646,6 @@
         .roster-meta-block {
             display: flex;
             flex-direction: column;
-            flex: 1;
-            min-width: 200px;
         }
 
         .roster-hours-sub {
@@ -677,7 +662,6 @@
         .roster-action-group {
             display: flex;
             gap: 6px;
-            flex-shrink: 0;
         }
 
         .action-sub-btn {
@@ -836,7 +820,7 @@
     <div class="login-box-container" id="loginBox">
         <div class="card" style="text-align: center; padding: 40px 32px;">
             <h2 style="font-size: 1.6rem; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.03em;">Welcome Back</h2>
-            <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 32px;">Please synchronize your identity workspace configuration credentials to continue.</p>
+            <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 32px;">Please sign in with your identity provider to continue tracking residency.</p>
             <div style="display: flex; justify-content: center;" id="gSignInWrapper">
                 <div id="g_id_onload"
                      data-client_id="276378730888-gsvgo6j5nvp6o2mmfvghhjn8ubufsilu.apps.googleusercontent.com"
@@ -1149,8 +1133,8 @@
             currentInterfaceTrackActionButton.disabled = false;
 
             if (status === "Clock In") {
-                currentInterfaceStatusLabelElement.innerText = "Active Session Track Status";
-                currentInterfaceStatusValueElement.innerText = "Currently Active";
+                currentInterfaceStatusLabelElement.innerText = "Status State";
+                currentInterfaceStatusValueElement.innerText = "Clock In";
                 currentInterfaceStatusValueElement.style.color = "var(--status-in)";
                 
                 currentInterfaceTrackActionButton.className = "smart-btn clock-out";
@@ -1160,12 +1144,12 @@
                         <polyline points="16 17 21 12 16 7"></polyline>
                         <line x1="21" y1="12" x2="9" y2="12"></line>
                     </svg>
-                    <span>Terminate Track Session</span>
+                    <span>Clock Out</span>
                 `;
                 internalInterfaceModeSelectionBlock.classList.add('hidden');
             } else {
-                currentInterfaceStatusLabelElement.innerText = "Ecosystem Session Track Status";
-                currentInterfaceStatusValueElement.innerText = "Offline State";
+                currentInterfaceStatusLabelElement.innerText = "Status State";
+                currentInterfaceStatusValueElement.innerText = "Offline";
                 currentInterfaceStatusValueElement.style.color = "var(--text-muted)";
                 
                 currentInterfaceTrackActionButton.className = "smart-btn clock-in";
@@ -1175,7 +1159,7 @@
                         <polyline points="10 17 5 12 10 7"></polyline>
                         <line x1="15" y1="12" x2="5" y2="12"></line>
                     </svg>
-                    <span>Initialize Track Session</span>
+                    <span>Clock In</span>
                 `;
                 internalInterfaceModeSelectionBlock.classList.remove('hidden');
             }
@@ -1232,7 +1216,7 @@
             })
             .catch(postTransmissionError => {
                 console.error("Ecosystem pipeline error:", postTransmissionError);
-                alert("The structural execution request failed to complete. Forcing cache re-verification...");
+                alert("The structural execution request failed to complete. Forcing cache re-verification... ");
                 fetchUserData(userEmail);
             });
         }
