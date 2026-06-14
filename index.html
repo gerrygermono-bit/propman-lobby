@@ -421,9 +421,13 @@
         .badge-out { background-color: #fff1f2; color: var(--status-out); }
 
         .board-user, .roster-user-item {
-            display: flex;
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            gap: 12px; 
             padding: 12px;
             border-bottom: 1px solid #f1f5f9;
+            flex-wrap: wrap; #f1f5f9;
         }
 
         .board-user { flex-direction: column; }
@@ -431,13 +435,13 @@
             font-weight: 600; 
             color: var(--text-main);
             white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            word-break: break-all;
+            white-space: normal;
         }
         .board-user .time-meta { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
 
         .roster-user-item { justify-content: space-between; align-items: center; gap: 10px; }
-        .roster-meta-block { display: flex; flex-direction: column; max-width: 65%; min-width: 0; }
+        .roster-meta-block { display: flex; flex-direction: column; flex: 1; min-width: 200px; }
         .roster-hours-sub { font-size: 0.8rem; color: #4f46e5; margin-top: 2px; font-weight: 600; }
         .roster-action-group { display: flex; gap: 6px; flex-shrink: 0; }
 
@@ -476,7 +480,7 @@
             z-index: 1000;
             text-align: center;
         }
-
+        
         @media(min-width: 576px) {
             .toast {
                 left: auto;
