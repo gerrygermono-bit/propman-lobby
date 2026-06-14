@@ -636,7 +636,7 @@
 
         .hidden { display: none !important; }
 
-        /* Minimalist Loading Screen Styles */
+        /* Subtle Fade Animation Styles */
         .minimal-loader-screen {
             position: fixed;
             top: 0;
@@ -648,13 +648,21 @@
             justify-content: center;
             align-items: center;
             z-index: 9999;
-            transition: opacity 0.3s ease, transform 0.3s ease;
+            opacity: 1;
+            transition: opacity 0.5s ease;
         }
+        
         .minimal-loader-text {
             font-size: 1.1rem;
             font-weight: 500;
             color: var(--text-main);
             letter-spacing: 0.05em;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .minimal-loader-text.fade-in {
+            opacity: 1;
         }
 
         @keyframes toastIn {
@@ -670,7 +678,7 @@
 <body>
 
     <div class="minimal-loader-screen hidden" id="minimalAppLoader">
-        <div class="minimal-loader-text">Loading...</div>
+        <div class="minimal-loader-text" id="minimalLoaderText">Loading...</div>
     </div>
 
     <header>
@@ -903,9 +911,18 @@
             userEmail = email;
             localStorage.setItem('userEmail', email);
 
-            // Display minimalist loading screen immediately
+            // 1. Display minimalist loading screen background instantly
             const loader = document.getElementById('minimalAppLoader');
+            const loaderText = document.getElementById('minimalLoaderText');
+            
+            loader.style.opacity = "1";
+            loaderText.classList.remove('fade-in');
             loader.classList.remove('hidden');
+            
+            // 2. After 0.5 seconds, fade the Loading... text in
+            setTimeout(() => {
+                loaderText.classList.add('fade-in');
+            }, 500);
             
             // Set up a minimum 5-second timer
             let minimumTimerDone = false;
@@ -922,8 +939,14 @@
 
             function checkAndHideLoader() {
                 if (minimumTimerDone && fullCachedPayload) {
-                    loader.classList.add('hidden');
-                    bootstrapApplication();
+                    // 3. Fade out the screen as a whole
+                    loader.style.opacity = "0";
+                    
+                    // Wait for the 0.5s fade transition to complete before hiding elements completely
+                    setTimeout(() => {
+                        loader.classList.add('hidden');
+                        bootstrapApplication();
+                    }, 500);
                 }
             }
         }
