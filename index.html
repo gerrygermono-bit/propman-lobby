@@ -588,6 +588,7 @@
             border-bottom: 1px solid #f1f5f9;
             font-size: 0.9rem;
             width: 100%;
+            box-sizing: border-box; /* Fixes elements stretching out of padding limits */
         }
         .feed-item:last-child { border-bottom: none; }
         [data-theme="dark"] .feed-item { border-bottom-color: #334155; }
@@ -597,14 +598,12 @@
             align-items: center;
             flex-wrap: nowrap;
             gap: 6px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+            min-width: 0; /* Prevents long titles or badges from causing right-side overflow */
         }
 
         .feed-item > div:last-child {
             white-space: nowrap;
-            flex-shrink: 0;
+            flex-shrink: 0; /* Fully anchors timestamp to prevent squeezing */
             text-align: right;
             color: var(--text-muted);
             font-size: 0.85rem;
