@@ -291,6 +291,10 @@
                 grid-template-columns: 380px 1fr;
                 align-items: start;
             }
+            /* Specific helper to stretch out layout fully when sidebar is hidden */
+            .app-layout.full-width-layout {
+                grid-template-columns: 1fr;
+            }
         }
 
         .card {
@@ -538,13 +542,13 @@
             max-height: 600px;
             overflow-y: auto;
             padding: 6px;
+            width: 100%;
         }
         
         [data-theme="dark"] .log-feed-container, [data-theme="dark"] .attendance-board-container, [data-theme="dark"] .roster-board-container, [data-theme="dark"] .history-feed-container {
             background: #1e293b40;
         }
 
-        /* Fixed: Structural optimization to guarantee item rows break gracefully on tight widths */
         .feed-item {
             display: flex;
             justify-content: space-between;
@@ -899,18 +903,24 @@
             document.getElementById('navMenu').classList.remove('show');
         });
 
+        /* Fixed: Re-configured view engine state behavior. Explicitly toggles .full-width-layout 
+           class on grid context to force cards out of choked track dimensions when panels hide. */
         function showPanel(panelName) {
             document.querySelectorAll('.select-panel-view').forEach(el => el.classList.add('hidden'));
+            const dashboardLayout = document.getElementById('mainDashboard');
             
             if (panelName === 'tracker') {
+                dashboardLayout.classList.remove('full-width-layout');
                 document.getElementById('sidebarPanel').classList.remove('hidden');
                 document.getElementById('trackerPanel').classList.remove('hidden');
                 document.getElementById('trackerContentView').classList.remove('hidden');
             } else if (panelName === 'history') {
+                dashboardLayout.classList.add('full-width-layout');
                 document.getElementById('sidebarPanel').classList.add('hidden');
                 document.getElementById('historyContentView').classList.remove('hidden');
                 if (fullCachedPayload) populateFullHistory(fullCachedPayload.fullHistory);
             } else if (panelName === 'admin') {
+                dashboardLayout.classList.remove('full-width-layout');
                 document.getElementById('sidebarPanel').classList.remove('hidden');
                 document.getElementById('trackerPanel').classList.remove('hidden');
                 document.getElementById('adminContentView').classList.remove('hidden');
@@ -1140,7 +1150,6 @@
             }).join('');
         }
 
-        /* Fixed: Reconfigured layout generation so it maps items symmetrically into structured row nodes */
         function populateFullHistory(logs) {
             const container = document.getElementById('fullHistoryContainer');
             if (!logs || logs.length === 0) {
