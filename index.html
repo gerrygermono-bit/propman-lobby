@@ -1017,67 +1017,78 @@
 
     <div class="toast" id="successToast"></div>
 
-    <div class="info-modal-overlay hidden" id="infoModal">
-        <div class="info-modal">
-            <div class="info-modal-header">
-                <h3>Residency Guidelines</h3>
-                <button class="info-modal-close" onclick="closeInfoModal()">&times;</button>
-            </div>
-            <div class="info-modal-body">
-                <p>Welcome to the Residency Tracker comprehensive guide! This manual will walk you through everything you need to know to use the platform smoothly, whether you are a general member or an EB!</p>
+    // Guideline UI
+<div class="info-modal-overlay hidden" id="infoModal">
+    <div class="info-modal">
+        <div class="info-modal-header">
+            <h3>Residency Guidelines</h3>
+            <button class="info-modal-close" onclick="closeInfoModal()">&times;</button>
+        </div>
+        <div class="info-modal-body" style="display: flex; flex-direction: column; gap: 20px;">
+            <p style="font-size: 1rem; color: var(--text-muted); background: var(--bg-canvas); padding: 12px 16px; border-radius: 8px; border-left: 4px solid var(--dlsu-green);">
+                Welcome to the Residency Tracker comprehensive guide! This manual will walk you through everything you need to know to use the platform smoothly, whether you are a general member or an EB!
+            </p>
 
-                <h4>General Basics</h4>
-                <p>You must use your official <code>@dlsu.edu.ph</code> Google Workspace account to access the tracker. Simply click the authorization button on the login screen to get started.</p>
+            <div>
+                <h4 style="border-bottom: 2px solid var(--border-soft); padding-bottom: 6px; margin-bottom: 12px;">General Basics</h4>
+                <p>You must use your official <code>@dlsu.edu.ph</code> Google Workspace account to access the tracker.</p>
                 <p>You can switch between Light and Dark mode at any time by clicking the sun/moon icon at the top right of the screen.</p>
                 <p>Right beside the theme button, you will see two mini-boxes showing exactly how many people are currently Online and Onsite.</p>
+            </div>
 
-                <h4>Guide for Members</h4>
-                <p>As a member, your main dashboard allows you to log your residency hours and view your personal history.</p>
+            <div>
+                <h4 style="border-bottom: 2px solid var(--border-soft); padding-bottom: 6px; margin-bottom: 12px;">Guide for Staffers</h4>
+                <p style="font-weight: 500; margin-bottom: 12px;">As a member, your main dashboard allows you to log your residency hours and view your personal history.</p>
 
-                <h5>1 Clocking In</h5>
-                <ul>
+                <h5 style="color: var(--dlsu-green); margin-top: 8px; margin-bottom: 4px;">1 Clocking In</h5>
+                <ul style="margin-bottom: 12px; list-style-type: disc; padding-left: 20px;">
                     <li>When you are ready to begin, click the green Clock In button.</li>
                     <li>Two options will appear underneath: Onsite and Online.</li>
                     <li>Click the one that matches your current setup. Your timer will start immediately, and a live duration counter will appear on screen.</li>
                 </ul>
 
-                <h5>2 Clocking Out</h5>
-                <ul>
+                <h5 style="color: var(--dlsu-green); margin-top: 8px; margin-bottom: 4px;">2 Clocking Out</h5>
+                <ul style="margin-bottom: 12px; list-style-type: disc; padding-left: 20px;">
                     <li>When you are done, click the red Clock Out button.</li>
                     <li>Your session ends, your total accumulated hours update automatically, and your live timer disappears.</li>
                 </ul>
 
-                <h5>3 Tracking Your Activity</h5>
-                <ul>
+                <h5 style="color: var(--dlsu-green); margin-top: 8px; margin-bottom: 4px;">3 Tracking Your Activity</h5>
+                <ul style="list-style-type: disc; padding-left: 20px;">
                     <li>The main panel shows your last 5 logs, indicating whether you clocked in or out, and whether it was an online or onsite session.</li>
                     <li>By opening the menu (top right) and selecting Log History, you can view a complete, expanded list of all your past clock-ins and outs with exact dates and timestamps.</li>
                 </ul>
+            </div>
 
-                <h4>Guide for EBs</h4>
-                <p>You will see an Admin Board option in your menu. This gives you extra tools to manage the roster and members.</p>
+            <div>
+                <h4 style="border-bottom: 2px solid var(--border-soft); padding-bottom: 6px; margin-bottom: 12px;">Guide for EBs</h4>
+                <p style="font-weight: 500; margin-bottom: 12px;">You will see an Admin Board option in your menu. This gives you extra tools to manage the roster and members.</p>
 
-                <h5>1 Active Sessions</h5>
+                <h5 style="margin-top: 8px; margin-bottom: 2px;">1 Active Sessions</h5>
                 <p>This section displays a live list of everyone currently clocked in.</p>
-                <p>You can see their email and exactly what time they started their shift (including whether they are working online or onsite).</p>
+                <p style="margin-bottom: 12px;">You can see their email and exactly what time they started their shift (including whether they are working online or onsite).</p>
 
-                <h5>2 Roster Management</h5>
-                <ul>
+                <h5 style="margin-top: 8px; margin-bottom: 4px;">2 Roster Management</h5>
+                <ul style="margin-bottom: 12px; list-style-type: disc; padding-left: 20px;">
                     <li>The Roster displays all members in the system, their total verified hours, and a status dot (green for clocked-in, grey for clocked-out).</li>
-                    <li>Sorting: You can sort the list to show "Clocked In First" or "Clocked Out First" using the dropdown menu.</li>
+                    <li>You can sort the list to show "Clocked In First" or "Clocked Out First" using the dropdown menu.</li>
                     <li>Force In / Force Out: If a member forgets to clock in or out, you can manually toggle their status.</li>
                     <li>Purge / Delete: You can completely wipe a user's log history and hours if necessary. Please avoid clicking accidentally. THIS WILL DELETE THEIR HISTORY PERMANENTLY.</li>
                 </ul>
 
-                <h5>3 Assigning New Admins</h5>
+                <h5 style="margin-top: 8px; margin-bottom: 2px;">3 Assigning New Admins</h5>
                 <p>At the bottom of the Admin Board, there is a field to "Give Admin Privileges".</p>
                 <p>Type in the user's <code>@dlsu.edu.ph</code> email address and click Add. They will instantly gain administrative access.</p>
+            </div>
 
-                <h4>Reminders</h4>
-                <p>Auto-Clock Out: Don't worry about leaving a session open overnight. The system automatically performs a midnight reset and clocks out any remaining active sessions so that hours are recorded properly.</p>
-                <p>Need Help? If your total hours or occupancy numbers do not immediately update, simply refresh the page to pull the freshest data from the server. If you think there is a mistake, contact an EB.</p>
+            <div style="background: #fffbeb; border: 1px solid #fef3c7; padding: 16px; border-radius: 10px; border-top: 3px solid #d97706;">
+                <h4 style="color: #b45309; margin-bottom: 8px;">Reminders</h4>
+                <p style="margin-bottom: 8px; font-size: 0.9rem;">Don't worry about leaving a session open overnight. The system automatically performs a midnight reset and clocks out any remaining active sessions so that hours are recorded properly.</p>
+                <p style="font-size: 0.9rem;">Need Help? If your total hours or occupancy numbers do not immediately update, simply refresh the page to pull the freshest data from the server. If you think there is a mistake, contact an EB.</p>
             </div>
         </div>
     </div>
+</div>
 
     <div class="info-modal-overlay hidden" id="accountModal">
         <div class="info-modal">
