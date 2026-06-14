@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MLF Residency Tracker</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-canvas: #f4f6f8;
+            --surface-card: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            
+            --dlsu-green: #0a5c36;
+            --dlsu-green-hover: #074528;
+            --status-in: #10b981;
+            --status-in-hover: #059669;
+            --status-out: #f43f5e;
+            --status-out-hover: #e11d48;
+            
+            --border-soft: #e2e8f0;
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+        }
+
+        html, body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-canvas);
+            color: var(--text-main);
+            line-height: 1.5;
+            padding-bottom: 40px;
+        }
+
+        /* Navigation Header styling */
+        header {
+            background-color: var(--surface-card);
+            border-bottom: 1px solid var(--border-soft);
+            padding: 16px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            width: 100%;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-logo {
+            width: 8px;
+            height: 24px;
+            background-color: var(--dlsu-green);
+            border-radius: 4px;
+        }
+
+        .brand h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            color: var(--text-main);
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            position: relative;
+            max-width: 100%;
+        }
+
+        .user-profile-chip {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--bg-canvas);
+            padding: 6px 14px;
+            border-radius: 9999px;
+            border: 1px solid var(--border-soft);
+            max-width: 100%;
+            min-width: 0;
+        }
+
+        .user-email {
+            font-size: 0.85rem;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 180px;
+        }
+
+        .admin-badge {
+            background-color: rgba(10, 92, 54, 0.1);
+            color: var(--dlsu-green);
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            flex-shrink: 0;
+        }
+
+        .logout-link {
+            color: var(--status-out);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: color 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .logout-link:hover {
+            color: var(--status-out-hover);
+            text-decoration: underline;
+        }
+
+        /* Sandwich Hamburger Menu Styling */
+        .menu-btn {
+            background: none;
+            border: 1px solid var(--border-soft);
+            background: var(--surface-card);
+            cursor: pointer;
+            padding: 10px 12px;
+            border-radius: 8px;
+            transition: all 0.2s;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 40px;
+            height: 36px;
+        }
+
+        .menu-btn:hover {
+            background: var(--bg-canvas);
+            border-color: var(--text-muted);
+        }
+
+        .menu-btn span {
+            display: block;
+            width: 100%;
+            height: 2px;
+            background-color: var(--text-main);
+            border-radius: 2px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-menu {
+            position: absolute;
+            top: 45px;
+            right: 0;
+            background: var(--surface-card);
+            border: 1px solid var(--border-soft);
+            box-shadow: var(--shadow-md);
+            display: none;
+            flex-direction: column;
+            z-index: 101;
+            border-radius: 12px;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(-8px);
+            transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 6px;
+        }
+
+        .nav-menu.show {
+            display: flex;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .nav-menu button {
+            background: var(--surface-card);
+            border: none;
+            padding: 10px 16px;
+            cursor: pointer;
+            text-align: left;
+            width: 160px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border-radius: 8px;
+            color: var(--text-main);
+            transition: all 0.2s ease;
+        }
+
+        .nav-menu button:hover {
+            background: var(--bg-canvas);
+            color: var(--dlsu-green);
+        }
+
+        /* App Layout Structures */
+        .login-box-container {
+            max-width: 420px;
+            margin: 100px auto;
+            padding: 0 24px;
+        }
+
+        .app-layout {
+            max-width: 1200px;
+            margin: 32px auto;
+            padding: 0 24px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+            width: 100%;
+        }
+
+        @media (min-width: 992px) {
+            .app-layout {
+                grid-template-columns: 380px 1fr;
+                align-items: start;
+            }
+        }
+
+        .card {
+            background: var(--surface-card);
+            border-radius: 16px;
+            border: 1px solid var(--border-soft);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            transition: box-shadow 0.2s ease;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .panel-heading {
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .warning, .admin-warning {
+            padding: 14px 16px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-sm);
+            display: none;
+            line-height: 1.4;
+        }
+
+        .warning {
+            background-color: #fff1f2;
+            border: 1px solid #ffe4e6;
+            border-left: 4px solid var(--status-out);
+            color: #991b1b;
+        }
+
+        .admin-warning {
+            background-color: #fffbeb;
+            border: 1px solid #fef3c7;
+            border-left: 4px solid #f59e0b;
+            color: #b45309;
+        }
+
+        .metric-display {
+            text-align: center;
+            padding: 18px 0;
+            border-radius: 12px;
+            background: #f8fafc;
+            border: 1px solid var(--border-soft);
+            margin-bottom: 16px;
+        }
+
+        .metric-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .metric-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--dlsu-green);
+            letter-spacing: -0.04em;
+            margin-top: 2px;
+        }
+
+        .metric-value.duration {
+            color: #b45309;
+        }
+
+        .smart-btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            color: white;
+            margin-bottom: 12px;
+        }
+
+        .smart-btn:active:not(:disabled) {
+            transform: scale(0.98);
+        }
+
+        .smart-btn.clock-in { background-color: var(--status-in); }
+        .smart-btn.clock-in:hover { background-color: var(--status-in-hover); }
+        .smart-btn.clock-out { background-color: var(--status-out); }
+        .smart-btn.clock-out:hover { background-color: var(--status-out-hover); }
+        .smart-btn:disabled { background-color: #cbd5e1 !important; color: #94a3b8; cursor: not-allowed; box-shadow: none; }
+
+        .admin-submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: #111827;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: background 0.2s ease;
+            margin-top: 8px;
+        }
+
+        .admin-submit-btn:hover { background: #1f2937; }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        input[type="email"] {
+            width: 100%;
+            padding: 12px;
+            box-sizing: border-box;
+            border: 1px solid var(--border-soft);
+            border-radius: 8px;
+            font-family: inherit;
+            transition: all 0.2s ease;
+        }
+
+        input[type="email"]:focus {
+            outline: none;
+            border-color: var(--dlsu-green);
+            box-shadow: 0 0 0 3px rgba(10, 92, 54, 0.1);
+        }
+
+        .log-feed-container, .attendance-board-container, .roster-board-container {
+            background: #fafafa;
+            border: 1px solid var(--border-soft);
+            border-radius: 12px;
+            max-height: 240px;
+            overflow-y: auto;
+            padding: 6px;
+        }
+
+        .feed-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 0.9rem;
+        }
+
+        .feed-item:last-child { border-bottom: none; }
+
+        .badge-action {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        
+        .badge-in { background-color: #ecfdf5; color: var(--status-in); }
+        .badge-out { background-color: #fff1f2; color: var(--status-out); }
+
+        /* FIX: Converted layout wrapper profiles to support fluid flex wrapping boundaries */
+        .board-user, .roster-user-item {
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            gap: 12px; 
+            padding: 12px;
+            border-bottom: 1px solid #f1f5f9;
+            flex-wrap: wrap;
+        }
+
+        .board-user { flex-direction: column; align-items: flex-start; }
+        
+        /* FIX: Normalized alignment boundaries and added word-break to avoid canvas box layout stretching */
+        .board-user .email, .roster-user-item .roster-email { 
+            font-weight: 600; 
+            color: var(--text-main);
+            word-break: break-all;
+            white-space: normal;
+        }
+        .board-user .time-meta { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
+
+        /* FIX: Added minimal row column scaling context and max-width scaling properties */
+        .roster-meta-block { display: flex; flex-direction: column; flex: 1; min-width: 200px; }
+        .roster-hours-sub { font-size: 0.8rem; color: #4f46e5; margin-top: 2px; font-weight: 600; }
+        .roster-action-group { display: flex; gap: 6px; flex-shrink: 0; flex-wrap: wrap; }
+
+        .action-sub-btn {
+            border: none;
+            padding: 6px 10px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 6px;
+            color: white;
+            transition: all 0.2s ease;
+        }
+
+        .action-sub-btn:active { transform: scale(0.95); }
+        .action-sub-btn.status-toggle { background: #d97706; }
+        .action-sub-btn.status-toggle:hover { background: #b45309; }
+        .action-sub-btn.delete { background: var(--status-out); }
+        .action-sub-btn.delete:hover { background: var(--status-out-hover); }
+
+        .empty-state { text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 24px 0; }
+
+        .toast {
+            display: none;
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            left: 24px;
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+            padding: 14px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            box-shadow: var(--shadow-md);
+            z-index: 1000;
+            text-align: center;
+        }
+        
+        @media(min-width: 576px) {
+            .toast {
+                left: auto;
+                max-width: 350px;
+            }
+        }
+
+        .toast.show {
+            display: block;
+            animation: toastIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        .hidden { display: none !important; }
+
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Dedicated breakpoint targeting small viewport containers explicitly */
+        @media (max-width: 520px) {
+            header {
+                padding: 12px 16px;
+            }
+            .nav-container {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 14px;
+            }
+            .header-controls {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .user-profile-chip {
+                max-width: calc(100% - 60px);
+            }
+            .user-email {
+                max-width: 120px;
+            }
+            /* FIX: Added card structure padding control and row adaptation configurations */
+            .card {
+                padding: 16px;
+            }
+            .roster-action-group {
+                width: 100%;
+                justify-content: flex-start;
+                margin-top: 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <div class="brand">
+                <div class="brand-logo"></div>
+                <h2 id="viewTitle">Residency Tracker</h2>
+            </div>
+            
+            <div class="header-controls">
+                <div id="userProfileChip" class="user-profile-chip hidden">
+                    <span class="user-email" id="userEmailText">loading...</span>
+                    <span id="adminTag" class="admin-badge" style="display: none;">Admin</span>
+                    <span style="color: var(--border-soft)">|</span>
+                    <span class="logout-link" onclick="handleLogout()">Sign Out</span>
+                </div>
+
+                <button id="menuToggleButton" class="menu-btn hidden" onclick="toggleMenu()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <div id="dropdownMenu" class="nav-menu">
+                    <button onclick="switchView('home')">Home Hub</button>
+                    <button id="adminMenuTab" class="hidden" onclick="switchView('admin')">Admin Panel</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div id="loginSection" class="login-box-container">
+        <div class="card" style="text-align: center;">
+            <div class="panel-heading" style="justify-content: center; font-size: 1.2rem; margin-bottom: 8px;">Identity Verification</div>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 24px;">Please authenticate with your official DLSU Google Workspace profile to log hours.</p>
+            <div id="googleSignInBtn" style="display: flex; justify-content: center;"></div>
+        </div>
+    </div>
+
+    <main class="app-layout">
+        
+        <div id="leftControlColumn" class="hidden" style="display: flex; flex-direction: column; gap: 24px;">
+            
+            <div id="timeWarning" class="warning">
+                <strong>Logging Blocked:</strong> Clocking shifts are strictly limited between 7:00 AM and 11:59 PM.
+            </div>
+
+            <div id="adminTimeWarning" class="admin-warning">
+                <strong>Administrative Override:</strong> You are registering an operational log entry outside regular office hours. Your security clearance permits this entry.
+            </div>
+
+            <div id="homeViewLeft" class="card">
+                <div class="panel-heading">Time Card</div>
+                
+                <div class="metric-display">
+                    <div class="metric-label">Accumulated Hours</div>
+                    <div class="metric-value" id="totalHoursText">0.00</div>
+                </div>
+
+                <div id="activeTimerDashboard" class="metric-display hidden">
+                    <div class="metric-label">Active Duration</div>
+                    <div class="metric-value duration" id="liveTimerText">00:00:00</div>
+                </div>
+
+                <button type="button" id="smartActionButton" class="smart-btn" onclick="handleSmartAction()" disabled>
+                    Syncing...
+                </button>
+            </div>
+        </div>
+
+        <div id="rightDataColumn" class="hidden" style="display: flex; flex-direction: column; gap: 24px;">
+            
+            <div id="homeViewRight" class="card">
+                <div class="panel-heading">Recent Log Stream <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 400;">Last 5 Actions</span></div>
+                <div id="personalLogFeed" class="log-feed-container">
+                    <div class="empty-state">Retrieving timeline logs...</div>
+                </div>
+            </div>
+
+            <div id="adminView" class="hidden" style="display: flex; flex-direction: column; gap: 24px; width: 100%;">
+                
+                <div class="card">
+                    <div class="panel-heading">Live Attendance Matrix</div>
+                    <div id="attendanceBoard" class="attendance-board-container">
+                        <div class="empty-state">Scanning active session rows...</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="panel-heading">Organization Roster Rollout</div>
+                    <div id="masterRosterBoard" class="roster-board-container">
+                        <div class="empty-state">Compiling organizational member charts...</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="panel-heading">System Security Management</div>
+                    <div class="form-group">
+                        <label for="newAdminEmail">Elevate System Administration Email Role</label>
+                        <input type="email" id="newAdminEmail" placeholder="username@dlsu.edu.ph">
+                        <button type="button" class="admin-submit-btn" onclick="addNewAdmin()">Grant Database Privilege</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <div id="successToast" class="toast">
+        Database transaction finalized successfully!
+    </div>
+
+    <script>
+        const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwRPyUfRVK7MTuqzdf-T8901TnKrN_4mO_B8SImg0YGLqzhOG_Uet_apqmZzdIFYUNYGg/exec";
+        const GOOGLE_CLIENT_ID = "276378730888-gsvgo6j5nvp6o2mmfvghhjn8ubufsilu.apps.googleusercontent.com";
+        const CLIENT_API_TOKEN = "DLSU_Residency_Secure_Token_2026";
+
+        let userEmail = "";
+        let userIsAdmin = false;
+        let isClockedIn = false;
+        let clockInTime = null;
+        let liveTimerIntervalId = null;
+
+        window.onload = function () {
+            checkCachedSession();
+
+            google.accounts.id.initialize({
+                client_id: GOOGLE_CLIENT_ID,
+                callback: handleCredentialResponse
+            });
+            google.accounts.id.renderButton(
+                document.getElementById("googleSignInBtn"),
+                { theme: "outline", size: "large" }
+            );
+
+            document.addEventListener('click', function(event) {
+                const menu = document.getElementById('dropdownMenu');
+                const btn = document.getElementById('menuToggleButton');
+                if (btn && !btn.contains(event.target) && menu && !menu.contains(event.target)) {
+                    hideMenu();
+                }
+            });
+        }
+
+        function checkCachedSession() {
+            const cachedEmail = localStorage.getItem('res_tracker_email');
+            const cachedAdmin = localStorage.getItem('res_tracker_isAdmin') === 'true';
+            const cachedClockedIn = localStorage.getItem('res_tracker_isClockedIn') === 'true';
+            const cachedHours = localStorage.getItem('res_tracker_totalHours') || '0.00';
+            const cachedTime = localStorage.getItem('res_tracker_clockInTimestamp');
+
+            if (cachedEmail) {
+                userEmail = cachedEmail;
+                userIsAdmin = cachedAdmin;
+                isClockedIn = cachedClockedIn;
+                if (cachedTime) clockInTime = new Date(cachedTime);
+
+                document.getElementById('userEmailText').innerText = userEmail;
+                document.getElementById('totalHoursText').innerText = Number(cachedHours).toFixed(2);
+                
+                document.getElementById('loginSection').classList.add('hidden');
+                document.getElementById('userProfileChip').classList.remove('hidden');
+                document.getElementById('leftControlColumn').classList.remove('hidden');
+                document.getElementById('rightDataColumn').classList.remove('hidden');
+                document.getElementById('menuToggleButton').classList.remove('hidden');
+
+                if (userIsAdmin) {
+                    document.getElementById('adminTag').style.display = 'inline-block';
+                    document.getElementById('adminMenuTab').classList.remove('hidden');
+                }
+
+                checkTimeWindow();
+                updateActionButtonUI();
+                manageLiveShiftTimer();
+                fetchUserData(userEmail);
+            }
+        }
+
+        function handleCredentialResponse(response) {
+            const responsePayload = parseJwt(response.credential);
+            if (!responsePayload.email.endsWith("@dlsu.edu.ph")) {
+                alert("Access Denied. Use your official @dlsu.edu.ph account.");
+                return;
+            }
+            userEmail = responsePayload.email;
+            localStorage.setItem('res_tracker_email', userEmail);
+            document.getElementById('userEmailText').innerText = userEmail;
+            
+            document.getElementById('loginSection').classList.add('hidden');
+            document.getElementById('userProfileChip').classList.remove('hidden');
+            document.getElementById('leftControlColumn').classList.remove('hidden');
+            document.getElementById('rightDataColumn').classList.remove('hidden');
+            document.getElementById('menuToggleButton').classList.remove('hidden');
+            
+            fetchUserData(userEmail);
+        }
+
+        function parseJwt(token) {
+            var base64Url = token.split('.')[1];
+            var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+            return JSON.parse(jsonPayload);
+        }
+
+        function toggleMenu() {
+            const menu = document.getElementById('dropdownMenu');
+            if (window.getComputedStyle(menu).display === 'none') {
+                menu.style.display = 'flex';
+                requestAnimationFrame(() => {
+                    menu.classList.add('show');
+                });
+            } else {
+                hideMenu();
+            }
+        }
+
+        function hideMenu() {
+            const menu = document.getElementById('dropdownMenu');
+            if (!menu) return;
+            menu.classList.remove('show');
+            setTimeout(() => {
+                if (!menu.classList.contains('show')) {
+                    menu.style.display = 'none';
+                }
+            }, 250);
+        }
+
+        function switchView(view) {
+            hideMenu();
+            
+            const homeViewRight = document.getElementById('homeViewRight');
+            const homeViewLeft = document.getElementById('homeViewLeft');
+            const adminView = document.getElementById('adminView');
+
+            if (view === 'home') {
+                document.getElementById('viewTitle').innerText = "Residency Tracker";
+                adminView.classList.add('hidden');
+                homeViewLeft.classList.remove('hidden');
+                homeViewRight.classList.remove('hidden');
+            } else if (view === 'admin' && userIsAdmin) {
+                document.getElementById('viewTitle').innerText = "Admin Settings";
+                homeViewRight.classList.add('hidden');
+                adminView.classList.remove('hidden');
+            }
+        }
+
+        function checkTimeWindow() {
+            const now = new Date();
+            const currentHour = now.getHours();
+            const outsideOfficeHours = (currentHour < 7 || currentHour >= 24);
+
+            if (userIsAdmin) {
+                document.getElementById('timeWarning').style.display = 'none';
+                if (outsideOfficeHours) {
+                    document.getElementById('adminTimeWarning').style.display = 'block';
+                } else {
+                    document.getElementById('adminTimeWarning').style.display = 'none';
+                }
+                return true; 
+            }
+
+            document.getElementById('adminTimeWarning').style.display = 'none';
+            if (outsideOfficeHours) {
+                document.getElementById('timeWarning').style.display = 'block';
+                return false;
+            }
+            document.getElementById('timeWarning').style.display = 'none';
+            return true;
+        }
+
+        function fetchUserData(email) {
+            fetch(`${APPS_SCRIPT_URL}?id=${encodeURIComponent(email)}`)
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('totalHoursText').innerText = Number(data.totalHours).toFixed(2);
+                    isClockedIn = data.isClockedIn || false; 
+                    userIsAdmin = data.isAdmin || false;
+                    
+                    if (isClockedIn && data.clockInTimestamp) {
+                        clockInTime = new Date(data.clockInTimestamp);
+                        localStorage.setItem('res_tracker_clockInTimestamp', data.clockInTimestamp);
+                    } else {
+                        clockInTime = null;
+                        localStorage.removeItem('res_tracker_clockInTimestamp');
+                    }
+
+                    localStorage.setItem('res_tracker_totalHours', data.totalHours);
+                    localStorage.setItem('res_tracker_isClockedIn', isClockedIn);
+                    localStorage.setItem('res_tracker_isAdmin', userIsAdmin);
+                    
+                    if (userIsAdmin) {
+                        document.getElementById('adminTag').style.display = 'inline-block';
+                        document.getElementById('adminMenuTab').classList.remove('hidden');
+                        renderAttendanceBoard(data.liveAttendance);
+                        renderMasterRosterBoard(data.masterRoster);
+                    } else {
+                        document.getElementById('adminTag').style.display = 'none';
+                        document.getElementById('adminMenuTab').classList.add('hidden');
+                    }
+                    
+                    renderPersonalLogFeed(data.recentLogs);
+                    checkTimeWindow();
+                    updateActionButtonUI();
+                    manageLiveShiftTimer();
+                })
+                .catch(err => {
+                    console.error("Error pulling database state updates:", err);
+                    updateActionButtonUI();
+                });
+        }
+
+        function manageLiveShiftTimer() {
+            clearInterval(liveTimerIntervalId);
+            const panel = document.getElementById('activeTimerDashboard');
+
+            if (!isClockedIn || !clockInTime) {
+                panel.classList.add('hidden');
+                return;
+            }
+
+            panel.classList.remove('hidden');
+            liveTimerIntervalId = setInterval(() => {
+                const now = new Date();
+                const differenceMs = now - clockInTime;
+                if (differenceMs < 0) return;
+
+                const totalSeconds = Math.floor(differenceMs / 1000);
+                const hrs = Math.floor(totalSeconds / 3600);
+                const mins = Math.floor((totalSeconds % 3600) / 60);
+                const secs = totalSeconds % 60;
+
+                const displayString = 
+                    (hrs < 10 ? "0" + hrs : hrs) + ":" + 
+                    (mins < 10 ? "0" + mins : mins) + ":" + 
+                    (secs < 10 ? "0" + secs : secs);
+
+                document.getElementById('liveTimerText').innerText = displayString;
+            }, 1000);
+        }
+
+        function renderPersonalLogFeed(logs) {
+            const container = document.getElementById('personalLogFeed');
+            if (!logs || logs.length === 0) {
+                container.innerHTML = `<div class="empty-state">No logs recorded yet.</div>`;
+                return;
+            }
+
+            container.innerHTML = logs.map(item => {
+                const badgeClass = item.action === 'Clock In' ? 'badge-in' : 'badge-out';
+                return `
+                    <div class="feed-item">
+                        <span>${item.timestamp}</span>
+                        <span class="badge-action ${badgeClass}">${item.action}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderAttendanceBoard(activeUsers) {
+            const container = document.getElementById('attendanceBoard');
+            if (!activeUsers || activeUsers.length === 0) {
+                container.innerHTML = `<div class="empty-state">Nobody is currently clocked in.</div>`;
+                return;
+            }
+
+            container.innerHTML = activeUsers.map(user => `
+                <div class="board-user">
+                    <span class="email" title="${user.email}">${user.email}</span>
+                    <span class="time-meta">Active since ${user.since}</span>
+                </div>
+            `).join('');
+        }
+
+        function renderMasterRosterBoard(roster) {
+            const container = document.getElementById('masterRosterBoard');
+            if (!roster || roster.length === 0) {
+                container.innerHTML = `<div class="empty-state">No student profiles discovered.</div>`;
+                return;
+            }
+
+            container.innerHTML = roster.map(member => {
+                const statusText = member.isCurrentlyClockedIn ? "Clocked In" : "Clocked Out";
+                const toggleButtonLabel = member.isCurrentlyClockedIn ? "Force Out" : "Force In";
+                return `
+                    <div class="roster-user-item">
+                        <div class="roster-meta-block">
+                            <span class="roster-email" title="${member.email}">${member.email}</span>
+                            <span class="roster-hours-sub">${Number(member.totalHours).toFixed(2)} hrs accumulated • [${statusText}]</span>
+                        </div>
+                        <div class="roster-action-group">
+                            <button type="button" class="action-sub-btn status-toggle" onclick="toggleUserLogState('${member.email}', ${member.isCurrentlyClockedIn})">
+                                ${toggleButtonLabel}
+                            </button>
+                            <button type="button" class="action-sub-btn delete" onclick="deleteUserRecord('${member.email}')">
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateActionButtonUI() {
+            const btn = document.getElementById('smartActionButton');
+            const allowed = checkTimeWindow();
+
+            btn.disabled = !allowed;
+
+            if (isClockedIn) {
+                btn.className = "smart-btn clock-out";
+                btn.innerText = "Clock Out";
+            } else {
+                btn.className = "smart-btn clock-in";
+                btn.innerText = "Clock In";
+            }
+        }
+
+        function handleSmartAction() {
+            if (!checkTimeWindow()) return;
+
+            const btn = document.getElementById('smartActionButton');
+            btn.disabled = true;
+            btn.innerText = "Syncing...";
+
+            const targetAction = isClockedIn ? "Clock Out" : "Clock In";
+
+            fetch(APPS_SCRIPT_URL, {
+                method: "POST",
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                body: JSON.stringify({
+                    token: CLIENT_API_TOKEN,
+                    action: targetAction,
+                    email: userEmail
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                showToast(`Successfully registered ${targetAction}!`);
+                fetchUserData(userEmail);
+            })
+            .catch(err => {
+                console.error("Transmission breakdown:", err);
+                alert("Sync processed. Updating view...");
+                setTimeout(() => { fetchUserData(userEmail); }, 1200);
+            });
+        }
+
+        function toggleUserLogState(targetEmail, currentStatus) {
+            if (!confirm(`Are you sure you want to force status change for ${targetEmail}?`)) return;
+            
+            const adminAction = currentStatus ? "Clock Out" : "Clock In";
+            
+            fetch(APPS_SCRIPT_URL, {
+                method: "POST",
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                body: JSON.stringify({
+                    token: CLIENT_API_TOKEN,
+                    action: adminAction,
+                    email: targetEmail
+                })
+            })
+            .then(res => res.json())
+            .then(() => {
+                showToast(`Forced status mutation applied for ${targetEmail}`);
+                fetchUserData(userEmail);
+            })
+            .catch(err => {
+                console.error("Admin toggle error:", err);
+                setTimeout(() => { fetchUserData(userEmail); }, 1200);
+            });
+        }
+
+        function deleteUserRecord(targetEmail) {
+            if (!confirm(`CRITICAL WARNING: Wipe all recorded performance records for ${targetEmail}? This action cannot be reversed.`)) return;
+
+            fetch(APPS_SCRIPT_URL, {
+                method: "POST",
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                body: JSON.stringify({
+                    token: CLIENT_API_TOKEN,
+                    action: "Delete User",
+                    email: targetEmail
+                })
+            })
+            .then(res => res.json())
+            .then(() => {
+                showToast(`Purged records for ${targetEmail}`);
+                fetchUserData(userEmail);
+            })
+            .catch(err => {
+                console.error("Admin deletion error:", err);
+                setTimeout(() => { fetchUserData(userEmail); }, 1200);
+            });
+        }
+
+        function addNewAdmin() {
+            const input = document.getElementById('newAdminEmail');
+            const newEmail = input.value.trim();
+
+            if (!newEmail || !newEmail.endsWith("@dlsu.edu.ph")) {
+                alert("Please declare a legitimate @dlsu.edu.ph identity workspace profile.");
+                return;
+            }
+
+            fetch(APPS_SCRIPT_URL, {
+                method: "POST",
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                body: JSON.stringify({
+                    token: CLIENT_API_TOKEN,
+                    action: "Add Admin",
+                    email: newEmail
+                })
+            })
+            .then(res => res.json())
+            .then(() => {
+                showToast(`Administrative security token assigned to ${newEmail}`);
+                input.value = "";
+                fetchUserData(userEmail);
+            })
+            .catch(err => {
+                console.error("Admin upgrade error:", err);
+                input.value = "";
+                setTimeout(() => { fetchUserData(userEmail); }, 1200);
+            });
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('successToast');
+            toast.innerText = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3500);
+        }
+
+        function handleLogout() {
+            localStorage.clear();
+            location.reload();
+        }
+    </script>
+</body>
+</html>
