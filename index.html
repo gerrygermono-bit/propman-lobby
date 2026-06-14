@@ -38,7 +38,7 @@
             --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -4px rgba(0, 0, 0, 0.2);
         }
 
-        body, header, .card, .user-profile-chip, .metric-display, input, button, select {
+        body, header, .card, .metric-display, input, button, select {
             transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
         }
 
@@ -160,49 +160,6 @@
             flex-shrink: 0;
         }
 
-        .user-profile-chip {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background: var(--bg-canvas);
-            padding: 6px 14px;
-            border-radius: 9999px;
-            border: 1px solid var(--border-soft);
-            max-width: 100%;
-            min-width: 0;
-        }
-
-        .user-email {
-            font-size: 0.85rem;
-            font-weight: 600;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 140px;
-        }
-
-        @media (min-width: 375px) {
-            .user-email {
-                max-width: 180px;
-            }
-        }
-
-        .admin-badge {
-            background-color: rgba(10, 92, 54, 0.1);
-            color: var(--dlsu-green);
-            font-size: 0.7rem;
-            font-weight: 700;
-            padding: 2px 8px;
-            border-radius: 4px;
-            text-transform: uppercase;
-            flex-shrink: 0;
-        }
-
-        [data-theme="dark"] .admin-badge {
-            background-color: rgba(16, 185, 129, 0.15);
-            color: #34d399;
-        }
-
         .logout-link {
             color: var(--status-out);
             font-size: 0.85rem;
@@ -272,18 +229,26 @@
             transform: translateY(0);
         }
 
-        .nav-menu button {
+        .nav-menu button, .nav-menu .account-info-box {
             background: var(--surface-card);
             border: none;
             padding: 10px 16px;
             cursor: pointer;
             text-align: left;
-            width: 170px;
+            width: 220px;
             font-size: 0.9rem;
             font-weight: 500;
             border-radius: 8px;
             color: var(--text-main);
             transition: all 0.2s ease;
+        }
+
+        .nav-menu .account-info-box {
+            cursor: default;
+            border-bottom: 1px solid var(--border-soft);
+            border-radius: 8px 8px 0 0;
+            font-size: 0.85rem;
+            line-height: 1.6;
         }
 
         .nav-menu button:hover {
@@ -803,101 +768,101 @@
             position: fixed;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
+            width: 100%;
+            height: 100%;
             background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(4px);
+            z-index: 10000;
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 10000;
             padding: 16px;
-            transition: opacity 0.3s ease;
+            backdrop-filter: blur(4px);
         }
-
-        .info-modal-overlay.hidden {
-            display: none;
-            opacity: 0;
-        }
-
-        .info-modal-card {
-            max-width: 650px;
-            width: 100%;
-            max-height: 85vh;
-            margin-bottom: 0 !important;
-            display: flex;
-            flex-direction: column;
+        
+        .info-modal {
             background: var(--surface-card);
             border: 1px solid var(--border-soft);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 650px;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow-md);
+            animation: modalIn 0.3s ease-out forwards;
         }
-
+        
         .info-modal-header {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border-soft);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 16px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid var(--border-soft);
         }
-
+        
+        .info-modal-header h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+        
         .info-modal-close {
             background: none;
-            border: 1px solid var(--border-soft);
-            color: var(--text-main);
+            border: none;
+            font-size: 1.75rem;
             cursor: pointer;
-            padding: 6px 10px;
-            border-radius: 8px;
-            font-size: 1.25rem;
+            color: var(--text-muted);
             line-height: 1;
         }
         .info-modal-close:hover {
-            background: var(--bg-canvas);
-        }
-
-        .info-modal-body {
-            overflow-y: auto;
-            padding-right: 4px;
-            font-size: 0.88rem;
             color: var(--text-main);
         }
-
+        
+        .info-modal-body {
+            padding: 24px;
+            overflow-y: auto;
+            color: var(--text-main);
+        }
+        
+        .info-modal-body p {
+            margin-bottom: 12px;
+            font-size: 0.92rem;
+        }
+        
         .info-modal-body h4 {
             font-size: 1.1rem;
-            font-weight: 700;
+            font-weight: 600;
             margin-top: 20px;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             color: var(--dlsu-green);
         }
-        [data-theme="dark"] .info-modal-body h4 { color: #34d399; }
+        [data-theme="dark"] .info-modal-body h4 {
+            color: #34d399;
+        }
 
         .info-modal-body h5 {
-            font-size: 0.95rem;
+            font-size: 0.98rem;
             font-weight: 600;
-            margin-top: 14px;
-            margin-bottom: 6px;
-        }
-
-        .info-modal-body p {
-            margin-bottom: 10px;
-            color: var(--text-main);
-        }
-
-        .info-modal-body ul {
-            padding-left: 20px;
-            margin-bottom: 14px;
-        }
-
-        .info-modal-body li {
+            margin-top: 12px;
             margin-bottom: 4px;
         }
-
+        
+        .info-modal-body ul {
+            margin-bottom: 14px;
+            padding-left: 20px;
+        }
+        
+        .info-modal-body li {
+            margin-bottom: 4px;
+            font-size: 0.92rem;
+        }
+        
         .info-modal-body code {
             background: var(--bg-canvas);
             padding: 2px 6px;
             border-radius: 4px;
-            font-size: 0.82rem;
             font-family: monospace;
-            border: 1px solid var(--border-soft);
+            font-size: 0.85rem;
         }
 
         @keyframes toastIn {
@@ -907,6 +872,10 @@
         @keyframes slideDown {
             from { opacity: 0; transform: translateY(-10px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
         }
     </style>
 </head>
@@ -933,12 +902,6 @@
                 <div class="occupancy-mini-box">Online <span id="onlineCountVal">--</span></div>
                 <div class="occupancy-mini-box">Onsite <span id="onsiteCountVal">--</span></div>
 
-                <div class="user-profile-chip">
-                    <span class="user-email" id="userEmailLabel">...</span>
-                    <span class="admin-badge hidden" id="adminBadge">Admin</span>
-                    <a class="logout-link" onclick="handleLogout()">Logout</a>
-                </div>
-
                 <button class="menu-btn" onclick="toggleMenu(event)" title="Options Menu">
                     <span></span>
                     <span></span>
@@ -946,10 +909,11 @@
                 </button>
 
                 <div class="nav-menu" id="navMenu">
+                    <button onclick="openAccountModal()">Account</button>
+                    <button onclick="openInfoModal()">Guidelines</button>
                     <button onclick="showPanel('tracker')">Residency Panel</button>
                     <button onclick="showPanel('history')">Log History</button>
                     <button class="hidden" id="adminMenuOpt" onclick="showPanel('admin')">Admin Board</button>
-                    <button onclick="openInfoModal()">Guidelines</button>
                 </div>
             </div>
         </div>
@@ -1051,8 +1015,10 @@
         </section>
     </main>
 
+    <div class="toast" id="successToast"></div>
+
     <div class="info-modal-overlay hidden" id="infoModal">
-        <div class="info-modal-card card">
+        <div class="info-modal">
             <div class="info-modal-header">
                 <h3>Residency Guidelines</h3>
                 <button class="info-modal-close" onclick="closeInfoModal()">&times;</button>
@@ -1113,11 +1079,25 @@
         </div>
     </div>
 
-    <div class="toast" id="successToast"></div>
+    <div class="info-modal-overlay hidden" id="accountModal">
+        <div class="info-modal">
+            <div class="info-modal-header">
+                <h3>Account Information</h3>
+                <button class="info-modal-close" onclick="closeAccountModal()">&times;</button>
+            </div>
+            <div class="info-modal-body">
+                <p>Email: <span id="modalUserEmail" style="font-weight: 700;">...</span></p>
+                <p>Total Office Hours: <span id="modalTotalHours" style="font-weight: 700;">0.00</span></p>
+                <p>Position: <span id="modalPosition" style="font-weight: 700;">Member</span></p>
+                <p style="margin-top: 16px;"><a class="logout-link" onclick="handleLogout()">Logout</a></p>
+            </div>
+        </div>
+    </div>
 
     <script>
         const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwRPyUfRVK7MTuqzdf-T8901TnKrN_4mO_B8SImg0YGLqzhOG_Uet_apqmZzdIFYUNYGg/exec"; 
         const CLIENT_API_TOKEN = "Residency_Secure_Token_2026";
+        const SYSTEM_API_TOKEN = "Residency_Secure_Token_2026";
 
         let userEmail = "";
         let timerInterval = null;
@@ -1182,11 +1162,30 @@
             document.getElementById('navMenu').classList.remove('show');
         });
 
+        function openInfoModal() {
+            document.getElementById('infoModal').classList.remove('hidden');
+            document.getElementById('navMenu').classList.remove('show');
+        }
+
+        function closeInfoModal() {
+            document.getElementById('infoModal').classList.add('hidden');
+        }
+
+        function openAccountModal() {
+            document.getElementById('accountModal').classList.remove('hidden');
+            document.getElementById('navMenu').classList.remove('show');
+        }
+
+        function closeAccountModal() {
+            document.getElementById('accountModal').classList.add('hidden');
+        }
+
         function showPanel(panelName) {
             document.querySelectorAll('.select-panel-view').forEach(el => el.classList.add('hidden'));
             const dashboardLayout = document.getElementById('mainDashboard');
             
             if (panelName === 'tracker') {
+                dashboardLayout.classList.add('app-layout');
                 dashboardLayout.classList.remove('full-width-layout');
                 document.getElementById('sidebarPanel').classList.remove('hidden');
                 document.getElementById('trackerPanel').classList.remove('hidden');
@@ -1202,16 +1201,6 @@
                 document.getElementById('trackerPanel').classList.remove('hidden');
                 document.getElementById('adminContentView').classList.remove('hidden');
             }
-        }
-
-        /* Modal control functions */
-        function openInfoModal() {
-            document.getElementById('infoModal').classList.remove('hidden');
-            document.getElementById('navMenu').classList.remove('show');
-        }
-
-        function closeInfoModal() {
-            document.getElementById('infoModal').classList.add('hidden');
         }
 
         function handleCredentialResponse(response) {
@@ -1262,7 +1251,6 @@
         function bootstrapApplication() {
             document.getElementById('loginView').classList.add('hidden');
             document.getElementById('headerControls').style.display = 'flex';
-            document.getElementById('userEmailLabel').innerText = userEmail;
             document.getElementById('mainDashboard').classList.remove('hidden');
             
             if (!fullCachedPayload) {
@@ -1297,15 +1285,22 @@
         }
 
         function renderFetchedData(data) {
+            let positionText = "Member";
             if (data.isAdmin) {
-                document.getElementById('adminBadge').classList.remove('hidden');
                 document.getElementById('adminMenuOpt').classList.remove('hidden');
+                positionText = "Admin";
                 populateAdminConsole(data);
             }
 
             document.getElementById('hoursValue').innerText = Number(data.totalHours).toFixed(2);
             document.getElementById('onlineCountVal').innerText = data.onlineCount || 0;
             document.getElementById('onsiteCountVal').innerText = data.onsiteCount || 0;
+            
+            // Populate Account Modal Data
+            document.getElementById('modalUserEmail').innerText = userEmail;
+            document.getElementById('modalTotalHours').innerText = Number(data.totalHours).toFixed(2);
+            document.getElementById('modalPosition').innerText = positionText;
+
             configureTrackingInterface(data.isClockedIn, data.lastActionTimestamp);
             populateRecentLogs(data.recentLogs);
         }
@@ -1516,6 +1511,12 @@
                         </div>
                     `;
                 }).join('');
+            }
+        }
+
+        function handleRosterSortChange() {
+            if (fullCachedPayload) {
+                populateAdminConsole(fullCachedPayload);
             }
         }
 
