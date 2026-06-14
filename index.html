@@ -1160,7 +1160,7 @@
         function populateAdminConsole(data) {
             const attContainer = document.getElementById('attendanceBoard');
             if (!data.liveAttendance || data.liveAttendance.length === 0) {
-                attContainer.innerHTML = '<div class="empty-state">No members currently clocked into the workstation ecosystem.</div>';
+                attContainer.innerHTML = '<div class="empty-state">No members are clocked in.</div>';
             } else {
                 attContainer.innerHTML = data.liveAttendance.map(user => `
                     <div class="board-user">
