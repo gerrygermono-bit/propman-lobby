@@ -318,7 +318,7 @@
             justify-content: space-between;
         }
 
-        .warning, .admin-warning {
+        .warning {
             padding: 14px 16px;
             border-radius: 12px;
             font-size: 0.9rem;
@@ -327,9 +327,6 @@
             box-shadow: var(--shadow-sm);
             display: none;
             line-height: 1.4;
-        }
-
-        .warning {
             background-color: #fff1f2;
             border: 1px solid #ffe4e6;
             border-left: 4px solid var(--status-out);
@@ -339,18 +336,6 @@
             background-color: #991b1b20;
             border-color: #991b1b40;
             color: #fca5a5;
-        }
-
-        .admin-warning {
-            background-color: #fffbeb;
-            border: 1px solid #fef3c7;
-            border-left: 4px solid #f59e0b;
-            color: #b45309;
-        }
-        [data-theme="dark"] .admin-warning {
-            background-color: #78350f20;
-            border-color: #78350f40;
-            color: #fde68a;
         }
 
         .metric-display {
@@ -429,7 +414,6 @@
             color: #64748b;
         }
 
-        /* Mode Selection Buttons Row Container */
         .mode-selection-container {
             display: flex;
             gap: 12px;
@@ -675,8 +659,8 @@
 
     <div class="login-box-container" id="loginView">
         <div class="card" style="text-align: center;">
-            <h2 style="font-size: 1.4rem; font-weight: 700; margin-bottom: 8px;">Welcome!</h2>
-            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 24px;">Please log in using your DLSU Google Account.</p>
+            <h2 style="font-size: 1.4rem; font-weight: 700; margin-bottom: 8px;">Welcome Tracker</h2>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 24px;">Please authorize using your DLSU Identity Workspace Profile Account.</p>
             <div style="display: flex; justify-content: center;" id="gSignInBtn"></div>
         </div>
     </div>
@@ -736,23 +720,22 @@
             </div>
 
             <div class="card select-panel-view hidden" id="adminContentView">
-                <div class="admin-warning" id="adminWarningBox"></div>
                 
                 <div class="card" style="padding: 18px; margin-bottom: 20px;">
-                    <div class="panel-heading" style="margin-bottom: 12px;">Active Cohort Attendance</div>
+                    <div class="panel-heading" style="margin-bottom: 12px;">Active Sessions</div>
                     <div class="attendance-board-container" id="attendanceBoard">
                         <div class="empty-state">No members currently clocked into the workstation ecosystem.</div>
                     </div>
                 </div>
 
                 <div class="card" style="padding: 18px;">
-                    <div class="panel-heading" style="margin-bottom: 12px;">Consolidated Roster Directory</div>
+                    <div class="panel-heading" style="margin-bottom: 12px;">Roster</div>
                     <div class="roster-board-container" id="rosterBoard">
                         <div class="empty-state">Roster lookup context currently unpopulated.</div>
                     </div>
                     
                     <div class="form-group" style="margin-top: 20px; border-top: 1px solid var(--border-soft); padding-top: 16px;">
-                        <label for="newAdminEmail">Elevate Administrative Privileges</label>
+                        <label for="newAdminEmail">Give Admin Privileges</label>
                         <div style="display: flex; gap: 8px;">
                             <input type="email" id="newAdminEmail" placeholder="user@dlsu.edu.ph" autocomplete="off" />
                             <button class="admin-submit-btn" style="width: auto; margin: 0; padding: 0 16px; white-space: nowrap;" onclick="addNewAdmin()">Add</button>
@@ -778,16 +761,7 @@
             const currentTheme = localStorage.getItem('theme') || 'light';
             document.documentElement.setAttribute('data-theme', currentTheme);
             updateThemeIcon(currentTheme);
-
-            google.accounts.id.initialize({
-                client_id: "276378730888-gsvgo6j5nvp6o2mmfvghhjn8ubufsilu.apps.googleusercontent.com", 
-                callback: handleCredentialResponse
-            });
-            
-            google.accounts.id.renderButton(
-                document.getElementById("gSignInBtn"),
-                { theme: currentTheme === 'dark' ? 'filled_black' : 'outline', size: "large", width: "280" }
-            );
+            renderGoogleSignInButton(currentTheme);
 
             const savedEmail = localStorage.getItem('userEmail');
             if (savedEmail) {
@@ -796,12 +770,32 @@
             }
         };
 
+        function renderGoogleSignInButton(theme) {
+            google.accounts.id.initialize({
+                client_id: "276378730888-gsvgo6j5nvp6o2mmfvghhjn8ubufsilu.apps.googleusercontent.com", 
+                callback: handleCredentialResponse
+            });
+            
+            const btnContainer = document.getElementById("gSignInBtn");
+            if (btnContainer) {
+                btnContainer.innerHTML = ""; 
+                google.accounts.id.renderButton(
+                    btnContainer,
+                    { theme: theme === 'dark' ? 'filled_black' : 'outline', size: "large", width: "280" }
+                );
+            }
+        }
+
         function toggleTheme() {
             const targetTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
             document.documentElement.setAttribute('data-theme', targetTheme);
             localStorage.setItem('theme', targetTheme);
             updateThemeIcon(targetTheme);
-            location.reload(); 
+            
+            // Re-render Google button smoothly without reloading the entire window page context
+            if (document.getElementById('loginView').classList.contains('hidden') === false) {
+                renderGoogleSignInButton(targetTheme);
+            }
         }
 
         function updateThemeIcon(theme) {
@@ -872,9 +866,8 @@
                         return;
                     }
                     
-                    fullCachedPayload = data; // Save to memory for history switching
+                    fullCachedPayload = data; 
                     
-                    // Admin Authorization Controls Configuration
                     if (data.isAdmin) {
                         document.getElementById('adminBadge').classList.remove('hidden');
                         document.getElementById('adminMenuOpt').classList.remove('hidden');
@@ -893,7 +886,6 @@
             document.getElementById('liveTimerDisplay').classList.add('hidden');
             document.getElementById('modeSelectionContainer').classList.add('hidden');
             
-            // Reset state toggles
             selectedClockInModeStr = "";
             document.getElementById('modeOnsiteBtn').classList.remove('selected');
             document.getElementById('modeOnlineBtn').classList.remove('selected');
@@ -927,7 +919,6 @@
         }
 
         function prepareClockIn() {
-            // Reveals Onsite / Online selectors below the Clock In button
             document.getElementById('modeSelectionContainer').classList.remove('hidden');
             const clockInBtn = document.getElementById('clockInBtn');
             clockInBtn.disabled = true;
@@ -943,7 +934,6 @@
             if (mode === 'Onsite') document.getElementById('modeOnsiteBtn').classList.add('selected');
             if (mode === 'Online') document.getElementById('modeOnlineBtn').classList.add('selected');
             
-            // Execute automated submit instantly upon option selection
             executeClockIn();
         }
 
@@ -1043,11 +1033,6 @@
         }
 
         function populateAdminConsole(data) {
-            const warningBox = document.getElementById('adminWarningBox');
-            warningBox.style.display = 'block';
-            warningBox.innerText = `Administration Dashboard Initialized. Total tracking directory indices: ${data.masterRoster.length} members.`;
-
-            // Render live active attendance list
             const attContainer = document.getElementById('attendanceBoard');
             if (!data.liveAttendance || data.liveAttendance.length === 0) {
                 attContainer.innerHTML = '<div class="empty-state">No members currently clocked into the workstation ecosystem.</div>';
@@ -1060,7 +1045,6 @@
                 `).join('');
             }
 
-            // Render integrated directory roster dashboard rows
             const rosterContainer = document.getElementById('rosterBoard');
             if (!data.masterRoster || data.masterRoster.length === 0) {
                 rosterContainer.innerHTML = '<div class="empty-state">Roster lookup context currently unpopulated.</div>';
