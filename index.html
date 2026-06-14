@@ -565,7 +565,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: nowrap;
+            flex-wrap: wrap; /* Updated from nowrap to wrap for mobile responsiveness */
             gap: 8px;
             padding: 12px 8px;
             border-bottom: 1px solid #f1f5f9;
@@ -579,11 +579,10 @@
         .feed-item > div:first-child {
             display: flex;
             align-items: center;
-            flex-wrap: nowrap;
+            flex-wrap: wrap;
             gap: 6px;
             min-width: 0;
             flex: 1;
-            overflow: hidden;
         }
 
         .feed-item .text-content-wrap {
@@ -636,7 +635,7 @@
             gap: 8px;
             padding: 12px 8px;
             border-bottom: 1px solid #f1f5f9;
-            flex-wrap: nowrap;
+            flex-wrap: wrap; /* Updated from nowrap to wrap for mobile responsiveness */
             width: 100%;
             max-width: 100%;
             box-sizing: border-box;
@@ -709,6 +708,7 @@
         .action-sub-btn.status-toggle { background: #d97706; }
         .action-sub-btn.status-toggle:hover { background: #b45309; }
         .action-sub-btn.delete { background: var(--status-out); }
+        .action-sub-btn.status-toggle:hover { background: #b45309; }
         .action-sub-btn.delete:hover { background: var(--status-out-hover); }
 
         .empty-state { text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 24px 0; }
