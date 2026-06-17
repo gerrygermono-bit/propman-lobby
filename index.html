@@ -1227,9 +1227,10 @@
 
             <div>
                 <h4 style="border-bottom: 2px solid var(--border-soft); padding-bottom: 6px; margin-bottom: 12px;">General Basics</h4>
-                <p>You must use your official <code>@dlsu.edu.ph</code> Google Workspace account to access the tracker.</p>
+                <p>You must use your official <code>@dlsu.edu.ph</code> Google account to access the tracker.</p>
                 <p>You can switch between Light and Dark mode at any time by clicking the sun/moon icon at the top right of the screen.</p>
                 <p>Right beside the theme button, you will see two mini-boxes showing exactly how many people are currently Online and Onsite.</p>
+                <p>Go into the Account menu to view your account information. Please edit the blank fields to ensure your profile is complete. This is important for record-keeping and verification of your residency hours.</p>
             </div>
 
             <div>
@@ -1286,33 +1287,46 @@
     </div>
 </div>
 
-    <div class="info-modal-overlay hidden" id="accountModal">
-        <div class="info-modal">
-            <div class="info-modal-header">
-                <h3>Account Information</h3>
-                <button class="info-modal-close" onclick="closeAccountModal()">&times;</button>
-            </div>
-            <div class="info-modal-body">
-                <p>Email: <span id="modalUserEmail" style="font-weight: 700;">...</span></p>
-                <p>Total Office Hours: <span id="modalTotalHours" style="font-weight: 700;">0.00</span></p>
-                
-                <div style="display: flex; align-items: center; gap: 10px; margin-top: 8px;">
-                    <span style="font-weight: 700;">Position: </span>
-                    <span id="displayPosition" style="font-weight: 700;">Member</span>
-                    
-                    <span class="edit-icon" onclick="toggleEditPosition()" title="Edit Position" style="cursor: pointer; display: flex; align-items: center;">
-                        <svg width="14" height="14" viewBox="0 0 24 24" style="stroke: var(--text-muted); stroke-width: 2; fill: none;">
-                            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
-                        </svg>
-                    </span>
-                    
-                    <input type="text" id="positionInput" onkeydown="handlePositionKey(event)" style="display: none; padding: 4px; border-radius: 6px; border: 1px solid var(--border-soft); background: var(--bg-canvas); color: var(--text-main);">
+        <div class="info-modal-overlay hidden" id="accountModal">
+            <div class="info-modal">
+                <div class="info-modal-header">
+                    <h3>Account Information</h3>
+                    <button class="info-modal-close" onclick="closeAccountModal()">&times;</button>
                 </div>
+                <div class="info-modal-body">
+                    <p>Email: <span id="modalUserEmail" style="font-weight: 700;">...</span></p>
+                    <p>Total Office Hours: <span id="modalTotalHours" style="font-weight: 700;">0.00</span></p>
+                    
+                    <script>
+                        function createFieldRow(label, id, value) {
+                            return `
+                                <div style="display: flex; align-items: center; gap: 10px; margin-top: 8px;">
+                                    <span style="font-weight: 400;">${label}: </span>
+                                    <span id="display${id}" style="font-weight: 700;">${value}</span>
+                                    <span class="edit-icon" onclick="toggleEdit('${id}')" title="Edit ${label}" style="cursor: pointer; display: flex; align-items: center;">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" style="stroke: var(--text-muted); stroke-width: 2; fill: none;">
+                                            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+                                        </svg>
+                                    </span>
+                                    <input type="text" id="input${id}" onkeydown="handleSave(event, '${id}')" style="display: none; padding: 4px; border-radius: 6px; border: 1px solid var(--border-soft); background: var(--bg-canvas); color: var(--text-main);">
+                                </div>
+                            `;
+                        }
+                    </script>
+                    
+                    <div id="profileFieldsContainer">
+                        <script>
+                            document.write(createFieldRow('Position', 'Position', 'Member'));
+                            document.write(createFieldRow('Section', 'Section', 'N/A'));
+                            document.write(createFieldRow('Full Name', 'FullName', 'N/A'));
+                            document.write(createFieldRow('ID Number', 'StaffId', 'N/A'));
+                        </script>
+                    </div>
 
-                <p style="margin-top: 16px;"><a class="logout-link" onclick="handleLogout()">Logout</a></p>
+                    <p style="margin-top: 16px;"><a class="logout-link" onclick="handleLogout()">Logout</a></p>
+                </div>
             </div>
         </div>
-    </div>
 
     <script>
         const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwRPyUfRVK7MTuqzdf-T8901TnKrN_4mO_B8SImg0YGLqzhOG_Uet_apqmZzdIFYUNYGg/exec"; 
@@ -1516,10 +1530,14 @@
             document.getElementById('onlineCountVal').innerText = data.onlineCount || 0;
             document.getElementById('onsiteCountVal').innerText = data.onsiteCount || 0;
             
-            // Populate Account Modal Data
             document.getElementById('modalUserEmail').innerText = userEmail;
             document.getElementById('modalTotalHours').innerText = Number(data.totalHours).toFixed(2);
-            document.getElementById('displayPosition').innerText = data.position;
+
+            // updates all four profile fields
+            document.getElementById('displayPosition').innerText = data.position || "Member";
+            document.getElementById('displaySection').innerText = data.section || "N/A";
+            document.getElementById('displayFullName').innerText = data.fullName || "N/A";
+            document.getElementById('displayStaffId').innerText = data.staffId || "N/A";
 
             configureTrackingInterface(data.isClockedIn, data.lastActionTimestamp);
             populateRecentLogs(data.recentLogs);
@@ -1797,40 +1815,43 @@
             location.reload();
         }
         
-        function toggleEditPosition() {
-            const display = document.getElementById('displayPosition');
-            const input = document.getElementById('positionInput');
-            const icon = document.querySelector('.edit-icon');
-            
-            if (input.style.display === 'none') {
-                input.value = display.innerText;
-                display.style.display = 'none';
-                icon.style.display = 'none'; // Hide pencil while editing
-                input.style.display = 'block';
-                input.focus();
-            }
+        function toggleEdit(field) {
+            document.getElementById('display' + field).style.display = 'none';
+            document.getElementById('input' + field).style.display = 'block';
+            document.getElementById('input' + field).value = document.getElementById('display' + field).innerText;
         }
 
-        function handlePositionKey(event) {
+        function handleSave(event, field) {
             if (event.key === 'Enter') {
-                const newPos = document.getElementById('positionInput').value;
-                const display = document.getElementById('displayPosition');
-                const input = document.getElementById('positionInput');
-                const icon = document.querySelector('.edit-icon');
+                const newValue = document.getElementById('input' + field).value;
+                const display = document.getElementById('display' + field);
+                const input = document.getElementById('input' + field);
+                
+                const fieldMap = {
+                    'Position': 'position',
+                    'Section': 'section',
+                    'FullName': 'fullName',
+                    'StaffId': 'staffId'
+                };
 
-                // Calls backend to update
-                sendPostRequest({
-                    token: SYSTEM_API_TOKEN,
-                    action: "Update Position",
-                    email: userEmail,
-                    position: newPos
-                }, "Position updated successfully!");
+                let payload = { 
+                    token: SYSTEM_API_TOKEN, 
+                    action: "Update Profile", 
+                    email: userEmail 
+                };
+                
+                // Use the map to set the correct backend key
+                const backendKey = fieldMap[field];
+                if (backendKey) {
+                    payload[backendKey] = newValue;
+                }
 
+                sendPostRequest(payload, field + " updated!");
+                
                 // Update UI
-                display.innerText = newPos;
+                display.innerText = newValue;
                 display.style.display = 'inline';
                 input.style.display = 'none';
-                icon.style.display = 'flex';
             }
         }
 
