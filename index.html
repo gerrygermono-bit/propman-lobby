@@ -1644,6 +1644,249 @@
         box-shadow: 0 3px 10px rgba(16, 185, 129, 0.2);
     }
 
+    .qty-input {
+        width: 40px;
+        height: 30px;
+        text-align: center;
+        font-weight: 700;
+        font-size: 0.95rem;
+        color: var(--text-main);
+        background: transparent;
+        border: none;
+        outline: none;
+        appearance: textfield;
+        -moz-appearance: textfield;
+        padding: 0;
+        transition: transform 0.15s ease;
+    }
+
+    .qty-input::-webkit-outer-spin-button,
+    .qty-input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    .qty-input.bounce {
+        animation: qtyBounce 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .folio-search-bar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: -8px 24px 16px;
+        padding: 8px 12px;
+        background: var(--bg-canvas);
+        border: 1px solid var(--border-soft);
+        border-radius: 10px;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .folio-search-bar:focus-within {
+        border-color: var(--dlsu-green);
+        box-shadow: 0 0 0 3px rgba(10, 92, 54, 0.1);
+    }
+
+    [data-theme="dark"] .folio-search-bar:focus-within {
+        border-color: #34d399;
+        box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.15);
+    }
+
+    .folio-search-icon {
+        flex-shrink: 0;
+        color: var(--text-muted);
+    }
+
+    .folio-search-input {
+        flex: 1;
+        border: none;
+        background: transparent;
+        outline: none;
+        font-family: inherit;
+        font-size: 0.85rem;
+        color: var(--text-main);
+    }
+
+    .folio-search-input::placeholder {
+        color: var(--text-muted);
+    }
+
+    .action-sub-btn.bulk-clockout {
+        background: linear-gradient(135deg, #d97706, #b45309);
+        padding: 6px 12px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(217, 119, 6, 0.25);
+    }
+
+    .action-sub-btn.bulk-clockout:hover {
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+        box-shadow: 0 3px 10px rgba(217, 119, 6, 0.35);
+        transform: translateY(-1px);
+    }
+
+    /* ===== CLOSURE REMINDER ===== */
+
+    .closure-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.55);
+        z-index: 20000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 16px;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
+
+    .closure-modal {
+        background: var(--surface-card);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid var(--glass-border);
+        border-radius: 20px;
+        width: 100%;
+        max-width: 420px;
+        box-shadow: var(--shadow-lg);
+        animation: modalIn 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        overflow: hidden;
+    }
+
+    .closure-modal-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 20px 24px 0;
+    }
+
+    .closure-modal-header h3 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--text-main);
+    }
+
+    .closure-modal-body {
+        padding: 16px 24px 8px;
+        color: var(--text-main);
+    }
+
+    .closure-modal-body p {
+        font-size: 0.9rem;
+        margin-bottom: 12px;
+        line-height: 1.5;
+    }
+
+    .closure-checklist {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .closure-checklist li {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 14px;
+        background: var(--bg-canvas);
+        border: 1px solid var(--border-soft);
+        border-radius: 10px;
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: var(--text-main);
+    }
+
+    .closure-checklist li svg {
+        flex-shrink: 0;
+        color: var(--dlsu-green);
+    }
+
+    [data-theme="dark"] .closure-checklist li svg {
+        color: #34d399;
+    }
+
+    .closure-modal-footer {
+        padding: 16px 24px 20px;
+    }
+
+    /* ===== IMAGE PREVIEW LIGHTBOX ===== */
+
+    .image-preview-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 30000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        cursor: pointer;
+    }
+
+    .image-preview-container {
+        position: relative;
+        max-width: 600px;
+        width: 100%;
+        background: var(--surface-card);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 24px 48px rgba(0, 0, 0, 0.3);
+        animation: modalIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        cursor: default;
+    }
+
+    .image-preview-container img {
+        width: 100%;
+        max-height: 70vh;
+        object-fit: contain;
+        display: block;
+        background: var(--bg-canvas);
+    }
+
+    .image-preview-close {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        width: 32px;
+        height: 32px;
+        border: none;
+        background: rgba(0, 0, 0, 0.5);
+        color: white;
+        font-size: 1.4rem;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+        transition: background 0.2s ease;
+    }
+
+    .image-preview-close:hover {
+        background: rgba(0, 0, 0, 0.7);
+    }
+
+    .image-preview-label {
+        text-align: center;
+        padding: 12px 16px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: var(--text-main);
+        margin: 0;
+    }
+
     ::selection {
         background-color: rgba(16, 185, 129, 0.25);
         color: inherit;
@@ -1748,6 +1991,10 @@
         -->
         <div class="card select-panel-view hidden" id="shopContentView">
             <div class="panel-heading">Get a Folio</div>
+            <div class="folio-search-bar">
+                <svg class="folio-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                <input class="folio-search-input" type="text" placeholder="Search folios..." oninput="filterFolios(this.value)">
+            </div>
             <div id="folioGrid"></div>
             <div id="cartSummary">
                 <div class="cart-header">
@@ -1816,7 +2063,10 @@
             <div class="card select-panel-view hidden" id="adminContentView">
                 
                 <div style="padding: 18px; margin-bottom: 20px;">
-                    <div class="panel-heading" style="margin-bottom: 12px;">Active Sessions</div>
+                    <div class="panel-heading" style="margin-bottom: 12px;">
+                        <span>Active Sessions</span>
+                        <button class="action-sub-btn bulk-clockout" onclick="bulkClockOut()">Clock Out All</button>
+                    </div>
                     <div class="attendance-board-container" id="attendanceBoard">
                         <div class="empty-state">No members are clocked in.</div>
                     </div>
@@ -1968,6 +2218,45 @@
             </div>
         </div>
 
+        <!-- Closure Reminder Overlay -->
+        <div class="closure-overlay hidden" id="closureReminderOverlay">
+            <div class="closure-modal">
+                <div class="closure-modal-header">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--status-in);"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    <h3>Office Closure Reminder</h3>
+                </div>
+                <div class="closure-modal-body">
+                    <p>You're the last member to leave! Before you go, please make sure to:</p>
+                    <ul class="closure-checklist">
+                        <li>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14s.5-1 2-2 3-1 3-1"/><circle cx="12" cy="12" r="10"/><circle cx="12" cy="10" r="3"/><path d="M12 13v2"/></svg>
+                            Turn off lights
+                        </li>
+                        <li>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="8" height="20" rx="1"/><rect x="14" y="6" width="8" height="16" rx="1"/></svg>
+                            Unplug extension cords
+                        </li>
+                        <li>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 4V2"/><path d="M15 4V2"/><path d="M4 9h16"/><path d="M4 15h16"/></svg>
+                            Turn off air conditioner
+                        </li>
+                    </ul>
+                </div>
+                <div class="closure-modal-footer">
+                    <button class="cart-checkout-btn" onclick="dismissClosureReminder()" style="width:100%;">Got it!</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Image Preview Lightbox -->
+        <div class="image-preview-overlay hidden" id="imagePreviewOverlay" onclick="closeImagePreview()">
+            <div class="image-preview-container" onclick="event.stopPropagation()">
+                <button class="image-preview-close" onclick="closeImagePreview()">&times;</button>
+                <img id="imagePreviewImg" src="" alt="Folio preview">
+                <p id="imagePreviewLabel" class="image-preview-label"></p>
+            </div>
+        </div>
+
     <script>
         const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwRPyUfRVK7MTuqzdf-T8901TnKrN_4mO_B8SImg0YGLqzhOG_Uet_apqmZzdIFYUNYGg/exec"; 
         const CLIENT_API_TOKEN = "Residency_Secure_Token_2026";
@@ -1976,7 +2265,10 @@
         let userEmail = "";
         let timerInterval = null;
         let selectedClockInModeStr = "";
-        let fullCachedPayload = null; 
+        let fullCachedPayload = null;
+        let lastSessionMode = "";
+        let pendingOnsiteCheckout = false;
+        let folioDataCache = []; 
 
         window.onload = function () {
             const currentTheme = localStorage.getItem('theme') || 'light';
@@ -2200,6 +2492,13 @@
 
             configureTrackingInterface(data.isClockedIn, data.lastActionTimestamp);
             populateRecentLogs(data.recentLogs);
+
+            if (pendingOnsiteCheckout && data.onsiteCount === 0) {
+                pendingOnsiteCheckout = false;
+                setTimeout(showClosureReminder, 500);
+            } else {
+                pendingOnsiteCheckout = false;
+            }
         }
 
         function configureTrackingInterface(isClockedIn, lastTimestampIso) {
@@ -2261,6 +2560,8 @@
         function executeClockIn() {
             if (!selectedClockInModeStr) return;
             
+            lastSessionMode = selectedClockInModeStr;
+            
             const btn = document.getElementById('clockInBtn');
             btn.disabled = true;
             btn.innerText = "Processing...";
@@ -2277,6 +2578,11 @@
             const btn = document.getElementById('clockOutBtn');
             btn.disabled = true;
             btn.innerText = "Processing...";
+
+            if (lastSessionMode === "Onsite") {
+                pendingOnsiteCheckout = true;
+            }
+            lastSessionMode = "";
 
             sendPostRequest({
                 token: CLIENT_API_TOKEN,
@@ -2469,6 +2775,73 @@
             setTimeout(() => { toast.classList.remove('show'); }, 3500);
         }
 
+        function showClosureReminder() {
+            const overlay = document.getElementById('closureReminderOverlay');
+            overlay.classList.remove('hidden');
+        }
+
+        function dismissClosureReminder() {
+            document.getElementById('closureReminderOverlay').classList.add('hidden');
+        }
+
+        function setCartQuantity(name, value) {
+            const qty = Math.max(0, parseInt(value) || 0);
+            const qtyInput = document.getElementById(`qty-${name}`);
+            qtyInput.value = qty;
+            cart[name] = qty;
+            const list = Object.entries(cart).filter(([n, q]) => q > 0);
+            const cartItems = document.getElementById('cartItemsList');
+            const countBadge = document.getElementById('cartCountBadge');
+            if (list.length > 0) {
+                const totalItems = list.reduce((sum, [, q]) => sum + q, 0);
+                cartItems.innerHTML = list.map(([n, q]) => `
+                    <div class="cart-item">
+                        <span class="cart-item-name">${n}</span>
+                        <span class="cart-item-qty">&times; ${q}</span>
+                    </div>
+                `).join('');
+                countBadge.textContent = totalItems;
+            } else {
+                cartItems.innerHTML = '<div class="cart-empty">Your cart is empty</div>';
+                countBadge.textContent = '0';
+            }
+        }
+
+        function filterFolios(searchTerm) {
+            const term = searchTerm.toLowerCase().trim();
+            renderFolioShop(
+                term ? folioDataCache.filter(f => f.name.toLowerCase().includes(term)) : folioDataCache
+            );
+        }
+
+        function openImagePreview(url, name) {
+            const overlay = document.getElementById('imagePreviewOverlay');
+            const img = document.getElementById('imagePreviewImg');
+            const label = document.getElementById('imagePreviewLabel');
+            img.src = url;
+            label.textContent = name;
+            overlay.classList.remove('hidden');
+        }
+
+        function closeImagePreview() {
+            document.getElementById('imagePreviewOverlay').classList.add('hidden');
+        }
+
+        function bulkClockOut() {
+            if (!confirm('Force clock out ALL currently active members?')) return;
+            const activeUsers = document.querySelectorAll('#attendanceBoard .board-user .email');
+            if (activeUsers.length === 0) {
+                alert('No active sessions to close.');
+                return;
+            }
+            const emails = Array.from(activeUsers).map(el => el.textContent.trim());
+            sendPostRequest({
+                token: CLIENT_API_TOKEN,
+                action: "Bulk Clock Out",
+                emails: emails
+            }, `Clocked out ${emails.length} member(s)`);
+        }
+
         function handleLogout() {
             localStorage.clear();
             location.reload();
@@ -2536,6 +2909,7 @@
         
         function renderFolioShop(folioData) {
             console.log("Debug: Folio List received:", folioData);
+            folioDataCache = folioData || [];
             const container = document.getElementById('folioGrid');
             
             if (!folioData || folioData.length === 0) {
@@ -2545,7 +2919,7 @@
 
             container.innerHTML = folioData.map((item, idx) => `
                 <div class="folio-card" style="animation-delay: ${idx * 0.05}s">
-                    <div class="folio-card-image">
+                    <div class="folio-card-image" ${item.imageUrl ? `onclick="openImagePreview('${item.imageUrl}', '${item.name}')" style="cursor:pointer;"` : ''}>
                         ${item.imageUrl
                             ? `<img src="${item.imageUrl}" alt="${item.name}" loading="lazy">`
                             : `<div class="no-image">No Image</div>`}
@@ -2554,12 +2928,12 @@
                         <div class="folio-card-name">${item.name}</div>
                         <div class="folio-stock">
                             <span class="folio-stock-dot ${item.remaining > 5 ? 'high' : item.remaining > 0 ? 'low' : 'empty'}"></span>
-                            <span class="folio-stock-text ${item.remaining > 5 ? 'high' : item.remaining > 0 ? 'low' : 'empty'}">${item.remaining > 0 ? item.remaining + ' available' : 'Out of stock'}</span>
+                            <span class="folio-stock-text ${item.remaining > 5 ? 'high' : item.remaining > 0 ? 'low' : 'empty'}" ${item.canGet ? `onclick="setCartQuantity('${item.name}', ${item.remaining})" style="cursor:pointer;" title="Click to fill max"` : ''}>${item.remaining > 0 ? item.remaining + ' available' : 'Out of stock'}</span>
                         </div>
                         ${item.canGet ? `
                             <div class="folio-qty-control">
                                 <button class="qty-btn minus" onclick="updateCart('${item.name}', -1)">&minus;</button>
-                                <span class="qty-value" id="qty-${item.name}">0</span>
+                                <input class="qty-input" type="number" id="qty-${item.name}" value="0" min="0" onchange="setCartQuantity('${item.name}', this.value)">
                                 <button class="qty-btn plus" onclick="updateCart('${item.name}', 1)">+</button>
                             </div>
                         ` : `
@@ -2575,11 +2949,11 @@
 
         function updateCart(name, change) {
             cart[name] = Math.max(0, (cart[name] || 0) + change);
-            const qtySpan = document.getElementById(`qty-${name}`);
-            qtySpan.innerText = cart[name];
-            qtySpan.classList.remove('bounce');
-            void qtySpan.offsetWidth;
-            qtySpan.classList.add('bounce');
+            const qtyInput = document.getElementById(`qty-${name}`);
+            qtyInput.value = cart[name];
+            qtyInput.classList.remove('bounce');
+            void qtyInput.offsetWidth;
+            qtyInput.classList.add('bounce');
             
             const list = Object.entries(cart).filter(([n, q]) => q > 0);
             const cartItems = document.getElementById('cartItemsList');
@@ -2619,7 +2993,7 @@
         function clearCart() {
             cart = {};
             document.querySelectorAll('[id^="qty-"]').forEach(el => {
-                el.innerText = '0';
+                el.value = '0';
                 el.classList.remove('bounce');
             });
             document.getElementById('cartItemsList').innerHTML = '<div class="cart-empty">Your cart is empty</div>';
