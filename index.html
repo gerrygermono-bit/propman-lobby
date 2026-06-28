@@ -183,7 +183,7 @@
         -webkit-text-fill-color: transparent;
         background-clip: text;
     }
-    
+
     [data-theme="dark"] .brand h1 {
         background: linear-gradient(135deg, #34d399, #10b981);
         -webkit-background-clip: text;
@@ -259,25 +259,18 @@
     }
 
     .logout-link {
-        background: linear-gradient(135deg, var(--status-out), var(--status-out-hover));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
+        color: var(--status-out);
         font-size: 0.85rem;
         font-weight: 600;
         cursor: pointer;
         text-decoration: none;
-        transition: all 0.2s ease;
+        transition: color 0.2s ease;
         flex-shrink: 0;
     }
 
     .logout-link:hover {
-        background: linear-gradient(135deg, #fb7185, var(--status-out));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
+        color: var(--status-out-hover);
         text-decoration: underline;
-        filter: brightness(1.1);
     }
 
     .menu-btn {
@@ -429,8 +422,7 @@
     }
 
     .card:hover {
-        transform: translateY(-3px);
-        box-shadow: var(--shadow-lg);
+        transform: translateY(-2px);
     }
 
     .select-panel-view {
@@ -499,17 +491,15 @@
         box-shadow: var(--shadow-sm);
         display: none;
         line-height: 1.4;
-        background: rgba(255, 241, 242, 0.8);
-        backdrop-filter: blur(4px);
-        border: 1px solid rgba(255, 228, 230, 0.5);
+        background-color: #fff1f2;
+        border: 1px solid #ffe4e6;
         border-left: 4px solid var(--status-out);
         color: #991b1b;
     }
 
     [data-theme="dark"] .warning {
-        background: rgba(153, 27, 27, 0.15);
-        backdrop-filter: blur(4px);
-        border-color: rgba(153, 27, 27, 0.25);
+        background-color: #991b1b20;
+        border-color: #991b1b40;
         color: #fca5a5;
     }
 
@@ -730,8 +720,6 @@
         margin-bottom: 6px;
         font-weight: 600;
         font-size: 0.9rem;
-        color: var(--text-main);
-        letter-spacing: -0.01em;
     }
 
     input[type="email"] {
@@ -989,10 +977,7 @@
 
     .roster-hours-sub {
         font-size: 0.75rem;
-        background: linear-gradient(135deg, #4f46e5, #7c3aed);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
+        color: #4f46e5;
         margin-top: 2px;
         font-weight: 600;
         word-break: break-word;
@@ -1000,10 +985,7 @@
     }
 
     [data-theme="dark"] .roster-hours-sub {
-        background: linear-gradient(135deg, #818cf8, #a78bfa);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
+        color: #818cf8;
     }
 
     .roster-action-group {
@@ -1321,34 +1303,345 @@
         }
     }
 
+    /* ===== FOLIO SHOP ===== */
+
+    #folioGrid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
+        gap: 16px;
+        margin-bottom: 20px;
+        width: 100%;
+        box-sizing: border-box;
+        padding: 4px 24px 0;
+    }
+
     .folio-card {
         background: var(--surface-card);
         backdrop-filter: blur(12px);
         -webkit-backdrop-filter: blur(12px);
         border: 1px solid var(--glass-border);
-        padding: 16px;
-        border-radius: 14px;
+        border-radius: 16px;
+        padding: 0;
         display: flex;
         flex-direction: column;
-        align-items: center;
-        gap: 10px;
-        transition: transform 0.25s ease, box-shadow 0.25s ease;
+        overflow: hidden;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                    box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                    border-color 0.3s ease;
+        animation: cardEntrance 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
     }
 
     .folio-card:hover {
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-md);
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-lg);
+        border-color: rgba(16, 185, 129, 0.2);
     }
+
+    .folio-card-image {
+        width: 100%;
+        height: 160px;
+        overflow: hidden;
+        position: relative;
+        background: var(--bg-canvas);
+    }
+
+    .folio-card-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+        display: block;
+    }
+
+    .folio-card:hover .folio-card-image img {
+        transform: scale(1.06);
+    }
+
+    .folio-card-image .no-image {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        font-weight: 500;
+        background: linear-gradient(135deg, var(--bg-canvas), var(--border-soft));
+    }
+
+    .folio-card-image::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 40px;
+        background: linear-gradient(to top, var(--surface-card), transparent);
+        pointer-events: none;
+    }
+
+    [data-theme="dark"] .folio-card-image::after {
+        background: linear-gradient(to top, rgba(30, 41, 59, 0.75), transparent);
+    }
+
+    .folio-card-body {
+        padding: 14px 16px 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        flex: 1;
+    }
+
+    .folio-card-name {
+        font-weight: 700;
+        font-size: 0.95rem;
+        text-align: center;
+        color: var(--text-main);
+        line-height: 1.3;
+    }
+
+    .folio-stock {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .folio-stock-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        flex-shrink: 0;
+    }
+
+    .folio-stock-dot.high { background: var(--status-in); box-shadow: 0 0 6px var(--status-in); }
+    .folio-stock-dot.low { background: #f59e0b; box-shadow: 0 0 6px #f59e0b; }
+    .folio-stock-dot.empty { background: var(--status-out); box-shadow: 0 0 6px var(--status-out); }
+
+    .folio-stock-text.high { color: var(--status-in); }
+    .folio-stock-text.low { color: #d97706; }
+    .folio-stock-text.empty { color: var(--status-out); }
 
     .folio-qty-control {
         display: flex;
         align-items: center;
+        justify-content: center;
+        gap: 0;
+        margin-top: 4px;
+        background: var(--bg-canvas);
+        border-radius: 10px;
+        padding: 4px;
+        border: 1px solid var(--border-soft);
+    }
+
+    .qty-btn {
+        width: 30px;
+        height: 30px;
+        border: none;
+        border-radius: 7px;
+        background: transparent;
+        color: var(--text-main);
+        font-size: 1.15rem;
+        font-weight: 700;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+        line-height: 1;
+    }
+
+    .qty-btn:hover {
+        background: var(--surface-card);
+        box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+
+    .qty-btn:active {
+        transform: scale(0.88);
+    }
+
+    .qty-btn.minus:hover {
+        background: rgba(244, 63, 94, 0.1);
+        color: var(--status-out);
+    }
+
+    .qty-btn.plus:hover {
+        background: rgba(16, 185, 129, 0.1);
+        color: var(--status-in);
+    }
+
+    .qty-btn:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+        transform: none !important;
+    }
+
+    .qty-value {
+        min-width: 34px;
+        text-align: center;
+        font-weight: 700;
+        font-size: 1rem;
+        color: var(--text-main);
+        transition: transform 0.15s ease;
+    }
+
+    .qty-value.bounce {
+        animation: qtyBounce 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .folio-restricted {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 8px 12px;
+        background: rgba(244, 63, 94, 0.08);
+        border: 1px solid rgba(244, 63, 94, 0.15);
+        border-radius: 8px;
+        color: var(--status-out);
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-align: center;
+        letter-spacing: 0.03em;
+        margin-top: 4px;
+    }
+
+    .folio-restricted svg {
+        flex-shrink: 0;
+    }
+
+    /* ===== CART SUMMARY ===== */
+
+    #cartSummary {
+        border-top: 1px solid var(--border-soft);
+        padding: 20px 24px;
+        background: rgba(248, 250, 252, 0.5);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border-radius: 0 0 16px 16px;
+    }
+
+    [data-theme="dark"] #cartSummary {
+        background: rgba(15, 23, 42, 0.3);
+    }
+
+    .cart-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 14px;
+    }
+
+    .cart-header h4 {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--text-main);
+    }
+
+    .cart-count-badge {
+        background: var(--dlsu-green);
+        color: white;
+        font-size: 0.7rem;
+        font-weight: 700;
+        padding: 2px 9px;
+        border-radius: 10px;
+        min-width: 20px;
+        text-align: center;
+        line-height: 1.4;
+    }
+
+    [data-theme="dark"] .cart-count-badge {
+        background: #10b981;
+        color: #0f172a;
+    }
+
+    #cartItemsList {
+        margin: 0 0 16px;
+        font-size: 0.9rem;
+        min-height: 20px;
+    }
+
+    .cart-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 0;
+        border-bottom: 1px solid rgba(0,0,0,0.04);
         gap: 12px;
     }
+
+    .cart-item:last-child {
+        border-bottom: none;
+    }
+
+    [data-theme="dark"] .cart-item {
+        border-bottom-color: rgba(255,255,255,0.04);
+    }
+
+    .cart-item-name {
+        font-weight: 600;
+        color: var(--text-main);
+        flex: 1;
+    }
+
+    .cart-item-qty {
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: var(--text-muted);
+        background: var(--bg-canvas);
+        padding: 2px 10px;
+        border-radius: 8px;
+        border: 1px solid var(--border-soft);
+        flex-shrink: 0;
+    }
+
+    .cart-empty {
+        text-align: center;
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        padding: 16px 0;
+    }
+
     .cart-actions {
         display: flex;
         gap: 10px;
-        margin-top: 20px;
+        margin-top: 4px;
+    }
+
+    .cart-actions .action-sub-btn {
+        flex: 1;
+        padding: 10px 16px;
+        font-size: 0.8rem;
+        border-radius: 10px;
+        text-align: center;
+    }
+
+    .cart-checkout-btn {
+        flex: 1;
+        padding: 10px 16px;
+        border: none;
+        border-radius: 10px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        cursor: pointer;
+        background: linear-gradient(135deg, var(--dlsu-green), #10b981);
+        color: white;
+        box-shadow: 0 3px 10px rgba(10, 92, 54, 0.25);
+        transition: all 0.25s ease;
+    }
+
+    .cart-checkout-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 5px 16px rgba(10, 92, 54, 0.35);
+    }
+
+    .cart-checkout-btn:active {
+        transform: scale(0.97);
+    }
+
+    [data-theme="dark"] .cart-checkout-btn {
+        box-shadow: 0 3px 10px rgba(16, 185, 129, 0.2);
     }
 
     ::selection {
@@ -1374,6 +1667,17 @@
     @keyframes pulseDot {
         0%, 100% { opacity: 0.4; transform: scale(0.8); }
         50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    @keyframes qtyBounce {
+        0% { transform: scale(1); }
+        40% { transform: scale(1.35); }
+        100% { transform: scale(1); }
+    }
+
+    @keyframes cardEntrance {
+        from { opacity: 0; transform: translateY(16px) scale(0.96); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -1444,14 +1748,16 @@
         -->
         <div class="card select-panel-view hidden" id="shopContentView">
             <div class="panel-heading">Get a Folio</div>
-            <div id="folioGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; margin-bottom: 20px; width: 100%; box-sizing: border-box; padding: 10x">
+            <div id="folioGrid"></div>
+            <div id="cartSummary">
+                <div class="cart-header">
+                    <h4>Shopping Cart</h4>
+                    <span class="cart-count-badge" id="cartCountBadge">0</span>
                 </div>
-            <div id="cartSummary" style="border-top: 1px solid var(--border-soft); padding-top: 15px;">
-                <h4>Shopping Cart</h4>
-                <div id="cartItemsList" style="margin: 10px 0; font-size: 0.9rem;"></div>
+                <div id="cartItemsList"></div>
                 <div class="cart-actions">
                     <button class="action-sub-btn delete" onclick="clearCart()">Cancel</button>
-                    <button class="action-sub-btn" style="background: var(--dlsu-green);" onclick="submitCart()">Get Selected</button>
+                    <button class="cart-checkout-btn" onclick="submitCart()">Get Selected</button>
                 </div>
             </div>
         </div>
@@ -2233,36 +2539,65 @@
             const container = document.getElementById('folioGrid');
             
             if (!folioData || folioData.length === 0) {
-                container.innerHTML = "<p>No folios found.</p>";
+                container.innerHTML = '<div class="empty-state" style="padding: 40px 0;">No folios available.</div>';
                 return;
             }
 
-            container.innerHTML = folioData.map(item => `
-                <div class="folio-card">
-                    ${item.imageUrl ? `<img src="${item.imageUrl}" style="width: 100%; height: 150px; object-fit: cover; border-radius: 8px;">` : `<div style="height: 150px; background: #eee; display: flex; align-items: center; justify-content: center; border-radius: 8px;">No Image</div>`}
-                    
-                    <p style="font-weight: 600; margin: 10px 0; text-align: center;">${item.name}</p>
-                    <p style="font-size: 0.8rem; color: var(--text-muted);">Stock: ${item.remaining}</p>
-                    
-                    ${item.canGet ? `
-                        <div class="folio-qty-control" style="margin-top: 10px;">
-                            <button onclick="updateCart('${item.name}', -1)">-</button>
-                            <span id="qty-${item.name}">0</span>
-                            <button onclick="updateCart('${item.name}', 1)">+</button>
+            container.innerHTML = folioData.map((item, idx) => `
+                <div class="folio-card" style="animation-delay: ${idx * 0.05}s">
+                    <div class="folio-card-image">
+                        ${item.imageUrl
+                            ? `<img src="${item.imageUrl}" alt="${item.name}" loading="lazy">`
+                            : `<div class="no-image">No Image</div>`}
+                    </div>
+                    <div class="folio-card-body">
+                        <div class="folio-card-name">${item.name}</div>
+                        <div class="folio-stock">
+                            <span class="folio-stock-dot ${item.remaining > 5 ? 'high' : item.remaining > 0 ? 'low' : 'empty'}"></span>
+                            <span class="folio-stock-text ${item.remaining > 5 ? 'high' : item.remaining > 0 ? 'low' : 'empty'}">${item.remaining > 0 ? item.remaining + ' available' : 'Out of stock'}</span>
                         </div>
-                    ` : `<p style="color: var(--status-out); font-weight: bold; margin-top: 10px; text-align: center;">DO NOT DISTRIBUTE</p>`}
+                        ${item.canGet ? `
+                            <div class="folio-qty-control">
+                                <button class="qty-btn minus" onclick="updateCart('${item.name}', -1)">&minus;</button>
+                                <span class="qty-value" id="qty-${item.name}">0</span>
+                                <button class="qty-btn plus" onclick="updateCart('${item.name}', 1)">+</button>
+                            </div>
+                        ` : `
+                            <div class="folio-restricted">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                                DO NOT DISTRIBUTE
+                            </div>
+                        `}
+                    </div>
                 </div>
             `).join('');
         }
 
         function updateCart(name, change) {
             cart[name] = Math.max(0, (cart[name] || 0) + change);
-            document.getElementById(`qty-${name}`).innerText = cart[name];
+            const qtySpan = document.getElementById(`qty-${name}`);
+            qtySpan.innerText = cart[name];
+            qtySpan.classList.remove('bounce');
+            void qtySpan.offsetWidth;
+            qtySpan.classList.add('bounce');
             
             const list = Object.entries(cart).filter(([n, q]) => q > 0);
-            document.getElementById('cartItemsList').innerHTML = list.length > 0 
-                ? list.map(([n, q]) => `${n}: ${q}`).join(', ') 
-                : 'Cart is empty';
+            const cartItems = document.getElementById('cartItemsList');
+            const countBadge = document.getElementById('cartCountBadge');
+            
+            if (list.length > 0) {
+                const totalItems = list.reduce((sum, [, q]) => sum + q, 0);
+                cartItems.innerHTML = list.map(([n, q]) => `
+                    <div class="cart-item">
+                        <span class="cart-item-name">${n}</span>
+                        <span class="cart-item-qty">&times; ${q}</span>
+                    </div>
+                `).join('');
+                countBadge.textContent = totalItems;
+            } else {
+                cartItems.innerHTML = '<div class="cart-empty">Your cart is empty</div>';
+                countBadge.textContent = '0';
+            }
         }
 
         async function submitCart() {
@@ -2283,8 +2618,12 @@
 
         function clearCart() {
             cart = {};
-            document.querySelectorAll('[id^="qty-"]').forEach(el => el.innerText = '0');
-            document.getElementById('cartItemsList').innerHTML = 'Cart is empty';
+            document.querySelectorAll('[id^="qty-"]').forEach(el => {
+                el.innerText = '0';
+                el.classList.remove('bounce');
+            });
+            document.getElementById('cartItemsList').innerHTML = '<div class="cart-empty">Your cart is empty</div>';
+            document.getElementById('cartCountBadge').textContent = '0';
         }
 
     </script>
