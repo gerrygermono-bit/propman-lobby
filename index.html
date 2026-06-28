@@ -1454,6 +1454,7 @@
         display: flex;
         flex-direction: column;
         overflow: hidden;
+        position: relative;
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
                     box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
                     border-color 0.3s ease;
@@ -1510,6 +1511,33 @@
 
     [data-theme="dark"] .folio-card-image::after {
         background: linear-gradient(to top, rgba(30, 41, 59, 0.75), transparent);
+    }
+
+    .folio-edit-btn {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        z-index: 2;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: none;
+        background: rgba(0,0,0,0.35);
+        color: #fff;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.2s ease, background 0.2s ease;
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+    }
+    .folio-card:hover .folio-edit-btn {
+        opacity: 1;
+    }
+    .folio-edit-btn:hover {
+        background: var(--dlsu-green);
     }
 
     .folio-card-body {
@@ -3156,7 +3184,7 @@
                                 </div>
                             </div>
                             <div class="premium-field-group">
-                                <label class="premium-field-label">Extra Sections</label>
+                                <label class="premium-field-label">Extra Teams</label>
                                 <div class="premium-chip-group">
                                     <button class="premium-chip" data-value="Layout" onclick="toggleExtraSection(this)">Layout</button>
                                     <button class="premium-chip" data-value="PropMan" onclick="toggleExtraSection(this)">PropMan</button>
@@ -3172,6 +3200,86 @@
                     <!-- Logout -->
                     <button class="logout-btn" onclick="handleLogout()">Logout</button>
 
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Folio Modal (admin) -->
+        <div class="info-modal-overlay hidden" id="editFolioModal">
+            <div class="info-modal" style="max-width: 520px;">
+                <div class="info-modal-header">
+                    <h3 id="editFolioTitle">Edit Folio</h3>
+                    <button class="info-modal-close" onclick="closeEditFolioModal()">&times;</button>
+                </div>
+                <div class="info-modal-body">
+                    <input type="hidden" id="editFolioName">
+
+                    <!-- Folio Name (read-only) -->
+                    <div class="profile-field-row" style="margin-bottom: 12px;">
+                        <span class="profile-field-label" style="min-width: 100px;">Folio Name</span>
+                        <span class="profile-field-value" id="editFolioNameDisplay" style="font-size:0.95rem;"></span>
+                    </div>
+                    <hr style="border: none; border-top: 1px solid var(--border-soft); margin: 0 0 14px;">
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                        <!-- Beginning Qty (editable) -->
+                        <div class="premium-field-group" style="margin:0;">
+                            <label class="premium-field-label">Beginning Qty</label>
+                            <input type="number" id="editBeginningQty" class="premium-select" style="padding: 9px 12px; width: 100%;">
+                        </div>
+                        <!-- Qty Distributed (read-only) -->
+                        <div class="premium-field-group" style="margin:0;">
+                            <label class="premium-field-label">Qty Distributed</label>
+                            <div style="padding: 9px 12px; border-radius: 12px; border: 1.5px solid var(--border-soft); background: var(--bg-canvas); color: var(--text-muted); font-size: 0.85rem; font-weight: 500;" id="editDistributedDisplay">0</div>
+                        </div>
+                        <!-- Total Qty (read-only) -->
+                        <div class="premium-field-group" style="margin:0;">
+                            <label class="premium-field-label">Total Qty</label>
+                            <div style="padding: 9px 12px; border-radius: 12px; border: 1.5px solid var(--border-soft); background: var(--bg-canvas); color: var(--text-muted); font-size: 0.85rem; font-weight: 500;" id="editTotalDisplay">0</div>
+                        </div>
+                        <!-- Allowable Qty (editable) -->
+                        <div class="premium-field-group" style="margin:0;">
+                            <label class="premium-field-label">Allowable Qty</label>
+                            <input type="number" id="editAllowable" class="premium-select" style="padding: 9px 12px; width: 100%;">
+                        </div>
+                    </div>
+
+                    <!-- Location (editable) -->
+                    <div class="premium-field-group" style="margin-top: 12px;">
+                        <label class="premium-field-label">Location</label>
+                        <div class="premium-select-wrapper">
+                            <select id="editLocation" class="premium-select">
+                                <option value="">-- Select Location --</option>
+                                <option value="Office">Office</option>
+                                <option value="Library">Library</option>
+                                <option value="CADS">CADS</option>
+                                <option value="SMO">SMO</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Note (editable) -->
+                    <div class="premium-field-group">
+                        <label class="premium-field-label">Note</label>
+                        <input type="text" id="editNote" class="premium-select" style="padding: 9px 12px; width: 100%;">
+                    </div>
+
+                    <!-- Image URL (editable) -->
+                    <div class="premium-field-group">
+                        <label class="premium-field-label">Image URL</label>
+                        <input type="text" id="editImageUrl" class="premium-select" style="padding: 9px 12px; width: 100%;">
+                    </div>
+
+                    <!-- Last Updated (read-only) -->
+                    <div class="premium-field-group">
+                        <label class="premium-field-label">Last Updated</label>
+                        <div style="padding: 9px 12px; border-radius: 12px; border: 1.5px solid var(--border-soft); background: var(--bg-canvas); color: var(--text-muted); font-size: 0.85rem; font-weight: 500;" id="editLastUpdatedDisplay">—</div>
+                    </div>
+
+                    <div class="premium-actions" style="margin-top: 18px;">
+                        <button class="premium-btn premium-btn-primary" onclick="saveEditFolio()">Save Changes</button>
+                        <button class="premium-btn premium-btn-ghost" onclick="closeEditFolioModal()">Cancel</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -4367,7 +4475,7 @@
         // Close modals on Escape key
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
-                var modals = ['infoModal', 'accountModal', 'alertModal', 'confirmModal', 'bugModal'];
+                var modals = ['infoModal', 'accountModal', 'editFolioModal', 'alertModal', 'confirmModal', 'bugModal'];
                 modals.forEach(function(id) {
                     var el = document.getElementById(id);
                     if (el && !el.classList.contains('hidden')) {
@@ -4416,6 +4524,7 @@
                             </div>
                         `}
                     </div>
+                    ${(fullCachedPayload && fullCachedPayload.isAdmin) ? `<button class="folio-edit-btn" onclick="openEditFolioModal('${item.name}')" title="Edit folio"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg></button>` : ''}
                 </div>
             `).join('');
         }
@@ -4492,6 +4601,48 @@
             });
             document.getElementById('cartItemsList').innerHTML = '<div class="cart-empty">Your cart is empty</div>';
             document.getElementById('cartCountBadge').textContent = '0';
+        }
+
+        // ===== EDIT FOLIO (admin) =====
+        function openEditFolioModal(folioName) {
+            var item = folioDataCache.find(function(f) { return f.name === folioName; });
+            if (!item) { showAlert('Folio not found in cache.'); return; }
+
+            document.getElementById('editFolioName').value = item.name;
+            document.getElementById('editFolioNameDisplay').innerText = item.name;
+            document.getElementById('editBeginningQty').value = item.beginningQty || 0;
+            document.getElementById('editDistributedDisplay').innerText = item.distributed || 0;
+            document.getElementById('editTotalDisplay').innerText = item.remaining || 0;
+            document.getElementById('editAllowable').value = item.maxQty || 0;
+            document.getElementById('editLocation').value = item.location || '';
+            document.getElementById('editNote').value = item.note || '';
+            document.getElementById('editImageUrl').value = item.imageUrl || '';
+            document.getElementById('editLastUpdatedDisplay').innerText = item.lastUpdated || '—';
+            document.getElementById('editFolioTitle').innerText = 'Edit Folio — ' + item.name;
+
+            document.getElementById('editFolioModal').classList.remove('hidden');
+            document.getElementById('navMenu').classList.remove('show');
+        }
+
+        function closeEditFolioModal() {
+            document.getElementById('editFolioModal').classList.add('hidden');
+        }
+
+        function saveEditFolio() {
+            var folioName = document.getElementById('editFolioName').value;
+            var payload = {
+                token: SYSTEM_API_TOKEN,
+                action: "Update Folio",
+                email: userEmail,
+                folioName: folioName,
+                beginningQty: parseFloat(document.getElementById('editBeginningQty').value) || 0,
+                location: document.getElementById('editLocation').value,
+                allowable: parseFloat(document.getElementById('editAllowable').value) || 0,
+                note: document.getElementById('editNote').value,
+                imageUrl: document.getElementById('editImageUrl').value
+            };
+            closeEditFolioModal();
+            sendPostRequest(payload, folioName + ' updated!');
         }
 
     </script>
