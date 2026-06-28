@@ -272,6 +272,133 @@
         text-decoration: underline;
     }
 
+    .account-avatar {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #fff;
+        background: linear-gradient(135deg, var(--dlsu-green), #10b981);
+        margin: 0 auto 12px;
+        flex-shrink: 0;
+    }
+    .account-card {
+        border-left: 3px solid var(--dlsu-green);
+        padding-left: 16px;
+        margin-bottom: 20px;
+    }
+    .account-card-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-muted);
+        margin-bottom: 12px;
+    }
+    .hours-badge {
+        display: inline-flex;
+        align-items: center;
+        background: rgba(16, 185, 129, 0.12);
+        color: var(--status-in);
+        font-weight: 700;
+        font-size: 0.85rem;
+        padding: 2px 10px;
+        border-radius: 100px;
+        border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+    [data-theme="dark"] .hours-badge {
+        background: rgba(16, 185, 129, 0.15);
+    }
+    .profile-field-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 0;
+        border-bottom: 1px solid var(--border-soft);
+    }
+    .profile-field-row:last-of-type {
+        border-bottom: none;
+    }
+    .profile-field-label {
+        font-weight: 400;
+        color: var(--text-muted);
+        font-size: 0.88rem;
+        min-width: 80px;
+        flex-shrink: 0;
+    }
+    .profile-field-value {
+        font-weight: 700;
+        font-size: 0.9rem;
+        color: var(--text-main);
+    }
+    .edit-icon-sm {
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        color: var(--text-muted);
+        transition: color 0.2s;
+        margin-left: auto;
+    }
+    .edit-icon-sm:hover {
+        color: var(--dlsu-green);
+    }
+    .logout-btn {
+        display: block;
+        width: 100%;
+        padding: 12px;
+        border-radius: 12px;
+        border: 1.5px solid var(--status-out);
+        background: transparent;
+        color: var(--status-out);
+        font-family: inherit;
+        font-size: 0.9rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        text-align: center;
+        margin-top: 16px;
+    }
+    .logout-btn:hover {
+        background: var(--status-out);
+        color: #fff;
+    }
+    .section-chip {
+        display: inline-flex;
+        align-items: center;
+        padding: 2px 10px;
+        border-radius: 100px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        margin: 2px 4px 2px 0;
+    }
+    .section-chip-main {
+        background: rgba(10, 92, 54, 0.1);
+        color: var(--dlsu-green);
+        border: 1px solid rgba(10, 92, 54, 0.15);
+    }
+    [data-theme="dark"] .section-chip-main {
+        background: rgba(52, 211, 153, 0.12);
+        color: #34d399;
+        border-color: rgba(52, 211, 153, 0.2);
+    }
+    .section-chip-extra {
+        background: rgba(79, 70, 229, 0.08);
+        color: #4f46e5;
+        border: 1px solid rgba(79, 70, 229, 0.15);
+    }
+    [data-theme="dark"] .section-chip-extra {
+        background: rgba(129, 140, 248, 0.12);
+        color: #818cf8;
+        border-color: rgba(129, 140, 248, 0.2);
+    }
+
     .menu-btn {
         background: var(--surface-card);
         border: 1px solid var(--border-soft);
@@ -2546,7 +2673,7 @@
             <div id="folioGrid"></div>
             <div id="cartSummary">
                 <div class="cart-header">
-                    <h4>Shopping Cart</h4>
+                    <h4>Cart</h4>
                     <span class="cart-count-badge" id="cartCountBadge">0</span>
                 </div>
                 <div id="cartItemsList"></div>
@@ -2595,7 +2722,7 @@
             <div class="card select-panel-view" id="trackerContentView">
                 <div class="panel-heading">Recent Actions</div>
                 <div class="log-feed-container" id="recentLogsContainer">
-                    <div class="empty-state">No recent records gathered in this tracking segment.</div>
+                    <div class="empty-state">No recent records gathered segment.</div>
                 </div>
             </div>
 
@@ -2604,7 +2731,7 @@
                     <span>Complete Log History</span>
                 </div>
                 <div class="history-feed-container" id="fullHistoryContainer">
-                    <div class="empty-state">No structured operations logs found.</div>
+                    <div class="empty-state">No operations logs found.</div>
                 </div>
             </div>
 
@@ -2631,7 +2758,7 @@
                         </div>
                     </div>
                     <div class="roster-board-container" id="rosterBoard">
-                        <div class="empty-state">Roster lookup context currently unpopulated.</div>
+                        <div class="empty-state">Roster lookup currently unpopulated.</div>
                     </div>
                     
                     <div class="form-group" style="margin-top: 20px; border-top: 1px solid var(--border-soft); padding-top: 16px;">
@@ -2858,105 +2985,193 @@
                     <button class="info-modal-close" onclick="closeAccountModal()">&times;</button>
                 </div>
                 <div class="info-modal-body">
-                    <p>Email: <span id="modalUserEmail" style="font-weight: 700;">...</span></p>
-                    <p>Total Office Hours: <span id="modalTotalHours" style="font-weight: 700;">0.00</span></p>
-                    
-                    <script>
-                        function createFieldRow(label, id, value) {
-                            return `
-                                <div style="display: flex; align-items: center; gap: 10px; margin-top: 8px;">
-                                    <span style="font-weight: 400;">${label}: </span>
-                                    <span id="display${id}" style="font-weight: 700;">${value}</span>
-                                    <span class="edit-icon" onclick="toggleEdit('${id}')" title="Edit ${label}" style="cursor: pointer; display: flex; align-items: center;">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" style="stroke: var(--text-muted); stroke-width: 2; fill: none;">
-                                            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
-                                        </svg>
-                                    </span>
-                                    <input type="text" id="input${id}" 
-                                    onblur="performSave('${id}')" 
-                                    onkeydown="if(event.key==='Enter') this.blur()" 
-                                    style="display: none; padding: 4px; border-radius: 6px; border: 1px solid var(--border-soft); background: var(--bg-canvas); color: var(--text-main);">
-                              </div>
-                            `;
-                        }
-                    </script>
-                    
-                    <div id="profileFieldsContainer">
-                        <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 8px;">
-                            <div style="display: flex; align-items: center; gap: 10px;">
-                                <span style="font-weight: 400;">Position: </span>
-                                <span id="displayPosition" style="font-weight: 700;">N/A</span>
-                                <span class="edit-icon" onclick="togglePositionEdit()" title="Edit Position" style="cursor: pointer; display: flex; align-items: center;">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" style="stroke: var(--text-muted); stroke-width: 2; fill: none;">
-                                        <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
-                                    </svg>
-                                </span>
-                            </div>
-                            <div id="positionEditContainer" class="premium-edit-panel" style="display: none;">
-                                <div class="premium-field-group">
-                                    <label class="premium-field-label">Role</label>
-                                    <div class="premium-select-wrapper">
-                                        <select id="positionSelect" class="premium-select">
-                                            <option value="Probationary">Probationary</option>
-                                            <option value="Newbie">Newbie</option>
-                                            <option value="Regular">Regular</option>
-                                            <option value="EB/Senior EB">EB/Senior EB</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="premium-actions">
-                                    <button class="premium-btn premium-btn-primary" onclick="performPositionSave()">Save</button>
-                                    <button class="premium-btn premium-btn-ghost" onclick="cancelPositionEdit()">Cancel</button>
-                                </div>
-                            </div>
+
+                    <!-- Avatar -->
+                    <div style="text-align: center; margin-bottom: 16px;">
+                        <div class="account-avatar" id="avatarCircle">
+                            <span id="avatarInitials">?</span>
                         </div>
-                        <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 8px;">
-                            <div style="display: flex; align-items: center; gap: 10px;">
-                                <span style="font-weight: 400;">Section: </span>
-                                <span id="displaySection" style="font-weight: 700;">N/A</span>
-                                <span class="edit-icon" onclick="toggleSectionEdit()" title="Edit Section" style="cursor: pointer; display: flex; align-items: center;">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" style="stroke: var(--text-muted); stroke-width: 2; fill: none;">
-                                        <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
-                                    </svg>
-                                </span>
-                            </div>
-                            <div id="sectionEditContainer" class="premium-edit-panel" style="display: none;">
-                                <div class="premium-field-group">
-                                    <label class="premium-field-label">Primary Section</label>
-                                    <div class="premium-select-wrapper">
-                                        <select id="sectionMainSelect" class="premium-select">
-                                            <option value="">-- Select Section --</option>
-                                            <option value="Art">Art</option>
-                                            <option value="Poetry">Poetry</option>
-                                            <option value="Photo">Photo</option>
-                                            <option value="Prose">Prose</option>
-                                            <option value="Screen/Play">Screen/Play</option>
-                                            <option value="Marketing and Events">Marketing and Events</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="premium-field-group">
-                                    <label class="premium-field-label">Extra Teams</label>
-                                    <div class="premium-chip-group">
-                                        <button class="premium-chip" data-value="Layout" onclick="toggleExtraSection(this)">Layout</button>
-                                        <button class="premium-chip" data-value="PropMan" onclick="toggleExtraSection(this)">PropMan</button>
-                                    </div>
-                                </div>
-                                <div class="premium-actions">
-                                    <button class="premium-btn premium-btn-primary" onclick="performSectionSave()">Save Changes</button>
-                                    <button class="premium-btn premium-btn-ghost" onclick="cancelSectionEdit()">Cancel</button>
-                                </div>
-                            </div>
-                        </div>
-                        <script>
-                            document.write(createFieldRow('Full Name', 'FullName', 'N/A'));
-                            document.write(createFieldRow('Nickname', 'Nickname', ''));
-                            document.write(createFieldRow('ID Number', 'StaffId', 'N/A'));
-                            document.write(createFieldRow('Pronouns', 'Pronouns', ''));
-                        </script>
                     </div>
 
-                    <p style="margin-top: 16px;"><a class="logout-link" onclick="handleLogout()">Logout</a></p>
+                    <!-- Card: Account -->
+                    <div class="account-card">
+                        <div class="account-card-header">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            Account
+                        </div>
+                        <div class="profile-field-row">
+                            <span class="profile-field-label">Email</span>
+                            <span class="profile-field-value" id="modalUserEmail">...</span>
+                        </div>
+                        <div class="profile-field-row">
+                            <span class="profile-field-label">Hours</span>
+                            <span class="hours-badge" id="modalTotalHours">0.00</span>
+                        </div>
+                    </div>
+
+                    <!-- Divider -->
+                    <hr style="border: none; border-top: 1px solid var(--border-soft); margin: 0 0 20px;">
+
+                    <!-- Card: Profile -->
+                    <div class="account-card">
+                        <div class="account-card-header">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                            Profile
+                        </div>
+
+                        <!-- Full Name -->
+                        <div class="profile-field-row">
+                            <span class="profile-field-label">Name</span>
+                            <span class="profile-field-value" id="displayFullName">N/A</span>
+                            <span class="edit-icon-sm" onclick="toggleTextFieldEdit('FullName')">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+                            </span>
+                        </div>
+                        <div id="editFullNamePanel" class="premium-edit-panel" style="display: none;">
+                            <div class="premium-field-group">
+                                <label class="premium-field-label">Full Name</label>
+                                <input type="text" id="inputFullName" class="premium-select" style="padding: 10px 14px; width: 100%;">
+                            </div>
+                            <div class="premium-actions">
+                                <button class="premium-btn premium-btn-primary" onclick="saveTextField('FullName')">Save</button>
+                                <button class="premium-btn premium-btn-ghost" onclick="cancelTextFieldEdit('FullName')">Cancel</button>
+                            </div>
+                        </div>
+
+                        <!-- Nickname -->
+                        <div class="profile-field-row">
+                            <span class="profile-field-label">Nickname</span>
+                            <span class="profile-field-value" id="displayNickname"></span>
+                            <span class="edit-icon-sm" onclick="toggleTextFieldEdit('Nickname')">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+                            </span>
+                        </div>
+                        <div id="editNicknamePanel" class="premium-edit-panel" style="display: none;">
+                            <div class="premium-field-group">
+                                <label class="premium-field-label">Nickname</label>
+                                <input type="text" id="inputNickname" class="premium-select" style="padding: 10px 14px; width: 100%;">
+                            </div>
+                            <div class="premium-actions">
+                                <button class="premium-btn premium-btn-primary" onclick="saveTextField('Nickname')">Save</button>
+                                <button class="premium-btn premium-btn-ghost" onclick="cancelTextFieldEdit('Nickname')">Cancel</button>
+                            </div>
+                        </div>
+
+                        <!-- ID Number -->
+                        <div class="profile-field-row">
+                            <span class="profile-field-label">ID Number</span>
+                            <span class="profile-field-value" id="displayStaffId">N/A</span>
+                            <span class="edit-icon-sm" onclick="toggleTextFieldEdit('StaffId')">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+                            </span>
+                        </div>
+                        <div id="editStaffIdPanel" class="premium-edit-panel" style="display: none;">
+                            <div class="premium-field-group">
+                                <label class="premium-field-label">ID Number</label>
+                                <input type="text" id="inputStaffId" class="premium-select" style="padding: 10px 14px; width: 100%;">
+                            </div>
+                            <div class="premium-actions">
+                                <button class="premium-btn premium-btn-primary" onclick="saveTextField('StaffId')">Save</button>
+                                <button class="premium-btn premium-btn-ghost" onclick="cancelTextFieldEdit('StaffId')">Cancel</button>
+                            </div>
+                        </div>
+
+                        <!-- Pronouns -->
+                        <div class="profile-field-row" style="border-bottom: none;">
+                            <span class="profile-field-label">Pronouns</span>
+                            <span class="profile-field-value" id="displayPronouns"></span>
+                            <span class="edit-icon-sm" onclick="toggleTextFieldEdit('Pronouns')">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+                            </span>
+                        </div>
+                        <div id="editPronounsPanel" class="premium-edit-panel" style="display: none;">
+                            <div class="premium-field-group">
+                                <label class="premium-field-label">Pronouns</label>
+                                <input type="text" id="inputPronouns" class="premium-select" style="padding: 10px 14px; width: 100%;">
+                            </div>
+                            <div class="premium-actions">
+                                <button class="premium-btn premium-btn-primary" onclick="saveTextField('Pronouns')">Save</button>
+                                <button class="premium-btn premium-btn-ghost" onclick="cancelTextFieldEdit('Pronouns')">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Divider -->
+                    <hr style="border: none; border-top: 1px solid var(--border-soft); margin: 0 0 20px;">
+
+                    <!-- Card: Organization -->
+                    <div class="account-card" style="border-left-color: #4f46e5;">
+                        <div class="account-card-header" style="color: #4f46e5;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                            Status
+                        </div>
+
+                        <!-- Position -->
+                        <div class="profile-field-row">
+                            <span class="profile-field-label">Position</span>
+                            <span class="profile-field-value" id="displayPosition">N/A</span>
+                            <span class="edit-icon-sm" onclick="togglePositionEdit()">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+                            </span>
+                        </div>
+                        <div id="positionEditContainer" class="premium-edit-panel" style="display: none;">
+                            <div class="premium-field-group">
+                                <label class="premium-field-label">Role</label>
+                                <div class="premium-select-wrapper">
+                                    <select id="positionSelect" class="premium-select">
+                                        <option value="Probationary">Probationary</option>
+                                        <option value="Newbie">Newbie</option>
+                                        <option value="Regular">Regular</option>
+                                        <option value="EB/Senior EB">EB/Senior EB</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="premium-actions">
+                                <button class="premium-btn premium-btn-primary" onclick="performPositionSave()">Save</button>
+                                <button class="premium-btn premium-btn-ghost" onclick="cancelPositionEdit()">Cancel</button>
+                            </div>
+                        </div>
+
+                        <!-- Section -->
+                        <div class="profile-field-row" style="border-bottom: none;">
+                            <span class="profile-field-label">Section</span>
+                            <span id="sectionChipsContainer"></span>
+                            <span class="edit-icon-sm" onclick="toggleSectionEdit()">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+                            </span>
+                        </div>
+                        <div id="sectionEditContainer" class="premium-edit-panel" style="display: none;">
+                            <div class="premium-field-group">
+                                <label class="premium-field-label">Primary Section</label>
+                                <div class="premium-select-wrapper">
+                                    <select id="sectionMainSelect" class="premium-select">
+                                        <option value="">-- Select Section --</option>
+                                        <option value="Art">Art</option>
+                                        <option value="Poetry">Poetry</option>
+                                        <option value="Photo">Photo</option>
+                                        <option value="Prose">Prose</option>
+                                        <option value="Screen/Play">Screen/Play</option>
+                                        <option value="Marketing and Events">Marketing and Events</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="premium-field-group">
+                                <label class="premium-field-label">Extra Teams</label>
+                                <div class="premium-chip-group">
+                                    <button class="premium-chip" data-value="Layout" onclick="toggleExtraSection(this)">Layout</button>
+                                    <button class="premium-chip" data-value="PropMan" onclick="toggleExtraSection(this)">PropMan</button>
+                                </div>
+                            </div>
+                            <div class="premium-actions">
+                                <button class="premium-btn premium-btn-primary" onclick="performSectionSave()">Save</button>
+                                <button class="premium-btn premium-btn-ghost" onclick="cancelSectionEdit()">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Logout -->
+                    <button class="logout-btn" onclick="handleLogout()">Logout</button>
+
                 </div>
             </div>
         </div>
@@ -3352,13 +3567,21 @@
             document.getElementById('modalUserEmail').innerText = userEmail;
             document.getElementById('modalTotalHours').innerText = Number(data.totalHours).toFixed(2);
 
+            // avatar initials
+            var nameForInitials = data.fullName || userEmail.split('@')[0];
+            var initials = nameForInitials.split(' ').filter(function(w){return w.length>0}).map(function(w){return w[0].toUpperCase()}).slice(0,2).join('');
+            if (!initials) { initials = '?'; }
+            document.getElementById('avatarInitials').innerText = initials;
+
             // updates all profile fields
             document.getElementById('displayPosition').innerText = data.position || "Member";
-            document.getElementById('displaySection').innerText = data.section || "N/A";
             document.getElementById('displayFullName').innerText = data.fullName || "N/A";
             document.getElementById('displayNickname').innerText = data.nickname || "";
             document.getElementById('displayStaffId').innerText = data.staffId || "N/A";
             document.getElementById('displayPronouns').innerText = data.pronouns || "";
+
+            // section chips
+            renderSectionChips(data.section);
 
             configureTrackingInterface(data.isClockedIn, data.lastActionTimestamp);
             populateRecentLogs(data.recentLogs);
@@ -3864,48 +4087,49 @@
             document.getElementById('adminBoardPasswordInput').value = '';
         }
         
-        function toggleEdit(field) {
-            document.getElementById('display' + field).style.display = 'none';
-            document.getElementById('input' + field).style.display = 'block';
-            document.getElementById('input' + field).value = document.getElementById('display' + field).innerText;
+        // ===== TEXT FIELD EDIT (Name, Nickname, ID, Pronouns) =====
+        function toggleTextFieldEdit(fieldId) {
+            var panel = document.getElementById('edit' + fieldId + 'Panel');
+            var isHidden = panel.style.display === 'none' || panel.style.display === '';
+            panel.style.display = isHidden ? 'block' : 'none';
+            if (isHidden) {
+                var display = document.getElementById('display' + fieldId);
+                var input = document.getElementById('input' + fieldId);
+                input.value = display.innerText === 'N/A' ? '' : display.innerText;
+                input.focus();
+                input.select();
+            }
         }
-
-        function performSave(field) {
-            const display = document.getElementById('display' + field);
-            const input = document.getElementById('input' + field);
-            const newValue = input.value;
-
-            // Saves if the value actually changed
-            if (newValue === display.innerText) {
-                input.style.display = 'none';
-                display.style.display = 'inline';
+        function saveTextField(fieldId) {
+            var display = document.getElementById('display' + fieldId);
+            var input = document.getElementById('input' + fieldId);
+            var newValue = input.value.trim();
+            var oldValue = display.innerText;
+            if (newValue === oldValue || (!newValue && oldValue === 'N/A')) {
+                document.getElementById('edit' + fieldId + 'Panel').style.display = 'none';
                 return;
             }
-
-            const fieldMap = {
+            var fieldMap = {
                 'FullName': 'fullName',
                 'Nickname': 'nickname',
                 'StaffId': 'staffId',
                 'Pronouns': 'pronouns'
             };
-
-            let payload = { 
-                token: SYSTEM_API_TOKEN, 
-                action: "Update Profile", 
-                email: userEmail 
+            var payload = {
+                token: SYSTEM_API_TOKEN,
+                action: "Update Profile",
+                email: userEmail
             };
-            
-            const backendKey = fieldMap[field];
+            var backendKey = fieldMap[fieldId];
             if (backendKey) {
                 payload[backendKey] = newValue;
             }
-
-            sendPostRequest(payload, field + " updated!");
-            
-            // updates UI
-            display.innerText = newValue;
-            display.style.display = 'inline';
-            input.style.display = 'none';
+            display.innerText = newValue || 'N/A';
+            document.getElementById('edit' + fieldId + 'Panel').style.display = 'none';
+            sendPostRequest(payload, fieldId + " updated!");
+        }
+        function cancelTextFieldEdit(fieldId) {
+            document.getElementById('edit' + fieldId + 'Panel').style.display = 'none';
         }
 
         // ===== POSITION EDIT (Dropdown) =====
@@ -3938,12 +4162,36 @@
             document.getElementById('positionEditContainer').style.display = 'none';
         }
 
+        // ===== SECTION CHIP RENDERER =====
+        function renderSectionChips(sectionVal) {
+            var container = document.getElementById('sectionChipsContainer');
+            if (!container) return;
+            container.innerHTML = '';
+            if (!sectionVal || sectionVal === 'N/A') {
+                container.innerHTML = '<span class="profile-field-value" style="font-size:0.88rem;">N/A</span>';
+                return;
+            }
+            var parts = sectionVal.split(' & ').map(function(s){return s.trim()});
+            var mainChip = document.createElement('span');
+            mainChip.className = 'section-chip section-chip-main';
+            mainChip.innerText = parts[0];
+            container.appendChild(mainChip);
+            for (var i = 1; i < parts.length; i++) {
+                var extraChip = document.createElement('span');
+                extraChip.className = 'section-chip section-chip-extra';
+                extraChip.innerText = parts[i];
+                container.appendChild(extraChip);
+            }
+        }
+
         // ===== SECTION EDIT (Dropdown + Chips) =====
         function toggleSectionEdit() {
             const container = document.getElementById('sectionEditContainer');
             container.style.display = container.style.display === 'none' ? 'block' : 'none';
             if (container.style.display === 'block') {
-                const currentSection = document.getElementById('displaySection').innerText;
+                var chipsContainer = document.getElementById('sectionChipsContainer');
+                var currentSection = chipsContainer ? chipsContainer.innerText.replace(/\s+/g,' ').trim() : 'N/A';
+                if (currentSection === 'N/A' || !currentSection) { currentSection = 'N/A'; }
                 let mainSection = currentSection;
                 let hasLayout = false;
                 let hasPropMan = false;
@@ -3980,7 +4228,7 @@
             if (extras.length > 0) {
                 displayValue += ' & ' + extras.join(' & ');
             }
-            document.getElementById('displaySection').innerText = displayValue;
+            renderSectionChips(displayValue);
             document.getElementById('sectionEditContainer').style.display = 'none';
             const payload = {
                 token: SYSTEM_API_TOKEN,
@@ -4113,16 +4361,21 @@
         }
 
         function closeAccountModal() {
-            // save func before hiding (excluding Position/Section which have their own handlers)
-            ['FullName', 'Nickname', 'StaffId', 'Pronouns'].forEach(field => {
-                const input = document.getElementById('input' + field);
-                if (input && input.style.display !== 'none') {
-                    performSave(field);
-                }
-            });
-            
             document.getElementById('accountModal').classList.add('hidden');
         }
+
+        // Close modals on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                var modals = ['infoModal', 'accountModal', 'alertModal', 'confirmModal', 'bugModal'];
+                modals.forEach(function(id) {
+                    var el = document.getElementById(id);
+                    if (el && !el.classList.contains('hidden')) {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        });
 
         
         // CART LOGIC
