@@ -14,7 +14,7 @@
         --bg-canvas: #f4f6f8;
         --surface-card: rgba(255, 255, 255, 0.75);
         --text-main: #1e293b;
-        --text-muted: #64748b;
+        --text-muted: #4b5563;
         
         --dlsu-green: #0a5c36;
         --dlsu-green-hover: #074528;
@@ -269,7 +269,7 @@
     .theme-toggle-btn:hover {
         background: var(--bg-canvas);
         border-color: var(--text-muted);
-        transform: rotate(15deg) scale(1.05);
+        transform: scale(1.05);
     }
 
     .theme-toggle-btn svg {
@@ -358,7 +358,7 @@
         display: inline-flex;
         align-items: center;
         background: rgba(16, 185, 129, 0.12);
-        color: var(--status-in);
+        color: var(--dlsu-green);
         font-weight: 700;
         font-size: 0.85rem;
         padding: 2px 10px;
@@ -367,6 +367,7 @@
     }
     [data-theme="dark"] .hours-badge {
         background: rgba(16, 185, 129, 0.15);
+        color: #34d399;
     }
     .profile-field-row {
         display: flex;
@@ -516,7 +517,7 @@
         font-size: 0.78rem;
         font-weight: 600;
         color: var(--text-muted);
-        display: flex;
+        display: none;
         gap: 16px;
         border-bottom: 1px solid var(--border-soft);
         margin-bottom: 4px;
@@ -525,6 +526,9 @@
     @media (max-width: 600px) {
         .header-controls .occupancy-mini-box {
             display: none;
+        }
+        .nav-menu-occupancy {
+            display: flex;
         }
         .nav-menu {
             left: 0;
@@ -3862,10 +3866,23 @@
         let lastSessionMode = "";
         let pendingOnsiteCheckout = false;
         let folioDataCache = [];
-        let appBootstrapped = false; 
+        let appBootstrapped = false;
+        let lastFocusedEl = null;
+        let refreshTimer = null;
+        const FOCUSABLE = 'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])';
+        function debouncedRefresh() {
+            clearTimeout(refreshTimer);
+            refreshTimer = setTimeout(function () { fetchUserData(userEmail); }, 1000);
+        }
+        function escJs(str) {
+            return String(str).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '\\"').replace(/<\//g, '<\\/');
+        }
+        function escHtml(str) {
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        }
 
         window.onload = function () {
-            const currentTheme = localStorage.getItem('theme') || 'light';
+            let currentTheme = localStorage.getItem('theme') || 'light';
             document.documentElement.setAttribute('data-theme', currentTheme);
             updateThemeIcon(currentTheme);
             try {
@@ -3910,8 +3927,8 @@
             }
         }
 
-        var themeClickCount = 0;
-        var themeClickTimer = null;
+        let themeClickCount = 0;
+        let themeClickTimer = null;
 
         function toggleTheme() {
             themeClickCount++;
@@ -3935,22 +3952,22 @@
         }
 
         function startDiscoMode() {
-            var icon = document.getElementById('themeIcon');
+            let icon = document.getElementById('themeIcon');
             icon.innerHTML = '';
 
-            var discoText = document.createElement('span');
+            let discoText = document.createElement('span');
             discoText.id = 'discoIcon';
             discoText.textContent = '\uD83E\uDEA9';
             discoText.style.cssText = 'font-size:22px;line-height:1;';
             icon.parentNode.appendChild(discoText);
 
-            var overlay = document.createElement('div');
+            let overlay = document.createElement('div');
             overlay.className = 'disco-overlay';
             document.body.appendChild(overlay);
 
-            var sparkleInterval = setInterval(function() {
-                for (var s = 0; s < 4; s++) {
-                    var spark = document.createElement('div');
+            let sparkleInterval = setInterval(function() {
+                for (let s = 0; s < 4; s++) {
+                    let spark = document.createElement('div');
                     spark.className = 'disco-sparkle';
                     spark.style.left = Math.random() * 100 + 'vw';
                     spark.style.top = Math.random() * 100 + 'vh';
@@ -3965,11 +3982,11 @@
                 if (overlay) overlay.classList.add('fade-out');
                 setTimeout(function() {
                     if (overlay) overlay.remove();
-                    var sparks = document.querySelectorAll('.disco-sparkle');
-                    for (var i = 0; i < sparks.length; i++) sparks[i].remove();
-                    var ds = document.getElementById('discoIcon');
+                    let sparks = document.querySelectorAll('.disco-sparkle');
+                    for (let i = 0; i < sparks.length; i++) sparks[i].remove();
+                    let ds = document.getElementById('discoIcon');
                     if (ds) ds.remove();
-                    var theme = document.documentElement.getAttribute('data-theme') || 'light';
+                    let theme = document.documentElement.getAttribute('data-theme') || 'light';
                     updateThemeIcon(theme);
                 }, 1500);
             }, 5000);
@@ -3994,9 +4011,10 @@
         });
 
         function openInfoModal() {
+            lastFocusedEl = document.activeElement;
             document.getElementById('infoModal').classList.remove('hidden');
             document.getElementById('navMenu').classList.remove('show');
-            var ebSection = document.getElementById('ebGuideSection');
+            let ebSection = document.getElementById('ebGuideSection');
             if (ebSection) {
                 ebSection.style.display = (fullCachedPayload && fullCachedPayload.isAdmin) ? 'block' : 'none';
             }
@@ -4004,9 +4022,11 @@
 
         function closeInfoModal() {
             document.getElementById('infoModal').classList.add('hidden');
+            if (lastFocusedEl) { lastFocusedEl.focus(); lastFocusedEl = null; }
         }
 
         function openAccountModal() {
+            lastFocusedEl = document.activeElement;
             document.getElementById('accountModal').classList.remove('hidden');
             document.getElementById('navMenu').classList.remove('show');
         }
@@ -4091,7 +4111,7 @@
         function fetchUserData(email, callback) {
             console.log("DEBUG: Fetching data for:", email); // Added for visibility
             
-            fetch(`${APPS_SCRIPT_URL}?id=${encodeURIComponent(email)}`)
+            fetch(`${APPS_SCRIPT_URL}?id=${encodeURIComponent(email)}&token=${encodeURIComponent(CLIENT_API_TOKEN)}`)
                 .then(res => res.json())
                 .then(data => {
                     console.log("DEBUG: Data received from server:", data); // Added for visibility
@@ -4139,8 +4159,8 @@
             }
             
             document.getElementById('hoursValue').innerText = Number(data.totalHours).toFixed(2);
-            var onlineCount = data.onlineCount || 0;
-            var onsiteCount = data.onsiteCount || 0;
+            let onlineCount = data.onlineCount || 0;
+            let onsiteCount = data.onsiteCount || 0;
             document.getElementById('onlineCountVal').innerText = onlineCount;
             document.getElementById('onsiteCountVal').innerText = onsiteCount;
             document.getElementById('menuOnlineCountVal').innerText = onlineCount;
@@ -4150,8 +4170,8 @@
             document.getElementById('modalTotalHours').innerText = Number(data.totalHours).toFixed(2);
 
             // avatar initials
-            var nameForInitials = data.fullName || userEmail.split('@')[0];
-            var initials = nameForInitials.split(' ').filter(function(w){return w.length>0}).map(function(w){return w[0].toUpperCase()}).slice(0,2).join('');
+            let nameForInitials = data.fullName || userEmail.split('@')[0];
+            let initials = nameForInitials.split(' ').filter(function(w){return w.length>0}).map(function(w){return w[0].toUpperCase()}).slice(0,2).join('');
             if (!initials) { initials = '?'; }
             document.getElementById('avatarInitials').innerText = initials;
 
@@ -4270,8 +4290,8 @@
             btn.disabled = true;
             btn.innerText = "Processing...";
 
-            var clockNote = document.getElementById('clockInNote').value.trim();
-            var clockInPayload = {
+            let clockNote = document.getElementById('clockInNote').value.trim();
+            let clockInPayload = {
                 token: CLIENT_API_TOKEN,
                 action: "Clock In",
                 email: userEmail,
@@ -4316,7 +4336,7 @@
                     return;
                 }
                 showToast(successMessage);
-                setTimeout(() => { fetchUserData(userEmail); }, 1000);
+                debouncedRefresh();
             })
             .catch(err => {
                 console.error(err);
@@ -4335,7 +4355,7 @@
             container.innerHTML = logs.map(item => {
                 const actionClass = item.action === "Clock In" ? "badge-in" : "badge-out";
                 const modeBadge = (item.action === "Clock In" && item.mode) ? `<span class="badge-mode">${item.mode}</span>` : "";
-                const noteHtml = item.note ? `<div class="log-note">${item.note}</div>` : "";
+                const noteHtml = item.note ? `<div class="log-note">${escHtml(item.note)}</div>` : "";
                 return `
                     <div class="feed-item">
                         <div>
@@ -4359,7 +4379,7 @@
             container.innerHTML = logs.map(item => {
                 const actionClass = item.action === "Clock In" ? "badge-in" : "badge-out";
                 const modeBadge = item.mode ? `<span class="badge-mode">${item.mode}</span>` : "";
-                const noteHtml = item.note ? `<div class="log-note">${item.note}</div>` : "";
+                const noteHtml = item.note ? `<div class="log-note">${escHtml(item.note)}</div>` : "";
                 return `
                     <div class="feed-item">
                         <div>
@@ -4403,7 +4423,7 @@
                 // Filter by section
                 if (sectionFilter) {
                     filteredRoster = filteredRoster.filter(m => {
-                        var sec = (m.section || '').trim();
+                        let sec = (m.section || '').trim();
                         return sec === sectionFilter || sec.startsWith(sectionFilter) || sec.includes(sectionFilter);
                     });
                 }
@@ -4423,30 +4443,30 @@
                     const forceButtonLabel = member.isCurrentlyClockedIn ? "Force out" : "Force in";
                     
                     // Section chips
-                    var sectionHtml = '';
+                    let sectionHtml = '';
                     if (member.section && member.section !== 'N/A' && member.section !== '') {
-                        var parts = member.section.split(' & ').map(function(s){return s.trim()});
+                        let parts = member.section.split(' & ').map(function(s){return s.trim()});
                         sectionHtml = parts.map(function(p){
-                            return '<span class="roster-section-chip">' + p + '</span>';
+                            return '<span class="roster-section-chip">' + escHtml(p) + '</span>';
                         }).join('');
                     }
                     
-                    var displayName = member.fullName || member.email.split('@')[0];
+                    let displayName = escHtml(member.fullName || member.email.split('@')[0]);
 
                     return `
                         <div class="roster-user-item">
-                            <div class="roster-meta-block" data-click="openAdminViewMemberModal('${member.email}')" style="cursor:pointer;">
+                            <div class="roster-meta-block" data-click="openAdminViewMemberModal('${escJs(member.email)}')" style="cursor:pointer;">
                                 <div style="display:flex; align-items:center; gap:6px;">
                                     ${statusDot}
-                                    <span class="roster-email">${member.email}</span>
+                                    <span class="roster-email">${escHtml(member.email)}</span>
                                 </div>
                                 <div style="font-size:0.78rem; color: var(--text-muted); margin: 2px 0 4px;">${displayName}</div>
                                 <div style="display:flex; gap:4px; flex-wrap:wrap;">${sectionHtml}</div>
                                 <span class="roster-hours-sub">Verified: ${Number(member.totalHours).toFixed(2)} hrs</span>
                             </div>
                             <div class="roster-action-group">
-                                <button class="action-sub-btn status-toggle" data-click="event.stopPropagation(); adminOverrideToggle('${member.email}', ${member.isCurrentlyClockedIn})">${forceButtonLabel}</button>
-                                <button class="action-sub-btn delete" data-click="event.stopPropagation(); adminPurgeUser('${member.email}')">Purge</button>
+                                <button class="action-sub-btn status-toggle" data-click="event.stopPropagation(); adminOverrideToggle('${escJs(member.email)}', ${member.isCurrentlyClockedIn})">${forceButtonLabel}</button>
+                                <button class="action-sub-btn delete" data-click="event.stopPropagation(); adminPurgeUser('${escJs(member.email)}')">Purge</button>
                             </div>
                         </div>
                     `;
@@ -4461,24 +4481,24 @@
         }
 
         function openAdminViewMemberModal(email) {
-            var member = (fullCachedPayload && fullCachedPayload.masterRoster) 
+            let member = (fullCachedPayload && fullCachedPayload.masterRoster) 
                 ? fullCachedPayload.masterRoster.find(function(m) { return m.email === email; }) 
                 : null;
             if (!member) { showAlert('Member data not found.'); return; }
             
-            var displayName = member.fullName || 'N/A';
-            var nickname = member.nickname || '';
-            var staffId = member.staffId || 'N/A';
-            var pronouns = member.pronouns || '';
-            var position = member.position || 'N/A';
-            var section = member.section || 'N/A';
-            var hours = Number(member.totalHours).toFixed(2);
+            let displayName = escHtml(member.fullName || 'N/A');
+            let nickname = escHtml(member.nickname || '');
+            let staffId = escHtml(member.staffId || 'N/A');
+            let pronouns = escHtml(member.pronouns || '');
+            let position = escHtml(member.position || 'N/A');
+            let section = member.section || 'N/A';
+            let hours = Number(member.totalHours).toFixed(2);
             
-            var sectionChips = '';
+            let sectionChips = '';
             if (section && section !== 'N/A') {
-                var parts = section.split(' & ').map(function(s){return s.trim()});
+                let parts = section.split(' & ').map(function(s){return s.trim()});
                 sectionChips = parts.map(function(p){
-                    return '<span class="roster-section-chip" style="font-size:0.75rem; padding:3px 10px;">' + p + '</span>';
+                    return '<span class="roster-section-chip" style="font-size:0.75rem; padding:3px 10px;">' + escHtml(p) + '</span>';
                 }).join(' ');
             }
             
@@ -4486,7 +4506,7 @@
                 <div class="account-card" style="margin-bottom:12px;">
                     <div class="profile-field-row">
                         <span class="profile-field-label">Email</span>
-                        <span class="profile-field-value">${email}</span>
+                        <span class="profile-field-value">${escHtml(email)}</span>
                     </div>
                     <div class="profile-field-row">
                         <span class="profile-field-label">Name</span>
@@ -4523,6 +4543,7 @@
         
         function closeAdminViewMemberModal() {
             document.getElementById('adminViewMemberModal').classList.add('hidden');
+            if (lastFocusedEl) { lastFocusedEl.focus(); lastFocusedEl = null; }
         }
 
         async function adminOverrideToggle(targetEmail, currentStatus) {
@@ -4613,12 +4634,18 @@
             }
         }
 
-        function filterFolios(searchTerm) {
-            const term = searchTerm.toLowerCase().trim();
-            renderFolioShop(
-                term ? folioDataCache.filter(f => f.name.toLowerCase().includes(term)) : folioDataCache
-            );
-        }
+        let filterFolios = (function () {
+            let timer = null;
+            return function (searchTerm) {
+                clearTimeout(timer);
+                timer = setTimeout(function () {
+                    let term = searchTerm.toLowerCase().trim();
+                    renderFolioShop(
+                        term ? folioDataCache.filter(f => f.name.toLowerCase().includes(term)) : folioDataCache
+                    );
+                }, 200);
+            };
+        })();
 
         function openImagePreview(url, name) {
             const overlay = document.getElementById('imagePreviewOverlay');
@@ -4755,8 +4782,8 @@
         
         // ===== ADMIN HOURS ADJUSTMENT =====
         function adjustMemberHours() {
-            var targetEmail = document.getElementById('hoursAdjustEmail').value.trim();
-            var hoursDelta = parseFloat(document.getElementById('hoursAdjustAmount').value);
+            let targetEmail = document.getElementById('hoursAdjustEmail').value.trim();
+            let hoursDelta = parseFloat(document.getElementById('hoursAdjustAmount').value);
             
             if (!targetEmail) { showAlert('Please enter a member email.'); return; }
             if (isNaN(hoursDelta) || hoursDelta === 0) { showAlert('Please enter a valid number of hours (positive to add, negative to deduct).'); return; }
@@ -4789,31 +4816,31 @@
         }
         
         // ===== ACCOUNT CHANGES TRACKING =====
-        var pendingAccountChanges = {};
+        let pendingAccountChanges = {};
 
         // ===== TEXT FIELD EDIT (Name, Nickname, ID, Pronouns) =====
         function toggleTextFieldEdit(fieldId) {
-            var panel = document.getElementById('edit' + fieldId + 'Panel');
-            var isHidden = panel.classList.contains('hidden');
+            let panel = document.getElementById('edit' + fieldId + 'Panel');
+            let isHidden = panel.classList.contains('hidden');
             panel.classList.toggle('hidden');
             if (isHidden) {
-                var display = document.getElementById('display' + fieldId);
-                var input = document.getElementById('input' + fieldId);
+                let display = document.getElementById('display' + fieldId);
+                let input = document.getElementById('input' + fieldId);
                 input.value = display.innerText === 'N/A' ? '' : display.innerText;
                 input.focus();
                 input.select();
             }
         }
         function applyTextFieldEdit(fieldId) {
-            var display = document.getElementById('display' + fieldId);
-            var input = document.getElementById('input' + fieldId);
-            var newValue = input.value.trim();
-            var oldValue = display.innerText;
+            let display = document.getElementById('display' + fieldId);
+            let input = document.getElementById('input' + fieldId);
+            let newValue = input.value.trim();
+            let oldValue = display.innerText;
             if (newValue === oldValue || (!newValue && oldValue === 'N/A')) {
                 document.getElementById('edit' + fieldId + 'Panel').classList.add('hidden');
                 return;
             }
-            var fieldMap = {
+            let fieldMap = {
                 'FullName': 'fullName',
                 'Nickname': 'nickname',
                 'StaffId': 'staffId',
@@ -4823,7 +4850,7 @@
                 showAlert('ID Number must contain only numbers.');
                 return;
             }
-            var backendKey = fieldMap[fieldId];
+            let backendKey = fieldMap[fieldId];
             if (backendKey) {
                 pendingAccountChanges[backendKey] = newValue;
             }
@@ -4862,20 +4889,20 @@
 
         // ===== SECTION CHIP RENDERER =====
         function renderSectionChips(sectionVal) {
-            var container = document.getElementById('sectionChipsContainer');
+            let container = document.getElementById('sectionChipsContainer');
             if (!container) return;
             container.innerHTML = '';
             if (!sectionVal || sectionVal === 'N/A') {
                 container.innerHTML = '<span class="profile-field-value" style="font-size:0.88rem;">N/A</span>';
                 return;
             }
-            var parts = sectionVal.split(' & ').map(function(s){return s.trim()});
-            var mainChip = document.createElement('span');
+            let parts = sectionVal.split(' & ').map(function(s){return s.trim()});
+            let mainChip = document.createElement('span');
             mainChip.className = 'section-chip section-chip-main';
             mainChip.innerText = parts[0];
             container.appendChild(mainChip);
-            for (var i = 1; i < parts.length; i++) {
-                var extraChip = document.createElement('span');
+            for (let i = 1; i < parts.length; i++) {
+                let extraChip = document.createElement('span');
                 extraChip.className = 'section-chip section-chip-extra';
                 extraChip.innerText = parts[i];
                 container.appendChild(extraChip);
@@ -4887,8 +4914,8 @@
             const container = document.getElementById('sectionEditContainer');
             container.classList.toggle('hidden');
             if (!container.classList.contains('hidden')) {
-                var chipsContainer = document.getElementById('sectionChipsContainer');
-                var currentSection = chipsContainer ? chipsContainer.innerText.replace(/\s+/g,' ').trim() : 'N/A';
+                let chipsContainer = document.getElementById('sectionChipsContainer');
+                let currentSection = chipsContainer ? chipsContainer.innerText.replace(/\s+/g,' ').trim() : 'N/A';
                 if (currentSection === 'N/A' || !currentSection) { currentSection = 'N/A'; }
                 let mainSection = currentSection;
                 let hasLayout = false;
@@ -4936,12 +4963,12 @@
         }
 
         function saveAllAccountChanges() {
-            var keys = Object.keys(pendingAccountChanges);
+            let keys = Object.keys(pendingAccountChanges);
             if (keys.length === 0) {
                 showAlert('No changes to save.');
                 return;
             }
-            var payload = {
+            let payload = {
                 token: SYSTEM_API_TOKEN,
                 action: "Update Profile",
                 email: userEmail
@@ -4974,6 +5001,7 @@
         let feedbackType = 'feedback';
 
         function openBugModal() {
+            lastFocusedEl = document.activeElement;
             document.getElementById('bugModal').classList.remove('hidden');
             document.getElementById('navMenu').classList.remove('show');
             // Reset state
@@ -4985,6 +5013,7 @@
 
         function closeBugModal() {
             document.getElementById('bugModal').classList.add('hidden');
+            if (lastFocusedEl) { lastFocusedEl.focus(); lastFocusedEl = null; }
         }
 
         function selectFeedbackType(type) {
@@ -5093,7 +5122,7 @@
         // ===== FIRST-TIME / UNFILLED ACCOUNT ALERT =====
         function checkFirstTimeSetup(data) {
             if (!data) return;
-            var hasMissingInfo = !data.fullName || data.fullName.trim() === '' ||
+            let hasMissingInfo = !data.fullName || data.fullName.trim() === '' ||
                                 !data.section || data.section === 'N/A' || data.section.trim() === '' ||
                                 !data.position || data.position.trim() === '';
             if (hasMissingInfo) {
@@ -5107,10 +5136,10 @@
 
 
         (function() {
-            var canHover = window.matchMedia('(hover: hover)').matches;
+            let canHover = window.matchMedia('(hover: hover)').matches;
             function setupMeme() {
-                var btn = document.getElementById('proceedDashboardBtn');
-                var container = document.getElementById('sideEyeContainer');
+                let btn = document.getElementById('proceedDashboardBtn');
+                let container = document.getElementById('sideEyeContainer');
                 if (!btn || !container) return;
 
                 function showMeme() { container.classList.add('show'); }
@@ -5133,8 +5162,8 @@
             }
         })();
 
-        var logoClickCount = 0;
-        var logoTimer = null;
+        let logoClickCount = 0;
+        let logoTimer = null;
         document.querySelector('.brand h1').addEventListener('click', function() {
             logoClickCount++;
             clearTimeout(logoTimer);
@@ -5147,8 +5176,8 @@
         });
 
         function rainEmojis(emoji, count) {
-            for (var i = 0; i < count; i++) {
-                var el = document.createElement('div');
+            for (let i = 0; i < count; i++) {
+                let el = document.createElement('div');
                 el.className = 'emoji-rain';
                 el.textContent = emoji;
                 el.style.left = Math.random() * 100 + 'vw';
@@ -5163,24 +5192,25 @@
 
         function closeAccountModal() {
             if (Object.keys(pendingAccountChanges).length > 0) {
-                var confirmed = confirm("You have unsaved changes. Discard them?");
+                let confirmed = confirm("You have unsaved changes. Discard them?");
                 if (!confirmed) return;
                 pendingAccountChanges = {};
             }
             document.getElementById('accountModal').classList.add('hidden');
+            if (lastFocusedEl) { lastFocusedEl.focus(); lastFocusedEl = null; }
         }
 
         // Close modals on Escape key
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
-                var modals = ['infoModal', 'editFolioModal', 'alertModal', 'confirmModal', 'bugModal', 'firstTimeAlert', 'adminViewMemberModal'];
+                let modals = ['infoModal', 'editFolioModal', 'alertModal', 'confirmModal', 'bugModal', 'firstTimeAlert', 'adminViewMemberModal'];
                 // Handle account modal specially to check for unsaved changes
-                var accEl = document.getElementById('accountModal');
+                let accEl = document.getElementById('accountModal');
                 if (accEl && !accEl.classList.contains('hidden')) {
                     closeAccountModal();
                 }
                 modals.forEach(function(id) {
-                    var el = document.getElementById(id);
+                    let el = document.getElementById(id);
                     if (el && !el.classList.contains('hidden')) {
                         el.classList.add('hidden');
                     }
@@ -5201,25 +5231,30 @@
                 return;
             }
 
-            container.innerHTML = folioData.map((item, idx) => `
+            container.innerHTML = folioData.map((item, idx) => {
+                let safeName = escHtml(item.name);
+                let safeImg = escHtml(item.imageUrl || '');
+                let safeJsName = escJs(item.name);
+                let safeJsImg = escJs(item.imageUrl || '');
+                return `
                 <div class="folio-card" style="animation-delay: ${idx * 0.05}s">
-                    <div class="folio-card-image" ${item.imageUrl ? `data-click="openImagePreview('${item.imageUrl}', '${item.name}')" style="cursor:pointer;"` : ''}>
+                    <div class="folio-card-image" ${item.imageUrl ? `data-click="openImagePreview('${safeJsImg}', '${safeJsName}')" style="cursor:pointer;"` : ''}>
                         ${item.imageUrl
-                            ? `<img src="${item.imageUrl}" alt="${item.name}" loading="lazy">`
+                            ? `<img src="${safeImg}" alt="${safeName}" loading="lazy">`
                             : `<div class="no-image">No Image</div>`}
                     </div>
                     <div class="folio-card-body">
-                        <div class="folio-card-name">${item.name}</div>
+                        <div class="folio-card-name">${safeName}</div>
                         <div class="folio-stock">
                             <span class="folio-stock-dot ${!item.canGet ? 'empty' : item.maxQty > 5 ? 'high' : 'low'}"></span>
-                            <span class="folio-stock-text ${!item.canGet ? 'empty' : item.maxQty > 5 ? 'high' : 'low'}" ${item.canGet ? `data-click="setCartQuantity('${item.name}', ${item.maxQty})" style="cursor:pointer;" title="Fill max"` : ''}>Total: ${item.remaining}</span>
+                            <span class="folio-stock-text ${!item.canGet ? 'empty' : item.maxQty > 5 ? 'high' : 'low'}" ${item.canGet ? `data-click="setCartQuantity('${safeJsName}', ${item.maxQty})" style="cursor:pointer;" title="Fill max"` : ''}>Total: ${item.remaining}</span>
                         </div>
                         ${item.limitPerMember > 0 ? `<div class="folio-limit-badge">Limit: ${item.limitPerMember}/member</div>` : ''}
                         ${item.canGet ? `
                             <div class="folio-qty-control">
-                                <button class="qty-btn minus" data-click="updateCart('${item.name}', -1)">&minus;</button>
-                                <input class="qty-input" type="number" id="qty-${item.name}" value="0" min="0" max="${item.maxQty}" data-change="setCartQuantity('${item.name}', this.value)">
-                                <button class="qty-btn plus" data-click="updateCart('${item.name}', 1)">+</button>
+                                <button class="qty-btn minus" data-click="updateCart('${safeJsName}', -1)">&minus;</button>
+                                <input class="qty-input" type="number" id="qty-${item.name}" value="0" min="0" max="${item.maxQty}" data-change="setCartQuantity('${safeJsName}', this.value)">
+                                <button class="qty-btn plus" data-click="updateCart('${safeJsName}', 1)">+</button>
                             </div>
                         ` : `
                             <div class="folio-restricted">
@@ -5228,9 +5263,9 @@
                             </div>
                         `}
                     </div>
-                    ${(fullCachedPayload && fullCachedPayload.isAdmin) ? `<button class="folio-edit-btn" data-click="openEditFolioModal('${item.name}')" title="Edit folio"><svg width="13" height="13" stroke-width="2.5"><use href="#pencil-icon"/></svg></button>` : ''}
-                </div>
-            `).join('');
+                    ${(fullCachedPayload && fullCachedPayload.isAdmin) ? `<button class="folio-edit-btn" data-click="openEditFolioModal('${safeJsName}')" title="Edit folio"><svg width="13" height="13" stroke-width="2.5"><use href="#pencil-icon"/></svg></button>` : ''}
+                </div>`;
+            }).join('');
         }
 
         function updateCart(name, change) {
@@ -5325,7 +5360,7 @@
 
         // ===== EDIT FOLIO (admin) =====
         function openEditFolioModal(folioName) {
-            var item = folioDataCache.find(function(f) { return f.name === folioName; });
+            let item = folioDataCache.find(function(f) { return f.name === folioName; });
             if (!item) { showAlert('Folio not found in cache.'); return; }
 
             document.getElementById('editFolioName').value = item.name;
@@ -5350,8 +5385,8 @@
         }
 
         function saveEditFolio() {
-            var folioName = document.getElementById('editFolioName').value;
-            var payload = {
+            let folioName = document.getElementById('editFolioName').value;
+            let payload = {
                 token: SYSTEM_API_TOKEN,
                 action: "Update Folio",
                 email: userEmail,
@@ -5368,38 +5403,62 @@
         }
 
         document.addEventListener('click', function (e) {
-            var el = e.target.closest('[data-click]');
+            let el = e.target.closest('[data-click]');
             if (el) {
-                var code = el.getAttribute('data-click');
+                let code = el.getAttribute('data-click');
                 if (code) (new Function('e', 'event', code)).call(el, e, e);
             }
         });
         document.addEventListener('change', function (e) {
-            var el = e.target.closest('[data-change]');
+            let el = e.target.closest('[data-change]');
             if (el) {
-                var code = el.getAttribute('data-change');
+                let code = el.getAttribute('data-change');
                 if (code) (new Function('e', 'event', code)).call(el, e, e);
             }
         });
         document.addEventListener('mouseover', function (e) {
-            var el = e.target.closest('[data-mouseenter]');
+            let el = e.target.closest('[data-mouseenter]');
             if (el) {
-                var code = el.getAttribute('data-mouseenter');
+                let code = el.getAttribute('data-mouseenter');
                 if (code) (new Function('e', 'event', code)).call(el, e, e);
             }
         });
         document.addEventListener('mouseout', function (e) {
-            var el = e.target.closest('[data-mouseleave]');
+            let el = e.target.closest('[data-mouseleave]');
             if (el) {
-                var code = el.getAttribute('data-mouseleave');
+                let code = el.getAttribute('data-mouseleave');
                 if (code) (new Function('e', 'event', code)).call(el, e, e);
             }
         });
         document.addEventListener('input', function (e) {
-            var el = e.target.closest('[data-input]');
+            let el = e.target.closest('[data-input]');
             if (el) {
-                var code = el.getAttribute('data-input');
+                let code = el.getAttribute('data-input');
                 if (code) (new Function('e', 'event', code)).call(el, e, e);
+            }
+        });
+        document.addEventListener('keydown', function (e) {
+            var el = e.target.closest('[data-click]');
+            if ((e.key === 'Enter' || e.key === ' ') && el) {
+                e.preventDefault();
+                let code = el.getAttribute('data-click');
+                if (code) (new Function('e', 'event', code)).call(el, e, e);
+                return;
+            }
+            if (e.key === 'Tab') {
+                let modal = document.querySelector('.bug-modal-overlay:not(.hidden), .info-modal-overlay:not(.hidden), .image-preview-overlay:not(.hidden), #accountModal:not(.hidden), #alertModal:not(.hidden), #confirmModal:not(.hidden), #ebPasswordModal:not(.hidden), #adminSetPasswordModal:not(.hidden), #editFolioModal:not(.hidden), .closure-modal:not(.hidden)');
+                if (!modal) return;
+                let focusable = modal.querySelectorAll(FOCUSABLE);
+                if (!focusable.length) return;
+                let first = focusable[0];
+                let last = focusable[focusable.length - 1];
+                if (e.shiftKey && document.activeElement === first) {
+                    e.preventDefault();
+                    last.focus();
+                } else if (!e.shiftKey && document.activeElement === last) {
+                    e.preventDefault();
+                    first.focus();
+                }
             }
         });
     </script>
