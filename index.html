@@ -5180,12 +5180,13 @@
         // ===== FIRST-TIME / UNFILLED ACCOUNT ALERT =====
         function checkFirstTimeSetup(data) {
             if (!data) return;
-            let hasMissingInfo = !data.fullName || data.fullName.trim() === '' ||
-                                !data.section || data.section === 'N/A' || data.section.trim() === '' ||
-                                !data.position || data.position.trim() === '' ||
-                                !data.staffId || data.staffId.trim() === '' ||
-                                !data.nickname || data.nickname.trim() === '' ||
-                                !data.pronouns || data.pronouns.trim() === '';
+            let str = v => v != null ? String(v).trim() : '';
+            let hasMissingInfo = !data.fullName || str(data.fullName) === '' ||
+                                !data.section || data.section === 'N/A' || str(data.section) === '' ||
+                                !data.position || str(data.position) === '' ||
+                                !data.staffId || str(data.staffId) === '' ||
+                                !data.nickname || str(data.nickname) === '' ||
+                                !data.pronouns || str(data.pronouns) === '';
             if (hasMissingInfo) {
                 document.getElementById('firstTimeAlert').classList.remove('hidden');
             }
