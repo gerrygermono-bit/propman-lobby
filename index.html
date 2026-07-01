@@ -5124,7 +5124,10 @@
             if (!data) return;
             let hasMissingInfo = !data.fullName || data.fullName.trim() === '' ||
                                 !data.section || data.section === 'N/A' || data.section.trim() === '' ||
-                                !data.position || data.position.trim() === '';
+                                !data.position || data.position.trim() === '' ||
+                                !data.staffId || data.staffId.trim() === '' ||
+                                !data.nickname || data.nickname.trim() === '' ||
+                                !data.pronouns || data.pronouns.trim() === '';
             if (hasMissingInfo) {
                 document.getElementById('firstTimeAlert').classList.remove('hidden');
             }
