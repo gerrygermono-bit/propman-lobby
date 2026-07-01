@@ -21,6 +21,7 @@
         --status-in: #10b981;
         --status-in-hover: #059669;
         --status-out: #f43f5e;
+        --status-out-rgb: 244, 63, 94;
         --status-out-hover: #e11d48;
         
         --border-soft: rgba(226, 232, 240, 0.6);
@@ -44,9 +45,9 @@
         --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
     }
 
-    [data-theme="dark"] .info-modal-body > div[style*="background: rgba(244,63,94,0.06)"] {
-        background: rgba(244,63,94,0.12) !important;
-        border-color: rgba(244,63,94,0.3) !important;
+    [data-theme="dark"] .info-modal-body > div[style*="background: rgba(var(--status-out-rgb), 0.06)"] {
+        background: rgba(var(--status-out-rgb), 0.12) !important;
+        border-color: rgba(var(--status-out-rgb), 0.3) !important;
     }
     [data-theme="dark"] .info-modal-body > div[style*="background: rgba(245,158,11,0.06)"],
     [data-theme="dark"] .info-modal-body > div[style*="background: rgba(245,158,11,0.08)"] {
@@ -76,13 +77,24 @@
     html, body {
         max-width: 100%;
         overflow-x: hidden;
-        box-sizing: border-box;
     }
 
     * {
         box-sizing: border-box;
         margin: 0;
         padding: 0;
+    }
+
+    body, header, .brand, .brand-logo, .hours-badge, .section-chip,
+    .info-modal, .info-modal-overlay, .bug-modal, .bug-modal-overlay,
+    .image-preview-overlay, .closure-modal, .nav-menu, .nav-menu-header,
+    .feed-item, .roster-user-item, .board-user, .folio-card,
+    .folio-card-image, .cart-item, .toast, .minimal-loader-screen,
+    .premium-edit-panel, .premium-select, .premium-chip, .premium-btn,
+    .account-card, .badge-in, .badge-out, .smart-btn, .mode-btn,
+    .admin-submit-btn, .cart-checkout-btn, .logout-btn,
+    .folio-search-bar, .qty-btn, .section-chip-extra, .edit-icon-sm,
+    .profile-field-row, .theme-toggle-btn, .star-btn {
         transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
     }
 
@@ -389,6 +401,11 @@
     .edit-icon-sm:hover {
         color: var(--dlsu-green);
     }
+
+    .guide-nav-btn:hover {
+        opacity: 0.7 !important;
+    }
+
     .logout-btn {
         display: block;
         width: 100%;
@@ -1347,6 +1364,12 @@
         display: none !important;
     }
 
+    .section-divider {
+        margin-top: 20px;
+        border-top: 1px solid var(--border-soft);
+        padding-top: 16px;
+    }
+
     .minimal-loader-screen {
         position: fixed;
         top: 0;
@@ -1795,10 +1818,6 @@
         font-size: 1rem;
         color: var(--text-main);
         transition: transform 0.15s ease;
-    }
-
-    .qty-value.bounce {
-        animation: qtyBounce 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .folio-restricted {
@@ -2410,16 +2429,6 @@
         font-family: inherit;
     }
 
-    .feedback-type-btn.active {
-        background: var(--surface-card);
-        color: var(--dlsu-green);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    }
-
-    [data-theme="dark"] .feedback-type-btn.active {
-        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    }
-
     .feedback-type-btn:hover:not(.active) {
         color: var(--text-main);
     }
@@ -2626,7 +2635,6 @@
         position: absolute;
         right: 12px;
         top: 50%;
-        transform: translateY(-50%);
         width: 10px;
         height: 10px;
         border-right: 2px solid var(--text-muted);
@@ -2918,6 +2926,15 @@
 </head>
 <body>
 
+    <svg style="display:none;">
+        <symbol id="pencil-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+        </symbol>
+        <symbol id="star-icon" viewBox="0 0 24 24">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+        </symbol>
+    </svg>
+
     <div class="minimal-loader-screen hidden" id="minimalAppLoader">
         <div class="minimal-loader-text" id="minimalLoaderText">Loading...</div>
     </div>
@@ -2930,12 +2947,12 @@
             </div>
             
             <div class="header-controls" id="headerControls" style="display: none;">
-                <button class="theme-toggle-btn" onclick="toggleTheme()" title="Toggle Theme">
+                <button class="theme-toggle-btn" data-click="toggleTheme()" title="Toggle Theme">
                     <svg viewBox="0 0 24 24" id="themeIcon">
                         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
                     </svg>
                 </button>
-                <button class="bug-btn" onclick="openBugModal()" title="Send Feedback / Report Bug">
+                <button class="bug-btn" data-click="openBugModal()" title="Send Feedback / Report Bug">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="12" cy="5" r="2"/>
                         <path d="M10 3.5 L7 1.5 M14 3.5 L17 1.5"/>
@@ -2946,7 +2963,7 @@
                         <path d="M7 17 L4 19 M17 17 L20 19"/>
                     </svg>
                 </button>
-                <button class="help-btn" onclick="openInfoModal()" title="Guidelines">
+                <button class="help-btn" data-click="openInfoModal()" title="Guidelines">
                     <svg viewBox="0 0 24 24">
                         <circle cx="12" cy="12" r="10"></circle>
                         <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
@@ -2957,7 +2974,7 @@
                 <div class="occupancy-mini-box">Online <span id="onlineCountVal">--</span></div>
                 <div class="occupancy-mini-box">Onsite <span id="onsiteCountVal">--</span></div>
 
-                <button class="menu-btn" onclick="toggleMenu(event)" title="Options Menu">
+                <button class="menu-btn" data-click="toggleMenu(event)" title="Options Menu">
                     <span></span>
                     <span></span>
                     <span></span>
@@ -2970,11 +2987,11 @@
                         <span>Online <span id="menuOnlineCountVal">--</span></span>
                         <span>Onsite <span id="menuOnsiteCountVal">--</span></span>
                     </div>
-                    <button onclick="showPanel('tracker')">Residency Panel</button>
-                    <button onclick="openAccountModal()">Account Information</button>
-                    <button onclick="showPanel('history')">Log History</button>
-                    <button onclick="showPanel('shop')">Get a Folio</button>
-                    <button class="hidden" id="adminMenuOpt" onclick="showPanel('admin')">Admin Board</button>
+                    <button data-click="showPanel('tracker')">Residency Panel</button>
+                    <button data-click="openAccountModal()">Account Information</button>
+                    <button data-click="showPanel('history')">Log History</button>
+                    <button data-click="showPanel('shop')">Get a Folio</button>
+                    <button class="hidden" id="adminMenuOpt" data-click="showPanel('admin')">Admin Board</button>
                     
                 </div>
             </div>
@@ -2998,7 +3015,7 @@
             <div class="panel-heading">Get a Folio</div>
             <div class="folio-search-bar">
                 <svg class="folio-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-                <input class="folio-search-input" type="text" placeholder="Search folios..." oninput="filterFolios(this.value)">
+                <input class="folio-search-input" type="text" placeholder="Search folios..." data-input="filterFolios(this.value)">
             </div>
             <div id="folioGrid"></div>
             <div id="cartSummary">
@@ -3008,8 +3025,8 @@
                 </div>
                 <div id="cartItemsList"></div>
                 <div class="cart-actions">
-                    <button class="action-sub-btn delete" onclick="clearCart()">Cancel</button>
-                    <button class="cart-checkout-btn" onclick="submitCart()">Get Selected</button>
+                    <button class="action-sub-btn delete" data-click="clearCart()">Cancel</button>
+                    <button class="cart-checkout-btn" data-click="submitCart()">Get Selected</button>
                 </div>
             </div>
         </div>
@@ -3032,19 +3049,19 @@
                     <div class="metric-value duration" id="liveTimerValue">00:00:00</div>
                 </div>
 
-                <button class="smart-btn clock-in" id="clockInBtn" onclick="prepareClockIn()">
+                <button class="smart-btn clock-in" id="clockInBtn" data-click="prepareClockIn()">
                     Clock In
                 </button>
                 
                 <div class="mode-selection-container hidden" id="modeSelectionContainer">
                     <div style="display:flex; gap:12px; width:100%;">
-                        <button class="mode-btn" id="modeOnsiteBtn" onclick="selectClockInMode('Onsite')">Onsite</button>
-                        <button class="mode-btn" id="modeOnlineBtn" onclick="selectClockInMode('Online')">Online</button>
+                        <button class="mode-btn" id="modeOnsiteBtn" data-click="selectClockInMode('Onsite')">Onsite</button>
+                        <button class="mode-btn" id="modeOnlineBtn" data-click="selectClockInMode('Online')">Online</button>
                     </div>
                     <input type="text" id="clockInNote" class="clock-in-note" placeholder="What are you working on? (optional)" maxlength="200">
                 </div>
 
-                <button class="smart-btn clock-out hidden" id="clockOutBtn" onclick="executeClockOut()">
+                <button class="smart-btn clock-out hidden" id="clockOutBtn" data-click="executeClockOut()">
                     Clock Out
                 </button>
             </div>
@@ -3073,7 +3090,7 @@
                 <div style="padding: 18px; margin-bottom: 20px;">
                     <div class="panel-heading" style="margin-bottom: 12px;">
                         <span>Active Sessions</span>
-                        <button class="action-sub-btn bulk-clockout" onclick="bulkClockOut()">Clock Out All</button>
+                        <button class="action-sub-btn bulk-clockout" data-click="bulkClockOut()">Clock Out All</button>
                     </div>
                     <div class="attendance-board-container" id="attendanceBoard">
                         <div class="empty-state">No members are clocked in.</div>
@@ -3085,7 +3102,7 @@
                         <div class="roster-heading-content">
                             <span>Roster</span>
                             <div style="display: flex; gap: 8px; align-items: center;">
-                                <select class="roster-sort-select" id="rosterSectionFilter" onchange="handleRosterSortChange()">
+                                <select class="roster-sort-select" id="rosterSectionFilter" data-change="handleRosterSortChange()">
                                     <option value="">All Sections</option>
                                     <option value="Art">Art</option>
                                     <option value="Poetry">Poetry</option>
@@ -3094,7 +3111,7 @@
                                     <option value="Screen/Play">Screen/Play</option>
                                     <option value="Marketing and Events">Marketing and Events</option>
                                 </select>
-                                <select class="roster-sort-select" id="rosterSortSelect" onchange="handleRosterSortChange()">
+                                <select class="roster-sort-select" id="rosterSortSelect" data-change="handleRosterSortChange()">
                                     <option value="clockedInFirst">Clocked In First</option>
                                     <option value="clockedOutFirst">Clocked Out First</option>
                                 </select>
@@ -3105,31 +3122,31 @@
                         <div class="empty-state">Roster lookup currently unpopulated.</div>
                     </div>
                     
-                    <div class="form-group" style="margin-top: 20px; border-top: 1px solid var(--border-soft); padding-top: 16px;">
+                    <div class="form-group section-divider">
                         <label for="newAdminEmail">Give Admin Privileges</label>
                         <div style="display: flex; gap: 8px;">
                             <input type="email" id="newAdminEmail" placeholder="user@dlsu.edu.ph" autocomplete="off" />
-                            <button class="admin-submit-btn" style="width: auto; margin: 0; padding: 0 16px; white-space: nowrap;" onclick="addNewAdmin()">Add</button>
+                            <button class="admin-submit-btn" style="width: auto; margin: 0; padding: 0 16px; white-space: nowrap;" data-click="addNewAdmin()">Add</button>
                         </div>
                     </div>
                     
-                    <div class="form-group" style="margin-top: 20px; border-top: 1px solid var(--border-soft); padding-top: 16px;">
+                    <div class="form-group section-divider">
                         <label>Your EB Password</label>
                         <p style="font-size: 0.8rem; color: var(--text-muted); margin: 4px 0 10px;">This lets members approve folio requests over the per-member limit. Resets every Saturday.</p>
                         <div style="display: flex; gap: 8px;">
                             <input type="text" id="adminBoardPasswordInput" placeholder="Enter your EB password" autocomplete="off" style="flex: 1; padding: 10px; box-sizing: border-box; border: 1px solid var(--border-soft); border-radius: 8px; font-family: inherit; background-color: transparent; color: var(--text-main);" />
-                            <button class="admin-submit-btn" style="width: auto; margin: 0; padding: 0 16px; white-space: nowrap;" onclick="saveAdminBoardPassword()">Save</button>
+                            <button class="admin-submit-btn" style="width: auto; margin: 0; padding: 0 16px; white-space: nowrap;" data-click="saveAdminBoardPassword()">Save</button>
                         </div>
                         <span id="adminPasswordStatus" style="font-size: 0.75rem; color: var(--text-muted); margin-top: 6px; display: block;"></span>
                     </div>
 
-                    <div class="form-group" style="margin-top: 20px; border-top: 1px solid var(--border-soft); padding-top: 16px;">
+                    <div class="form-group section-divider">
                         <label>Log Missed Hours</label>
                         <p style="font-size: 0.8rem; color: var(--text-muted); margin: 4px 0 10px;">If a member forgot to clock in, log their missed hours here. Use negative values to deduct.</p>
                         <div style="display: flex; gap: 8px; flex-wrap: wrap;">
                             <input type="email" id="hoursAdjustEmail" placeholder="member@dlsu.edu.ph" autocomplete="off" style="flex: 2; min-width: 180px; padding: 10px; box-sizing: border-box; border: 1px solid var(--border-soft); border-radius: 8px; font-family: inherit; background-color: transparent; color: var(--text-main);" />
                             <input type="number" id="hoursAdjustAmount" placeholder="Hours (+/-)" autocomplete="off" style="flex: 1; min-width: 80px; padding: 10px; box-sizing: border-box; border: 1px solid var(--border-soft); border-radius: 8px; font-family: inherit; background-color: transparent; color: var(--text-main);" />
-                            <button class="admin-submit-btn" style="width: auto; margin: 0; padding: 0 16px; white-space: nowrap;" onclick="adjustMemberHours()">Log</button>
+                            <button class="admin-submit-btn" style="width: auto; margin: 0; padding: 0 16px; white-space: nowrap;" data-click="adjustMemberHours()">Log</button>
                         </div>
                     </div>
                 </div>
@@ -3143,7 +3160,7 @@
     <div class="info-modal">
         <div class="info-modal-header">
             <h3>Website Guidelines</h3>
-            <button class="info-modal-close" onclick="closeInfoModal()">&times;</button>
+            <button class="info-modal-close" data-click="closeInfoModal()">&times;</button>
         </div>
         <div class="info-modal-body" style="display: flex; flex-direction: column; gap: 20px;">
 
@@ -3155,12 +3172,12 @@
 
             <!-- Quick-jump pills -->
             <div style="display: flex; flex-wrap: wrap; gap: 8px;">
-                <button onclick="document.getElementById('guide-getting-started').scrollIntoView({behavior:'smooth',block:'start'})" style="padding: 5px 12px; border-radius: 100px; font-size: 0.72rem; font-weight: 700; background: rgba(16,185,129,0.1); color: var(--status-in); border: 1px solid rgba(16,185,129,0.2); cursor: pointer; transition: opacity 0.2s;" onmouseenter="this.style.opacity='0.7'" onmouseleave="this.style.opacity='1'">Getting Started</button>
-                <button onclick="document.getElementById('guide-tracker').scrollIntoView({behavior:'smooth',block:'start'})" style="padding: 5px 12px; border-radius: 100px; font-size: 0.72rem; font-weight: 700; background: rgba(16,185,129,0.1); color: var(--status-in); border: 1px solid rgba(16,185,129,0.2); cursor: pointer; transition: opacity 0.2s;" onmouseenter="this.style.opacity='0.7'" onmouseleave="this.style.opacity='1'">Tracker</button>
-                <button onclick="document.getElementById('guide-folio').scrollIntoView({behavior:'smooth',block:'start'})" style="padding: 5px 12px; border-radius: 100px; font-size: 0.72rem; font-weight: 700; background: rgba(245,158,11,0.1); color: #d97706; border: 1px solid rgba(245,158,11,0.2); cursor: pointer; transition: opacity 0.2s;" onmouseenter="this.style.opacity='0.7'" onmouseleave="this.style.opacity='1'">Folio Shop</button>
-                <button onclick="document.getElementById('guide-passwords').scrollIntoView({behavior:'smooth',block:'start'})" style="padding: 5px 12px; border-radius: 100px; font-size: 0.72rem; font-weight: 700; background: rgba(139,92,246,0.1); color: #7c3aed; border: 1px solid rgba(139,92,246,0.2); cursor: pointer; transition: opacity 0.2s;" onmouseenter="this.style.opacity='0.7'" onmouseleave="this.style.opacity='1'">Passwords</button>
-                <button onclick="document.getElementById('guide-feedback').scrollIntoView({behavior:'smooth',block:'start'})" style="padding: 5px 12px; border-radius: 100px; font-size: 0.72rem; font-weight: 700; background: rgba(244,63,94,0.1); color: var(--status-out); border: 1px solid rgba(244,63,94,0.2); cursor: pointer; transition: opacity 0.2s;" onmouseenter="this.style.opacity='0.7'" onmouseleave="this.style.opacity='1'">Feedback</button>
-                <button onclick="document.getElementById('ebGuideSection').scrollIntoView({behavior:'smooth',block:'start'})" style="padding: 5px 12px; border-radius: 100px; font-size: 0.72rem; font-weight: 700; background: rgba(79,70,229,0.1); color: #4f46e5; border: 1px solid rgba(79,70,229,0.2); cursor: pointer; transition: opacity 0.2s;" onmouseenter="this.style.opacity='0.7'" onmouseleave="this.style.opacity='1'">Admin</button>
+                <button data-click="document.getElementById('guide-getting-started').scrollIntoView({behavior:'smooth',block:'start'})" style="padding: 5px 12px; border-radius: 100px; font-size: 0.72rem; font-weight: 700; background: rgba(16,185,129,0.1); color: var(--status-in); border: 1px solid rgba(16,185,129,0.2); cursor: pointer; transition: opacity 0.2s;" class="guide-nav-btn">Getting Started</button>
+                <button data-click="document.getElementById('guide-tracker').scrollIntoView({behavior:'smooth',block:'start'})" style="padding: 5px 12px; border-radius: 100px; font-size: 0.72rem; font-weight: 700; background: rgba(139,92,246,0.1); color: #7c3aed; border: 1px solid rgba(139,92,246,0.2); cursor: pointer; transition: opacity 0.2s;" class="guide-nav-btn">Tracker</button>
+                <button data-click="document.getElementById('guide-folio').scrollIntoView({behavior:'smooth',block:'start'})" style="padding: 5px 12px; border-radius: 100px; font-size: 0.72rem; font-weight: 700; background: rgba(245,158,11,0.1); color: #d97706; border: 1px solid rgba(245,158,11,0.2); cursor: pointer; transition: opacity 0.2s;" class="guide-nav-btn">Folio Shop</button>
+                <button data-click="document.getElementById('guide-passwords').scrollIntoView({behavior:'smooth',block:'start'})" style="padding: 5px 12px; border-radius: 100px; font-size: 0.72rem; font-weight: 700; background: rgba(139,92,246,0.1); color: #7c3aed; border: 1px solid rgba(139,92,246,0.2); cursor: pointer; transition: opacity 0.2s;" class="guide-nav-btn">Passwords</button>
+                <button data-click="document.getElementById('guide-feedback').scrollIntoView({behavior:'smooth',block:'start'})" style="padding: 5px 12px; border-radius: 100px; font-size: 0.72rem; font-weight: 700; background: rgba(var(--status-out-rgb), 0.1); color: var(--status-out); border: 1px solid rgba(var(--status-out-rgb), 0.2); cursor: pointer; transition: opacity 0.2s;" class="guide-nav-btn">Feedback</button>
+                <button data-click="document.getElementById('ebGuideSection').scrollIntoView({behavior:'smooth',block:'start'})" style="padding: 5px 12px; border-radius: 100px; font-size: 0.72rem; font-weight: 700; background: rgba(79,70,229,0.1); color: #4f46e5; border: 1px solid rgba(79,70,229,0.2); cursor: pointer; transition: opacity 0.2s;" class="guide-nav-btn">Admin</button>
             </div>
 
             <!-- ===== GETTING STARTED ===== -->
@@ -3179,9 +3196,9 @@
             </div>
 
             <!-- ===== RESIDENCY TRACKER ===== -->
-            <div id="guide-tracker" style="border-left: 3px solid var(--dlsu-green); padding-left: 16px;">
-                <h4 style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--dlsu-green);"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <div id="guide-tracker" style="border-left: 3px solid #7c3aed; padding-left: 16px;">
+                <h4 style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px; color: #7c3aed;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #7c3aed;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                     Residency Tracker
                 </h4>
 
@@ -3192,7 +3209,7 @@
                 </ul>
 
                 <!-- Restriction warning -->
-                <div style="background: rgba(244,63,94,0.06); border: 1px solid rgba(244,63,94,0.15); padding: 10px 14px; border-radius: 8px; margin-bottom: 12px; font-size: 0.82rem;">
+                <div style="background: rgba(var(--status-out-rgb), 0.06); border: 1px solid rgba(var(--status-out-rgb), 0.15); padding: 10px 14px; border-radius: 8px; margin-bottom: 12px; font-size: 0.82rem;">
                     <div style="display: flex; align-items: flex-start; gap: 8px;">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--status-out)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 1px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                         <span><strong>Clock-in is restricted</strong> on <strong>Sundays</strong> and outside working hours (<strong>10 PM – 7 AM</strong>). You won't be able to clock in during those times. If you're an EB and absolutely need to, you can override with a confirmation prompt.</span>
@@ -3248,7 +3265,7 @@
                 </ul>
 
                 <!-- Not for distribution note -->
-                <div style="background: rgba(244,63,94,0.06); border: 1px solid rgba(244,63,94,0.15); padding: 10px 14px; border-radius: 8px; margin-bottom: 8px; font-size: 0.82rem;">
+                <div style="background: rgba(var(--status-out-rgb), 0.06); border: 1px solid rgba(var(--status-out-rgb), 0.15); padding: 10px 14px; border-radius: 8px; margin-bottom: 8px; font-size: 0.82rem;">
                     <div style="display: flex; align-items: flex-start; gap: 8px;">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--status-out)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 1px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                         <span>Folios marked <strong>DO NOT DISTRIBUTE</strong> are not available for distribution. <strong>Contact an EB</strong> if you think this is a mistake.</span>
@@ -3341,7 +3358,7 @@
             <div class="info-modal">
                 <div class="info-modal-header">
                     <h3>Account Information</h3>
-                    <button class="info-modal-close" onclick="closeAccountModal()">&times;</button>
+                    <button class="info-modal-close" data-click="closeAccountModal()">&times;</button>
                 </div>
                 <div class="info-modal-body">
 
@@ -3382,18 +3399,18 @@
                         <div class="profile-field-row">
                             <span class="profile-field-label">Name</span>
                             <span class="profile-field-value" id="displayFullName">N/A</span>
-                            <span class="edit-icon-sm" onclick="toggleTextFieldEdit('FullName')">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+                            <span class="edit-icon-sm" data-click="toggleTextFieldEdit('FullName')">
+                                <svg width="14" height="14" stroke-width="2"><use href="#pencil-icon"/></svg>
                             </span>
                         </div>
-                        <div id="editFullNamePanel" class="premium-edit-panel" style="display: none;">
+                        <div id="editFullNamePanel" class="premium-edit-panel hidden">
                             <div class="premium-field-group">
                                 <label class="premium-field-label">Full Name</label>
                                 <input type="text" id="inputFullName" class="premium-select" style="padding: 10px 14px; width: 100%;">
                             </div>
                             <div class="premium-actions">
-                                <button class="premium-btn premium-btn-primary" onclick="applyTextFieldEdit('FullName')">Apply</button>
-                                <button class="premium-btn premium-btn-ghost" onclick="cancelTextFieldEdit('FullName')">Cancel</button>
+                                <button class="premium-btn premium-btn-primary" data-click="applyTextFieldEdit('FullName')">Apply</button>
+                                <button class="premium-btn premium-btn-ghost" data-click="cancelTextFieldEdit('FullName')">Cancel</button>
                             </div>
                         </div>
 
@@ -3401,18 +3418,18 @@
                         <div class="profile-field-row">
                             <span class="profile-field-label">Nickname</span>
                             <span class="profile-field-value" id="displayNickname"></span>
-                            <span class="edit-icon-sm" onclick="toggleTextFieldEdit('Nickname')">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+                            <span class="edit-icon-sm" data-click="toggleTextFieldEdit('Nickname')">
+                                <svg width="14" height="14" stroke-width="2"><use href="#pencil-icon"/></svg>
                             </span>
                         </div>
-                        <div id="editNicknamePanel" class="premium-edit-panel" style="display: none;">
+                        <div id="editNicknamePanel" class="premium-edit-panel hidden">
                             <div class="premium-field-group">
                                 <label class="premium-field-label">Nickname</label>
                                 <input type="text" id="inputNickname" class="premium-select" style="padding: 10px 14px; width: 100%;">
                             </div>
                             <div class="premium-actions">
-                                <button class="premium-btn premium-btn-primary" onclick="applyTextFieldEdit('Nickname')">Apply</button>
-                                <button class="premium-btn premium-btn-ghost" onclick="cancelTextFieldEdit('Nickname')">Cancel</button>
+                                <button class="premium-btn premium-btn-primary" data-click="applyTextFieldEdit('Nickname')">Apply</button>
+                                <button class="premium-btn premium-btn-ghost" data-click="cancelTextFieldEdit('Nickname')">Cancel</button>
                             </div>
                         </div>
 
@@ -3420,18 +3437,18 @@
                         <div class="profile-field-row">
                             <span class="profile-field-label">ID Number</span>
                             <span class="profile-field-value" id="displayStaffId">N/A</span>
-                            <span class="edit-icon-sm" onclick="toggleTextFieldEdit('StaffId')">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+                            <span class="edit-icon-sm" data-click="toggleTextFieldEdit('StaffId')">
+                                <svg width="14" height="14" stroke-width="2"><use href="#pencil-icon"/></svg>
                             </span>
                         </div>
-                        <div id="editStaffIdPanel" class="premium-edit-panel" style="display: none;">
+                        <div id="editStaffIdPanel" class="premium-edit-panel hidden">
                             <div class="premium-field-group">
                                 <label class="premium-field-label">ID Number</label>
                                 <input type="text" id="inputStaffId" class="premium-select" style="padding: 10px 14px; width: 100%;" inputmode="numeric" pattern="[0-9]*">
                             </div>
                             <div class="premium-actions">
-                                <button class="premium-btn premium-btn-primary" onclick="applyTextFieldEdit('StaffId')">Apply</button>
-                                <button class="premium-btn premium-btn-ghost" onclick="cancelTextFieldEdit('StaffId')">Cancel</button>
+                                <button class="premium-btn premium-btn-primary" data-click="applyTextFieldEdit('StaffId')">Apply</button>
+                                <button class="premium-btn premium-btn-ghost" data-click="cancelTextFieldEdit('StaffId')">Cancel</button>
                             </div>
                         </div>
 
@@ -3439,18 +3456,18 @@
                         <div class="profile-field-row" style="border-bottom: none;">
                             <span class="profile-field-label">Pronouns</span>
                             <span class="profile-field-value" id="displayPronouns"></span>
-                            <span class="edit-icon-sm" onclick="toggleTextFieldEdit('Pronouns')">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+                            <span class="edit-icon-sm" data-click="toggleTextFieldEdit('Pronouns')">
+                                <svg width="14" height="14" stroke-width="2"><use href="#pencil-icon"/></svg>
                             </span>
                         </div>
-                        <div id="editPronounsPanel" class="premium-edit-panel" style="display: none;">
+                        <div id="editPronounsPanel" class="premium-edit-panel hidden">
                             <div class="premium-field-group">
                                 <label class="premium-field-label">Pronouns</label>
                                 <input type="text" id="inputPronouns" class="premium-select" style="padding: 10px 14px; width: 100%;">
                             </div>
                             <div class="premium-actions">
-                                <button class="premium-btn premium-btn-primary" onclick="applyTextFieldEdit('Pronouns')">Apply</button>
-                                <button class="premium-btn premium-btn-ghost" onclick="cancelTextFieldEdit('Pronouns')">Cancel</button>
+                                <button class="premium-btn premium-btn-primary" data-click="applyTextFieldEdit('Pronouns')">Apply</button>
+                                <button class="premium-btn premium-btn-ghost" data-click="cancelTextFieldEdit('Pronouns')">Cancel</button>
                             </div>
                         </div>
                     </div>
@@ -3469,11 +3486,11 @@
                         <div class="profile-field-row">
                             <span class="profile-field-label">Position</span>
                             <span class="profile-field-value" id="displayPosition">N/A</span>
-                            <span class="edit-icon-sm" onclick="togglePositionEdit()">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+                            <span class="edit-icon-sm" data-click="togglePositionEdit()">
+                                <svg width="14" height="14" stroke-width="2"><use href="#pencil-icon"/></svg>
                             </span>
                         </div>
-                        <div id="positionEditContainer" class="premium-edit-panel" style="display: none;">
+                        <div id="positionEditContainer" class="premium-edit-panel hidden">
                             <div class="premium-field-group">
                                 <label class="premium-field-label">Role</label>
                                 <div class="premium-select-wrapper">
@@ -3486,8 +3503,8 @@
                                 </div>
                             </div>
                             <div class="premium-actions">
-                                <button class="premium-btn premium-btn-primary" onclick="applyPositionEdit()">Apply</button>
-                                <button class="premium-btn premium-btn-ghost" onclick="cancelPositionEdit()">Cancel</button>
+                                <button class="premium-btn premium-btn-primary" data-click="applyPositionEdit()">Apply</button>
+                                <button class="premium-btn premium-btn-ghost" data-click="cancelPositionEdit()">Cancel</button>
                             </div>
                         </div>
 
@@ -3495,11 +3512,11 @@
                         <div class="profile-field-row" style="border-bottom: none;">
                             <span class="profile-field-label">Section</span>
                             <span id="sectionChipsContainer"></span>
-                            <span class="edit-icon-sm" onclick="toggleSectionEdit()">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+                            <span class="edit-icon-sm" data-click="toggleSectionEdit()">
+                                <svg width="14" height="14" stroke-width="2"><use href="#pencil-icon"/></svg>
                             </span>
                         </div>
-                        <div id="sectionEditContainer" class="premium-edit-panel" style="display: none;">
+                        <div id="sectionEditContainer" class="premium-edit-panel hidden">
                             <div class="premium-field-group">
                                 <label class="premium-field-label">Primary Section</label>
                                 <div class="premium-select-wrapper">
@@ -3517,25 +3534,25 @@
                             <div class="premium-field-group">
                                 <label class="premium-field-label">Extra Teams</label>
                                 <div class="premium-chip-group">
-                                    <button class="premium-chip" data-value="Layout" onclick="toggleExtraSection(this)">Layout</button>
-                                    <button class="premium-chip" data-value="PropMan" onclick="toggleExtraSection(this)">PropMan</button>
+                                    <button class="premium-chip" data-value="Layout" data-click="toggleExtraSection(this)">Layout</button>
+                                    <button class="premium-chip" data-value="PropMan" data-click="toggleExtraSection(this)">PropMan</button>
                                 </div>
                             </div>
                             <div class="premium-actions">
-                                <button class="premium-btn premium-btn-primary" onclick="applySectionEdit()">Apply</button>
-                                <button class="premium-btn premium-btn-ghost" onclick="cancelSectionEdit()">Cancel</button>
+                                <button class="premium-btn premium-btn-primary" data-click="applySectionEdit()">Apply</button>
+                                <button class="premium-btn premium-btn-ghost" data-click="cancelSectionEdit()">Cancel</button>
                             </div>
                         </div>
                     </div>
 
                     <!-- Save All / Discard -->
                     <div class="premium-actions" style="margin-top: 20px;">
-                        <button class="premium-btn premium-btn-primary" onclick="saveAllAccountChanges()">Save All Changes</button>
-                        <button class="premium-btn premium-btn-ghost" onclick="discardAccountChanges()">Discard Changes</button>
+                        <button class="premium-btn premium-btn-primary" data-click="saveAllAccountChanges()">Save All Changes</button>
+                        <button class="premium-btn premium-btn-ghost" data-click="discardAccountChanges()">Discard Changes</button>
                     </div>
 
                     <!-- Logout -->
-                    <button class="logout-btn" onclick="handleLogout()">Logout</button>
+                    <button class="logout-btn" data-click="handleLogout()">Logout</button>
 
                 </div>
             </div>
@@ -3546,7 +3563,7 @@
             <div class="info-modal" style="max-width: 520px;">
                 <div class="info-modal-header">
                     <h3 id="editFolioTitle">Edit Folio</h3>
-                    <button class="info-modal-close" onclick="closeEditFolioModal()">&times;</button>
+                    <button class="info-modal-close" data-click="closeEditFolioModal()">&times;</button>
                 </div>
                 <div class="info-modal-body">
                     <input type="hidden" id="editFolioName">
@@ -3620,45 +3637,45 @@
                     </div>
 
                     <div class="premium-actions" style="margin-top: 18px;">
-                        <button class="premium-btn premium-btn-primary" onclick="saveEditFolio()">Save Changes</button>
-                        <button class="premium-btn premium-btn-ghost" onclick="closeEditFolioModal()">Cancel</button>
+                        <button class="premium-btn premium-btn-primary" data-click="saveEditFolio()">Save Changes</button>
+                        <button class="premium-btn premium-btn-ghost" data-click="closeEditFolioModal()">Cancel</button>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Bug Report / Feedback Modal -->
-        <div class="bug-modal-overlay hidden" id="bugModal" onclick="closeBugModal()">
-            <div class="bug-modal" onclick="event.stopPropagation()">
+        <div class="bug-modal-overlay hidden" id="bugModal" data-click="closeBugModal()">
+            <div class="bug-modal" data-click="event.stopPropagation()">
                 <div class="bug-modal-header">
                     <h3>Send Feedback / Report Bug</h3>
-                    <button class="bug-modal-close" onclick="closeBugModal()">&times;</button>
+                    <button class="bug-modal-close" data-click="closeBugModal()">&times;</button>
                 </div>
                 <div class="bug-modal-body">
                     <div class="feedback-type-toggle">
-                        <button class="feedback-type-btn active" id="feedbackTypeBtn" onclick="selectFeedbackType('feedback')">Feedback</button>
-                        <button class="feedback-type-btn" id="bugTypeBtn" onclick="selectFeedbackType('bug')">Bug</button>
+                        <button class="feedback-type-btn active" id="feedbackTypeBtn" data-click="selectFeedbackType('feedback')">Feedback</button>
+                        <button class="feedback-type-btn" id="bugTypeBtn" data-click="selectFeedbackType('bug')">Bug</button>
                     </div>
 
                     <div id="bugFeedbackView" class="feedback-view">
                         <div class="rating-group">
                             <span class="rating-label">How was your experience?</span>
                             <div class="stars-row" data-rating-id="1">
-                                <button class="star-btn" data-value="1" onclick="setRating(1, this)" onmouseenter="hoverRating(1, this)" onmouseleave="unhoverRating(1)"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
-                                <button class="star-btn" data-value="2" onclick="setRating(1, this)" onmouseenter="hoverRating(1, this)" onmouseleave="unhoverRating(1)"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
-                                <button class="star-btn" data-value="3" onclick="setRating(1, this)" onmouseenter="hoverRating(1, this)" onmouseleave="unhoverRating(1)"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
-                                <button class="star-btn" data-value="4" onclick="setRating(1, this)" onmouseenter="hoverRating(1, this)" onmouseleave="unhoverRating(1)"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
-                                <button class="star-btn" data-value="5" onclick="setRating(1, this)" onmouseenter="hoverRating(1, this)" onmouseleave="unhoverRating(1)"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+                                <button class="star-btn" data-value="1" data-click="setRating(1, this)" data-mouseenter="hoverRating(1, this)" data-mouseleave="unhoverRating(1)"><svg viewBox="0 0 24 24"><use href="#star-icon"/></svg></button>
+                                <button class="star-btn" data-value="2" data-click="setRating(1, this)" data-mouseenter="hoverRating(1, this)" data-mouseleave="unhoverRating(1)"><svg viewBox="0 0 24 24"><use href="#star-icon"/></svg></button>
+                                <button class="star-btn" data-value="3" data-click="setRating(1, this)" data-mouseenter="hoverRating(1, this)" data-mouseleave="unhoverRating(1)"><svg viewBox="0 0 24 24"><use href="#star-icon"/></svg></button>
+                                <button class="star-btn" data-value="4" data-click="setRating(1, this)" data-mouseenter="hoverRating(1, this)" data-mouseleave="unhoverRating(1)"><svg viewBox="0 0 24 24"><use href="#star-icon"/></svg></button>
+                                <button class="star-btn" data-value="5" data-click="setRating(1, this)" data-mouseenter="hoverRating(1, this)" data-mouseleave="unhoverRating(1)"><svg viewBox="0 0 24 24"><use href="#star-icon"/></svg></button>
                             </div>
                         </div>
                         <div class="rating-group">
                             <span class="rating-label">How did you find the website?</span>
                             <div class="stars-row" data-rating-id="2">
-                                <button class="star-btn" data-value="1" onclick="setRating(2, this)" onmouseenter="hoverRating(2, this)" onmouseleave="unhoverRating(2)"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
-                                <button class="star-btn" data-value="2" onclick="setRating(2, this)" onmouseenter="hoverRating(2, this)" onmouseleave="unhoverRating(2)"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
-                                <button class="star-btn" data-value="3" onclick="setRating(2, this)" onmouseenter="hoverRating(2, this)" onmouseleave="unhoverRating(2)"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
-                                <button class="star-btn" data-value="4" onclick="setRating(2, this)" onmouseenter="hoverRating(2, this)" onmouseleave="unhoverRating(2)"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
-                                <button class="star-btn" data-value="5" onclick="setRating(2, this)" onmouseenter="hoverRating(2, this)" onmouseleave="unhoverRating(2)"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+                                <button class="star-btn" data-value="1" data-click="setRating(2, this)" data-mouseenter="hoverRating(2, this)" data-mouseleave="unhoverRating(2)"><svg viewBox="0 0 24 24"><use href="#star-icon"/></svg></button>
+                                <button class="star-btn" data-value="2" data-click="setRating(2, this)" data-mouseenter="hoverRating(2, this)" data-mouseleave="unhoverRating(2)"><svg viewBox="0 0 24 24"><use href="#star-icon"/></svg></button>
+                                <button class="star-btn" data-value="3" data-click="setRating(2, this)" data-mouseenter="hoverRating(2, this)" data-mouseleave="unhoverRating(2)"><svg viewBox="0 0 24 24"><use href="#star-icon"/></svg></button>
+                                <button class="star-btn" data-value="4" data-click="setRating(2, this)" data-mouseenter="hoverRating(2, this)" data-mouseleave="unhoverRating(2)"><svg viewBox="0 0 24 24"><use href="#star-icon"/></svg></button>
+                                <button class="star-btn" data-value="5" data-click="setRating(2, this)" data-mouseenter="hoverRating(2, this)" data-mouseleave="unhoverRating(2)"><svg viewBox="0 0 24 24"><use href="#star-icon"/></svg></button>
                             </div>
                         </div>
                     </div>
@@ -3669,7 +3686,7 @@
 
                     <textarea class="bug-textarea" id="bugMessageInput" placeholder="Share your thoughts here..." rows="4"></textarea>
 
-                    <button class="bug-submit-btn" id="bugSubmitBtn" onclick="submitFeedback()">Submit</button>
+                    <button class="bug-submit-btn" id="bugSubmitBtn" data-click="submitFeedback()">Submit</button>
                 </div>
             </div>
         </div>
@@ -3699,17 +3716,17 @@
                     </ul>
                 </div>
                 <div class="closure-modal-footer">
-                    <button class="cart-checkout-btn" onclick="dismissClosureReminder()" style="width:100%;">Got it!</button>
+                    <button class="cart-checkout-btn" data-click="dismissClosureReminder()" style="width:100%;">Got it!</button>
                 </div>
             </div>
         </div>
 
         <!-- Admin View Member Info Modal -->
         <div class="bug-modal-overlay hidden" id="adminViewMemberModal">
-            <div class="bug-modal" onclick="event.stopPropagation()" style="max-width: 460px;">
+            <div class="bug-modal" data-click="event.stopPropagation()" style="max-width: 460px;">
                 <div class="bug-modal-header">
                     <h3>Member Information</h3>
-                    <button class="bug-modal-close" onclick="closeAdminViewMemberModal()">&times;</button>
+                    <button class="bug-modal-close" data-click="closeAdminViewMemberModal()">&times;</button>
                 </div>
                 <div class="bug-modal-body" id="adminViewMemberContent">
                 </div>
@@ -3718,7 +3735,7 @@
 
         <!-- First-Time / Unfilled Account Alert -->
         <div class="bug-modal-overlay hidden" id="firstTimeAlert">
-            <div class="bug-modal" onclick="event.stopPropagation()" style="max-width: 460px;">
+            <div class="bug-modal" data-click="event.stopPropagation()" style="max-width: 460px;">
                 <div class="bug-modal-header">
                     <h3>Welcome! Let's Get Started</h3>
                 </div>
@@ -3736,53 +3753,53 @@
                         </div>
                     </div>
                     <div class="cart-actions" style="flex-direction: column; gap: 10px;">
-                        <button class="cart-checkout-btn" onclick="closeFirstTimeAlert(); openAccountModal();" style="width: 100%;">Go to Account Information</button>
-                        <button class="cart-checkout-btn" onclick="closeFirstTimeAlert(); openInfoModal();" style="width: 100%; background: linear-gradient(135deg, #4f46e5, #6366f1);">Read Guidelines</button>
-                        <button class="action-sub-btn delete" id="proceedDashboardBtn" onclick="closeFirstTimeAlert();" style="width: 100%; justify-content: center;">Proceed to Dashboard</button>
+                        <button class="cart-checkout-btn" data-click="closeFirstTimeAlert(); openAccountModal();" style="width: 100%;">Go to Account Information</button>
+                        <button class="cart-checkout-btn" data-click="closeFirstTimeAlert(); openInfoModal();" style="width: 100%; background: linear-gradient(135deg, #4f46e5, #6366f1);">Read Guidelines</button>
+                        <button class="action-sub-btn delete" id="proceedDashboardBtn" data-click="closeFirstTimeAlert();" style="width: 100%; justify-content: center;">Proceed to Dashboard</button>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Alert Modal -->
-        <div class="bug-modal-overlay hidden" id="alertModal" onclick="closeAlertModal()">
-            <div class="bug-modal" onclick="event.stopPropagation()" style="max-width: 420px;">
+        <div class="bug-modal-overlay hidden" id="alertModal" data-click="closeAlertModal()">
+            <div class="bug-modal" data-click="event.stopPropagation()" style="max-width: 420px;">
                 <div class="bug-modal-header">
                     <h3 id="alertModalTitle">Notice</h3>
-                    <button class="bug-modal-close" onclick="closeAlertModal()">&times;</button>
+                    <button class="bug-modal-close" data-click="closeAlertModal()">&times;</button>
                 </div>
                 <div class="bug-modal-body">
                     <p id="alertModalMessage"></p>
                     <div class="cart-actions" style="margin-top: 16px;">
-                        <button class="cart-checkout-btn" onclick="closeAlertModal()" style="flex:1;">OK</button>
+                        <button class="cart-checkout-btn" data-click="closeAlertModal()" style="flex:1;">OK</button>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Confirm Modal -->
-        <div class="bug-modal-overlay hidden" id="confirmModal" onclick="closeConfirmModal(false)">
-            <div class="bug-modal" onclick="event.stopPropagation()" style="max-width: 420px;">
+        <div class="bug-modal-overlay hidden" id="confirmModal" data-click="closeConfirmModal(false)">
+            <div class="bug-modal" data-click="event.stopPropagation()" style="max-width: 420px;">
                 <div class="bug-modal-header">
                     <h3 id="confirmModalTitle">Confirm</h3>
-                    <button class="bug-modal-close" onclick="closeConfirmModal(false)">&times;</button>
+                    <button class="bug-modal-close" data-click="closeConfirmModal(false)">&times;</button>
                 </div>
                 <div class="bug-modal-body">
                     <p id="confirmModalMessage"></p>
                     <div class="cart-actions" style="margin-top: 16px;">
-                        <button class="action-sub-btn delete" onclick="closeConfirmModal(false)" style="flex:1;">Cancel</button>
-                        <button class="cart-checkout-btn" onclick="closeConfirmModal(true)" style="flex:1;">Confirm</button>
+                        <button class="action-sub-btn delete" data-click="closeConfirmModal(false)" style="flex:1;">Cancel</button>
+                        <button class="cart-checkout-btn" data-click="closeConfirmModal(true)" style="flex:1;">Confirm</button>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- EB Password Modal (for members requesting >10 folios) -->
-        <div class="bug-modal-overlay hidden" id="ebPasswordModal" onclick="closeEbPasswordModal()">
-            <div class="bug-modal" onclick="event.stopPropagation()">
+        <div class="bug-modal-overlay hidden" id="ebPasswordModal" data-click="closeEbPasswordModal()">
+            <div class="bug-modal" data-click="event.stopPropagation()">
                 <div class="bug-modal-header">
                     <h3>EB Approval Required</h3>
-                    <button class="bug-modal-close" onclick="closeEbPasswordModal()">&times;</button>
+                    <button class="bug-modal-close" data-click="closeEbPasswordModal()">&times;</button>
                 </div>
                 <div class="bug-modal-body">
                     <p style="margin-bottom: 16px;">You have reached the per-member limit for one or more folio types. Ask an EB for their password to proceed.</p>
@@ -3791,19 +3808,19 @@
                         <input type="password" id="ebPasswordInput" placeholder="Enter EB password" autocomplete="off" style="width: 100%; padding: 12px; box-sizing: border-box; border: 1px solid var(--border-soft); border-radius: 8px; font-family: inherit; background-color: transparent; color: var(--text-main); margin-top: 6px;" />
                     </div>
                     <div class="cart-actions" style="margin-top: 20px;">
-                        <button class="action-sub-btn delete" onclick="closeEbPasswordModal()">Cancel</button>
-                        <button class="cart-checkout-btn" onclick="submitEbPassword()">Submit</button>
+                        <button class="action-sub-btn delete" data-click="closeEbPasswordModal()">Cancel</button>
+                        <button class="cart-checkout-btn" data-click="submitEbPassword()">Submit</button>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Admin Set Password Prompt Modal -->
-        <div class="bug-modal-overlay hidden" id="adminSetPasswordModal" onclick="closeAdminSetPasswordModal()">
-            <div class="bug-modal" onclick="event.stopPropagation()">
+        <div class="bug-modal-overlay hidden" id="adminSetPasswordModal" data-click="closeAdminSetPasswordModal()">
+            <div class="bug-modal" data-click="event.stopPropagation()">
                 <div class="bug-modal-header">
                     <h3>Set Your EB Password</h3>
-                    <button class="bug-modal-close" onclick="closeAdminSetPasswordModal()">&times;</button>
+                    <button class="bug-modal-close" data-click="closeAdminSetPasswordModal()">&times;</button>
                 </div>
                 <div class="bug-modal-body">
                     <p style="margin-bottom: 16px;">This password lets members approve folio requests over the per-member limit when they ask you. Choose anything — make it fun, unique, personal! It resets every Saturday.</p>
@@ -3812,17 +3829,17 @@
                         <input type="text" id="adminPasswordInput" placeholder="Enter your password" autocomplete="off" style="width: 100%; padding: 12px; box-sizing: border-box; border: 1px solid var(--border-soft); border-radius: 8px; font-family: inherit; background-color: transparent; color: var(--text-main); margin-top: 6px;" />
                     </div>
                     <div class="cart-actions" style="margin-top: 20px;">
-                        <button class="action-sub-btn delete" onclick="closeAdminSetPasswordModal()">Skip for now</button>
-                        <button class="cart-checkout-btn" onclick="submitAdminPassword()">Save</button>
+                        <button class="action-sub-btn delete" data-click="closeAdminSetPasswordModal()">Skip for now</button>
+                        <button class="cart-checkout-btn" data-click="submitAdminPassword()">Save</button>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Image Preview Lightbox -->
-        <div class="image-preview-overlay hidden" id="imagePreviewOverlay" onclick="closeImagePreview()">
-            <div class="image-preview-container" onclick="event.stopPropagation()">
-                <button class="image-preview-close" onclick="closeImagePreview()">&times;</button>
+        <div class="image-preview-overlay hidden" id="imagePreviewOverlay" data-click="closeImagePreview()">
+            <div class="image-preview-container" data-click="event.stopPropagation()">
+                <button class="image-preview-close" data-click="closeImagePreview()">&times;</button>
                 <img id="imagePreviewImg" src="" alt="Folio preview">
                 <p id="imagePreviewLabel" class="image-preview-label"></p>
             </div>
@@ -3830,7 +3847,7 @@
 
         <div id="sideEyeContainer">
             <div id="speechBubble">R u sure?</div>
-            <img id="sideEyeMeme" src="https://gifcop.com/wp-content/uploads/dog-side-eye.gif" alt="Dog Side Eye Sticker">
+            <img id="sideEyeMeme" src="https://gifcop.com/wp-content/uploads/dog-side-eye.gif" alt="Dog Side Eye Sticker" loading="lazy">
         </div>
 
     <script>
@@ -4418,7 +4435,7 @@
 
                     return `
                         <div class="roster-user-item">
-                            <div class="roster-meta-block" onclick="openAdminViewMemberModal('${member.email}')" style="cursor:pointer;">
+                            <div class="roster-meta-block" data-click="openAdminViewMemberModal('${member.email}')" style="cursor:pointer;">
                                 <div style="display:flex; align-items:center; gap:6px;">
                                     ${statusDot}
                                     <span class="roster-email">${member.email}</span>
@@ -4428,8 +4445,8 @@
                                 <span class="roster-hours-sub">Verified: ${Number(member.totalHours).toFixed(2)} hrs</span>
                             </div>
                             <div class="roster-action-group">
-                                <button class="action-sub-btn status-toggle" onclick="event.stopPropagation(); adminOverrideToggle('${member.email}', ${member.isCurrentlyClockedIn})">${forceButtonLabel}</button>
-                                <button class="action-sub-btn delete" onclick="event.stopPropagation(); adminPurgeUser('${member.email}')">Purge</button>
+                                <button class="action-sub-btn status-toggle" data-click="event.stopPropagation(); adminOverrideToggle('${member.email}', ${member.isCurrentlyClockedIn})">${forceButtonLabel}</button>
+                                <button class="action-sub-btn delete" data-click="event.stopPropagation(); adminPurgeUser('${member.email}')">Purge</button>
                             </div>
                         </div>
                     `;
@@ -4777,8 +4794,8 @@
         // ===== TEXT FIELD EDIT (Name, Nickname, ID, Pronouns) =====
         function toggleTextFieldEdit(fieldId) {
             var panel = document.getElementById('edit' + fieldId + 'Panel');
-            var isHidden = panel.style.display === 'none' || panel.style.display === '';
-            panel.style.display = isHidden ? 'block' : 'none';
+            var isHidden = panel.classList.contains('hidden');
+            panel.classList.toggle('hidden');
             if (isHidden) {
                 var display = document.getElementById('display' + fieldId);
                 var input = document.getElementById('input' + fieldId);
@@ -4793,7 +4810,7 @@
             var newValue = input.value.trim();
             var oldValue = display.innerText;
             if (newValue === oldValue || (!newValue && oldValue === 'N/A')) {
-                document.getElementById('edit' + fieldId + 'Panel').style.display = 'none';
+                document.getElementById('edit' + fieldId + 'Panel').classList.add('hidden');
                 return;
             }
             var fieldMap = {
@@ -4811,17 +4828,17 @@
                 pendingAccountChanges[backendKey] = newValue;
             }
             display.innerText = newValue || 'N/A';
-            document.getElementById('edit' + fieldId + 'Panel').style.display = 'none';
+            document.getElementById('edit' + fieldId + 'Panel').classList.add('hidden');
         }
         function cancelTextFieldEdit(fieldId) {
-            document.getElementById('edit' + fieldId + 'Panel').style.display = 'none';
+            document.getElementById('edit' + fieldId + 'Panel').classList.add('hidden');
         }
 
         // ===== POSITION EDIT (Dropdown) =====
         function togglePositionEdit() {
             const container = document.getElementById('positionEditContainer');
-            container.style.display = container.style.display === 'none' ? 'block' : 'none';
-            if (container.style.display === 'block') {
+            container.classList.toggle('hidden');
+            if (!container.classList.contains('hidden')) {
                 const currentPosition = document.getElementById('displayPosition').innerText;
                 const select = document.getElementById('positionSelect');
                 if ([...select.options].some(o => o.value === currentPosition)) {
@@ -4836,11 +4853,11 @@
                 pendingAccountChanges['position'] = newValue;
             }
             document.getElementById('displayPosition').innerText = newValue || 'N/A';
-            document.getElementById('positionEditContainer').style.display = 'none';
+            document.getElementById('positionEditContainer').classList.add('hidden');
         }
 
         function cancelPositionEdit() {
-            document.getElementById('positionEditContainer').style.display = 'none';
+            document.getElementById('positionEditContainer').classList.add('hidden');
         }
 
         // ===== SECTION CHIP RENDERER =====
@@ -4868,8 +4885,8 @@
         // ===== SECTION EDIT (Dropdown + Chips) =====
         function toggleSectionEdit() {
             const container = document.getElementById('sectionEditContainer');
-            container.style.display = container.style.display === 'none' ? 'block' : 'none';
-            if (container.style.display === 'block') {
+            container.classList.toggle('hidden');
+            if (!container.classList.contains('hidden')) {
                 var chipsContainer = document.getElementById('sectionChipsContainer');
                 var currentSection = chipsContainer ? chipsContainer.innerText.replace(/\s+/g,' ').trim() : 'N/A';
                 if (currentSection === 'N/A' || !currentSection) { currentSection = 'N/A'; }
@@ -4911,11 +4928,11 @@
             }
             pendingAccountChanges['section'] = displayValue;
             renderSectionChips(displayValue);
-            document.getElementById('sectionEditContainer').style.display = 'none';
+            document.getElementById('sectionEditContainer').classList.add('hidden');
         }
 
         function cancelSectionEdit() {
-            document.getElementById('sectionEditContainer').style.display = 'none';
+            document.getElementById('sectionEditContainer').classList.add('hidden');
         }
 
         function saveAllAccountChanges() {
@@ -5186,7 +5203,7 @@
 
             container.innerHTML = folioData.map((item, idx) => `
                 <div class="folio-card" style="animation-delay: ${idx * 0.05}s">
-                    <div class="folio-card-image" ${item.imageUrl ? `onclick="openImagePreview('${item.imageUrl}', '${item.name}')" style="cursor:pointer;"` : ''}>
+                    <div class="folio-card-image" ${item.imageUrl ? `data-click="openImagePreview('${item.imageUrl}', '${item.name}')" style="cursor:pointer;"` : ''}>
                         ${item.imageUrl
                             ? `<img src="${item.imageUrl}" alt="${item.name}" loading="lazy">`
                             : `<div class="no-image">No Image</div>`}
@@ -5195,14 +5212,14 @@
                         <div class="folio-card-name">${item.name}</div>
                         <div class="folio-stock">
                             <span class="folio-stock-dot ${!item.canGet ? 'empty' : item.maxQty > 5 ? 'high' : 'low'}"></span>
-                            <span class="folio-stock-text ${!item.canGet ? 'empty' : item.maxQty > 5 ? 'high' : 'low'}" ${item.canGet ? `onclick="setCartQuantity('${item.name}', ${item.maxQty})" style="cursor:pointer;" title="Fill max"` : ''}>Total: ${item.remaining}</span>
+                            <span class="folio-stock-text ${!item.canGet ? 'empty' : item.maxQty > 5 ? 'high' : 'low'}" ${item.canGet ? `data-click="setCartQuantity('${item.name}', ${item.maxQty})" style="cursor:pointer;" title="Fill max"` : ''}>Total: ${item.remaining}</span>
                         </div>
                         ${item.limitPerMember > 0 ? `<div class="folio-limit-badge">Limit: ${item.limitPerMember}/member</div>` : ''}
                         ${item.canGet ? `
                             <div class="folio-qty-control">
-                                <button class="qty-btn minus" onclick="updateCart('${item.name}', -1)">&minus;</button>
-                                <input class="qty-input" type="number" id="qty-${item.name}" value="0" min="0" max="${item.maxQty}" onchange="setCartQuantity('${item.name}', this.value)">
-                                <button class="qty-btn plus" onclick="updateCart('${item.name}', 1)">+</button>
+                                <button class="qty-btn minus" data-click="updateCart('${item.name}', -1)">&minus;</button>
+                                <input class="qty-input" type="number" id="qty-${item.name}" value="0" min="0" max="${item.maxQty}" data-change="setCartQuantity('${item.name}', this.value)">
+                                <button class="qty-btn plus" data-click="updateCart('${item.name}', 1)">+</button>
                             </div>
                         ` : `
                             <div class="folio-restricted">
@@ -5211,7 +5228,7 @@
                             </div>
                         `}
                     </div>
-                    ${(fullCachedPayload && fullCachedPayload.isAdmin) ? `<button class="folio-edit-btn" onclick="openEditFolioModal('${item.name}')" title="Edit folio"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg></button>` : ''}
+                    ${(fullCachedPayload && fullCachedPayload.isAdmin) ? `<button class="folio-edit-btn" data-click="openEditFolioModal('${item.name}')" title="Edit folio"><svg width="13" height="13" stroke-width="2.5"><use href="#pencil-icon"/></svg></button>` : ''}
                 </div>
             `).join('');
         }
@@ -5350,6 +5367,41 @@
             sendPostRequest(payload, folioName + ' updated!');
         }
 
+        document.addEventListener('click', function (e) {
+            var el = e.target.closest('[data-click]');
+            if (el) {
+                var code = el.getAttribute('data-click');
+                if (code) (new Function('e', 'event', code)).call(el, e, e);
+            }
+        });
+        document.addEventListener('change', function (e) {
+            var el = e.target.closest('[data-change]');
+            if (el) {
+                var code = el.getAttribute('data-change');
+                if (code) (new Function('e', 'event', code)).call(el, e, e);
+            }
+        });
+        document.addEventListener('mouseover', function (e) {
+            var el = e.target.closest('[data-mouseenter]');
+            if (el) {
+                var code = el.getAttribute('data-mouseenter');
+                if (code) (new Function('e', 'event', code)).call(el, e, e);
+            }
+        });
+        document.addEventListener('mouseout', function (e) {
+            var el = e.target.closest('[data-mouseleave]');
+            if (el) {
+                var code = el.getAttribute('data-mouseleave');
+                if (code) (new Function('e', 'event', code)).call(el, e, e);
+            }
+        });
+        document.addEventListener('input', function (e) {
+            var el = e.target.closest('[data-input]');
+            if (el) {
+                var code = el.getAttribute('data-input');
+                if (code) (new Function('e', 'event', code)).call(el, e, e);
+            }
+        });
     </script>
 </body>
 </html>
