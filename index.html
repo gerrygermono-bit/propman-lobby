@@ -2922,6 +2922,27 @@
         100% { opacity: 0; transform: scale(4) translateY(-20px); }
     }
 
+    [data-tip] {
+        position: relative;
+        cursor: help;
+    }
+    [data-tip]:hover::after {
+        content: attr(data-tip);
+        position: absolute;
+        bottom: calc(100% + 6px);
+        left: 50%;
+        transform: translateX(-50%);
+        background: #333;
+        color: #fff;
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-size: 11px;
+        white-space: nowrap;
+        z-index: 9999;
+        pointer-events: none;
+        font-weight: 500;
+        letter-spacing: 0.01em;
+    }
     @media (prefers-reduced-motion: reduce) {
         *, *::before, *::after {
             animation-duration: 0.01ms !important;
@@ -3614,17 +3635,17 @@
                         <!-- Qty Distributed (read-only) -->
                         <div class="premium-field-group" style="margin:0;">
                             <label class="premium-field-label">Qty Distributed</label>
-                            <div style="padding: 9px 12px; border-radius: 12px; border: 1.5px solid var(--border-soft); background: var(--bg-canvas); color: var(--text-muted); font-size: 0.85rem; font-weight: 500;" id="editDistributedDisplay">0</div>
+                            <div data-tip="Please edit using the google sheet file." style="padding: 9px 12px; border-radius: 12px; border: 1.5px solid var(--border-soft); background: var(--bg-canvas); color: var(--text-muted); font-size: 0.85rem; font-weight: 500;" id="editDistributedDisplay">0</div>
                         </div>
                         <!-- Total Qty (read-only) -->
                         <div class="premium-field-group" style="margin:0;">
                             <label class="premium-field-label">Total Qty</label>
-                            <div style="padding: 9px 12px; border-radius: 12px; border: 1.5px solid var(--border-soft); background: var(--bg-canvas); color: var(--text-muted); font-size: 0.85rem; font-weight: 500;" id="editTotalDisplay">0</div>
+                            <div data-tip="Please edit using the google sheet file." style="padding: 9px 12px; border-radius: 12px; border: 1.5px solid var(--border-soft); background: var(--bg-canvas); color: var(--text-muted); font-size: 0.85rem; font-weight: 500;" id="editTotalDisplay">0</div>
                         </div>
-                        <!-- Allowable Qty (editable) -->
+                        <!-- Allowable Qty (read-only) -->
                         <div class="premium-field-group" style="margin:0;">
                             <label class="premium-field-label">Allowable Qty</label>
-                            <input type="number" id="editAllowable" class="premium-select" style="padding: 9px 12px; width: 100%;">
+                            <div data-tip="Please edit using the google sheet file." style="padding: 9px 12px; border-radius: 12px; border: 1.5px solid var(--border-soft); background: var(--bg-canvas); color: var(--text-muted); font-size: 0.85rem; font-weight: 500;" id="editAllowableDisplay">0</div>
                         </div>
                     </div>
 
@@ -4604,7 +4625,8 @@
             sendPostRequest({
                 token: CLIENT_API_TOKEN,
                 action: nextAction,
-                email: targetEmail,
+                email: userEmail,
+                targetEmail: targetEmail,
                 mode: currentStatus ? "" : "Onsite"
             }, `Overrode for ${targetEmail}`);
         }
@@ -4633,7 +4655,8 @@
             sendPostRequest({
                 token: CLIENT_API_TOKEN,
                 action: "Add Admin",
-                email: newEmail
+                email: userEmail,
+                targetEmail: newEmail
             }, `Administrator privileges granted to ${newEmail}`);
             input.value = "";
         }
@@ -4723,6 +4746,7 @@
             sendPostRequest({
                 token: CLIENT_API_TOKEN,
                 action: "Bulk Clock Out",
+                email: userEmail,
                 emails: emails
             }, `Clocked out ${emails.length} member(s)`);
         }
@@ -4780,6 +4804,8 @@
         
         function closeEbPasswordModal() {
             document.getElementById('ebPasswordModal').classList.add('hidden');
+            pendingCartItems = null;
+            document.querySelector('#cartSummary .cart-checkout-btn').disabled = false;
         }
         
         function submitEbPassword() {
@@ -4802,7 +4828,13 @@
                     sessionStorage.setItem('ebVerified', 'true');
                     closeEbPasswordModal();
                     showToast('EB password verified!');
-                    if (pendingCartItems) doSubmitCart(pendingCartItems);
+                    if (pendingCartItems) {
+                        doSubmitCart(pendingCartItems).then(() => {
+                            document.querySelector('#cartSummary .cart-checkout-btn').disabled = false;
+                        }).catch(() => {
+                            document.querySelector('#cartSummary .cart-checkout-btn').disabled = false;
+                        });
+                    }
                 } else {
                     showAlert(resData.message || 'Incorrect EB password.', 'Error');
                 }
@@ -5368,8 +5400,12 @@
         }
 
         async function submitCart() {
+            const btn = document.querySelector('#cartSummary .cart-checkout-btn');
+            if (btn.disabled) return;
             const items = Object.entries(cart).filter(([n, q]) => q > 0);
             if (items.length === 0) { showAlert("Cart is empty!"); return; }
+            
+            btn.disabled = true;
             
             const folioHistory = (fullCachedPayload && fullCachedPayload.folioHistory) || {};
             
@@ -5388,15 +5424,19 @@
                 }
             }
             
-            if (needsApproval && fullCachedPayload && !fullCachedPayload.isAdmin) {
-                if (sessionStorage.getItem('ebVerified') === 'true') {
-                    await doSubmitCart(items);
+            try {
+                if (needsApproval && fullCachedPayload && !fullCachedPayload.isAdmin) {
+                    if (sessionStorage.getItem('ebVerified') === 'true') {
+                        await doSubmitCart(items);
+                    } else {
+                        pendingCartItems = items;
+                        showEbPasswordModal();
+                    }
                 } else {
-                    pendingCartItems = items;
-                    showEbPasswordModal();
+                    await doSubmitCart(items);
                 }
-            } else {
-                await doSubmitCart(items);
+            } finally {
+                if (!pendingCartItems) btn.disabled = false;
             }
         }
         
@@ -5404,18 +5444,24 @@
         
         async function doSubmitCart(items) {
             const ebVerified = sessionStorage.getItem('ebVerified') === 'true';
-            for (const [name, qty] of items) {
-                await sendPostRequest({
-                    token: SYSTEM_API_TOKEN,
-                    action: "Get Folio",
-                    email: userEmail,
-                    folioName: name,
-                    quantity: qty,
-                    allowExceed: ebVerified
-                }, "Requested " + name);
+            try {
+                for (const [name, qty] of items) {
+                    await sendPostRequest({
+                        token: SYSTEM_API_TOKEN,
+                        action: "Get Folio",
+                        email: userEmail,
+                        folioName: name,
+                        quantity: qty,
+                        allowExceed: ebVerified
+                    }, "Requested " + name);
+                }
+                clearCart();
+            } catch (e) {
+                // re-throw so submitCart's finally can re-enable
+                throw e;
+            } finally {
+                pendingCartItems = null;
             }
-            clearCart();
-            pendingCartItems = null;
         }
 
         function clearCart() {
@@ -5438,7 +5484,7 @@
             document.getElementById('editBeginningQty').value = item.beginningQty || 0;
             document.getElementById('editDistributedDisplay').innerText = item.distributed || 0;
             document.getElementById('editTotalDisplay').innerText = item.remaining || 0;
-            document.getElementById('editAllowable').value = item.maxQty || 0;
+            document.getElementById('editAllowableDisplay').innerText = item.maxQty || 0;
             document.getElementById('editLimitPerMember').value = item.limitPerMember || 0;
             document.getElementById('editLocation').value = item.location || '';
             document.getElementById('editNote').value = item.note || '';
@@ -5463,7 +5509,6 @@
                 folioName: folioName,
                 beginningQty: parseFloat(document.getElementById('editBeginningQty').value) || 0,
                 location: document.getElementById('editLocation').value,
-                allowable: parseFloat(document.getElementById('editAllowable').value) || 0,
                 limitPerMember: parseFloat(document.getElementById('editLimitPerMember').value) || 0,
                 note: document.getElementById('editNote').value,
                 imageUrl: document.getElementById('editImageUrl').value
