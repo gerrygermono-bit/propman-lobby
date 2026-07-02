@@ -73,6 +73,12 @@
     [data-theme="dark"] .info-modal-body h4[style*="color: #4f46e5"] {
         color: #818cf8 !important;
     }
+    [data-theme="dark"] #accountModal .account-card[style*="border-left-color: #d97706"] {
+        border-left-color: #fbbf24 !important;
+    }
+    [data-theme="dark"] #accountModal .account-card-header[style*="color: #d97706"] {
+        color: #fbbf24 !important;
+    }
 
     html, body {
         max-width: 100%;
@@ -2876,14 +2882,11 @@
 
     .emoji-rain {
         position: fixed;
-        top: -40px;
+        top: 0;
+        left: 0;
         z-index: 99999;
         pointer-events: none;
-        font-size: 30px;
-        animation: emojiFall linear forwards;
-    }
-    @keyframes emojiFall {
-        to { transform: translateY(110vh) rotate(720deg); }
+        will-change: transform;
     }
 
     .disco-overlay {
@@ -2920,6 +2923,76 @@
     @keyframes sparkleFade {
         0% { opacity: 1; transform: scale(1); }
         100% { opacity: 0; transform: scale(4) translateY(-20px); }
+    }
+
+    .clock-out-wrapper {
+        position: relative;
+    }
+    .clock-out-meme {
+        position: absolute;
+        bottom: calc(100% + 8px);
+        right: 0;
+        width: 200px;
+        height: auto;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+        z-index: 100;
+        display: none;
+        pointer-events: none;
+    }
+    @media (hover: hover) {
+        .clock-out-wrapper:hover .clock-out-meme {
+            display: block;
+        }
+    }
+    .clock-out-meme.show {
+        display: block;
+    }
+
+    .disable-memes-wrapper {
+        position: relative;
+    }
+    .disable-memes-meme {
+        position: absolute;
+        bottom: calc(100% + 8px);
+        right: 0;
+        width: 200px;
+        height: auto;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+        z-index: 100;
+        display: none;
+        pointer-events: none;
+    }
+    @media (hover: hover) {
+        .disable-memes-wrapper:hover .disable-memes-meme {
+            display: block;
+        }
+    }
+    .disable-memes-meme.show {
+        display: block;
+    }
+
+    html.memes-disabled .brand h1:hover {
+        background: var(--brand-gradient, linear-gradient(135deg, var(--dlsu-green), #10b981));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: none;
+    }
+    html.memes-disabled[data-theme="dark"] .brand h1:hover {
+        background: linear-gradient(135deg, #34d399, #10b981);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    html.memes-disabled .clock-out-meme,
+    html.memes-disabled .clock-out-wrapper:hover .clock-out-meme {
+        display: none !important;
+    }
+    html.memes-disabled #sideEyeContainer,
+    html.memes-disabled #sideEyeContainer.show {
+        display: none !important;
     }
 
     [data-tip] {
@@ -3089,9 +3162,12 @@
                     <input type="text" id="clockInNote" class="clock-in-note" placeholder="What are you working on? (optional)" maxlength="200">
                 </div>
 
-                <button class="smart-btn clock-out hidden" id="clockOutBtn" data-click="executeClockOut()">
-                    Clock Out
-                </button>
+                <div class="clock-out-wrapper">
+                    <button class="smart-btn clock-out hidden" id="clockOutBtn" data-click="executeClockOut()">
+                        Clock Out
+                    </button>
+                    <img class="clock-out-meme" src="https://i.pinimg.com/736x/a6/ac/8b/a6ac8b18fbd670ad802bfe167f3b866d.jpg" alt="meme">
+                </div>
             </div>
         </section>
 
@@ -3371,7 +3447,7 @@
                     Reminders
                 </h4>
                 <ul style="margin: 0; padding-left: 20px; font-size: 0.88rem; list-style-type: disc;">
-                    <li style="margin-bottom: 6px;"><strong>Always clock out</strong> when you leave the office! The system does auto-clock-out at midnight as a safety net, but manual clock-out ensures your hours are most accurate.</li>
+                    <li style="margin-bottom: 6px;"><strong>Always clock out</strong> when you leave the office! The system does auto-clock-out at 10 PM as a safety net, but manual clock-out ensures your hours are most accurate.</li>
                     <li style="margin-bottom: 6px;">If your total hours or occupancy numbers don't update immediately, <strong>refresh the page</strong> to pull the latest data.</li>
                     <li style="margin-bottom: 6px;">Think something is wrong? <strong>Contact an EB</strong> or submit a <strong>Bug Report</strong> from the header.</li>
                 </ul>
@@ -3592,6 +3668,24 @@
                             <div class="premium-actions">
                                 <button class="premium-btn premium-btn-primary" data-click="applySectionEdit()">Apply</button>
                                 <button class="premium-btn premium-btn-ghost" data-click="cancelSectionEdit()">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Divider -->
+                    <hr style="border: none; border-top: 1px solid var(--border-soft); margin: 20px 0;">
+
+                    <!-- Card: Preferences -->
+                    <div class="account-card" style="border-left-color: #d97706;">
+                        <div class="account-card-header" style="color: #d97706;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                            Preferences
+                        </div>
+                        <div class="profile-field-row" style="border-bottom: none;">
+                            <span class="profile-field-label">Memes &amp; Easter Eggs</span>
+                            <div class="disable-memes-wrapper">
+                                <button class="premium-chip" id="disableMemesBtn" data-click="toggleMemesDisabled()" style="padding: 6px 16px; font-size: 0.8rem;">Disable Memes</button>
+                                <img class="disable-memes-meme" id="disableMemesMeme" src="https://i.pinimg.com/vwebp/736x/63/6e/e0/636ee050f792868fc0d45826c0a22dfc.webp" alt="meme" loading="lazy">
                             </div>
                         </div>
                     </div>
@@ -3918,6 +4012,42 @@
         let refreshTimer = null;
         let passwordPromptShown = false;
         const FOCUSABLE = 'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])';
+        var cursorX = -9999;
+        var cursorY = -9999;
+        document.addEventListener('mousemove', function(e) { cursorX = e.clientX; cursorY = e.clientY; });
+        document.addEventListener('touchmove', function(e) {
+            if (e.touches.length > 0) { cursorX = e.touches[0].clientX; cursorY = e.touches[0].clientY; }
+        });
+        var fallingEmojis = [];
+        var emojiAnimId = null;
+        function animateEmojis() {
+            for (var i = fallingEmojis.length - 1; i >= 0; i--) {
+                var e = fallingEmojis[i];
+                e.vy += 0.03 * e.g;
+                e.vx *= 0.99;
+                var dx = e.x - cursorX;
+                var dy = e.y - cursorY;
+                var size = parseFloat(e.el.style.fontSize) || 30;
+                if (Math.abs(dx) < size / 2 && Math.abs(dy) < size) {
+                    e.vx += (dx > 0 ? 1 : -1) * 5;
+                    e.vy -= 2;
+                }
+                e.x += e.vx;
+                e.y += e.vy;
+                if (e.x < 0) { e.x = 0; e.vx *= -0.4; }
+                if (e.x + size > window.innerWidth) { e.x = window.innerWidth - size; e.vx *= -0.4; }
+                e.el.style.transform = 'translate(' + e.x + 'px, ' + e.y + 'px) rotate(' + (e.y * 2) + 'deg)';
+                if (e.y > window.innerHeight + 100) {
+                    e.el.remove();
+                    fallingEmojis.splice(i, 1);
+                }
+            }
+            if (fallingEmojis.length > 0) {
+                emojiAnimId = requestAnimationFrame(animateEmojis);
+            } else {
+                emojiAnimId = null;
+            }
+        }
         function debouncedRefresh() {
             clearTimeout(refreshTimer);
             refreshTimer = setTimeout(function () { fetchUserData(userEmail); }, 1000);
@@ -3930,6 +4060,26 @@
             el.innerText = isEmpty ? '—' : str;
             el.classList.toggle('is-empty', isEmpty);
         }
+
+        var memesDisabled = localStorage.getItem('memesDisabled') === 'true';
+        var DISABLE_MEME_SRC = 'https://i.pinimg.com/vwebp/736x/63/6e/e0/636ee050f792868fc0d45826c0a22dfc.webp';
+        var ENABLE_MEME_SRC = 'https://i.pinimg.com/1200x/7a/09/79/7a0979579e3ef2755ac52e379dfc5761.jpg';
+        function areMemesEnabled() { return !memesDisabled; }
+        function updateMemesUI() {
+            var btn = document.getElementById('disableMemesBtn');
+            var img = document.getElementById('disableMemesMeme');
+            if (btn) btn.textContent = memesDisabled ? 'Enable Memes' : 'Disable Memes';
+            if (img) img.src = memesDisabled ? ENABLE_MEME_SRC : DISABLE_MEME_SRC;
+        }
+        function toggleMemesDisabled() {
+            memesDisabled = !memesDisabled;
+            localStorage.setItem('memesDisabled', memesDisabled);
+            document.documentElement.classList.toggle('memes-disabled', memesDisabled);
+            updateMemesUI();
+        }
+        document.documentElement.classList.toggle('memes-disabled', memesDisabled);
+        updateMemesUI();
+
         function escJs(str) {
             return String(str).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '\\"').replace(/<\//g, '<\\/').replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/\t/g, '\\t');
         }
@@ -3985,14 +4135,28 @@
 
         let themeClickCount = 0;
         let themeClickTimer = null;
+        let discoCooldown = false;
 
         function toggleTheme() {
+            if (discoCooldown) return;
+            if (!areMemesEnabled()) {
+                const targetTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', targetTheme);
+                localStorage.setItem('theme', targetTheme);
+                updateThemeIcon(targetTheme);
+                if (document.getElementById('loginView').classList.contains('hidden') === false) {
+                    renderGoogleSignInButton(targetTheme);
+                }
+                return;
+            }
             themeClickCount++;
             clearTimeout(themeClickTimer);
             themeClickTimer = setTimeout(function() { themeClickCount = 0; }, 5000);
 
             if (themeClickCount >= 6) {
                 themeClickCount = 0;
+                discoCooldown = true;
+                setTimeout(function() { discoCooldown = false; }, 3000);
                 startDiscoMode();
                 return;
             }
@@ -4008,6 +4172,9 @@
         }
 
         function startDiscoMode() {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            localStorage.setItem('theme', 'dark');
+            updateThemeIcon('dark');
             let icon = document.getElementById('themeIcon');
             icon.innerHTML = '';
 
@@ -5234,9 +5401,9 @@
             function setupMeme() {
                 let btn = document.getElementById('proceedDashboardBtn');
                 let container = document.getElementById('sideEyeContainer');
-                if (!btn || !container) return;
+                if (!btn || !container || !areMemesEnabled()) return;
 
-                function showMeme() { container.classList.add('show'); }
+                function showMeme() { if (areMemesEnabled()) container.classList.add('show'); }
                 function hideMeme() { container.classList.remove('show'); }
 
                 if (canHover) {
@@ -5259,29 +5426,35 @@
         let logoClickCount = 0;
         let logoTimer = null;
         document.querySelector('.brand h1').addEventListener('click', function() {
+            if (!areMemesEnabled()) return;
             logoClickCount++;
             clearTimeout(logoTimer);
             logoTimer = setTimeout(function() { logoClickCount = 0; }, 5000);
 
             if (logoClickCount >= 1) {
                 logoClickCount = 0;
-                rainEmojis('\uD83C\uDFF3\uFE0F\u200D\uD83C\uDF08', 50);
+                rainEmojis('\uD83C\uDFF3\uFE0F\u200D\uD83C\uDF08', 100);
             }
         });
 
         function rainEmojis(emoji, count) {
-            for (let i = 0; i < count; i++) {
-                let el = document.createElement('div');
+            for (var i = 0; i < count; i++) {
+                var el = document.createElement('div');
                 el.className = 'emoji-rain';
                 el.textContent = emoji;
-                el.style.left = Math.random() * 100 + 'vw';
-                el.style.fontSize = (20 + Math.random() * 20) + 'px';
-                el.style.animationDuration = (3 + Math.random() * 4) + 's';
-                el.style.animationDelay = (Math.random() * 2) + 's';
-                el.style.opacity = 0.6 + Math.random() * 0.4;
+                el.style.fontSize = (18 + Math.random() * 24) + 'px';
+                el.style.opacity = 0.5 + Math.random() * 0.5;
                 document.body.appendChild(el);
-                setTimeout(function() { el.remove(); }, 5000);
+                fallingEmojis.push({
+                    el: el,
+                    x: Math.random() * window.innerWidth,
+                    y: -(100 + Math.random() * 200),
+                    vx: (Math.random() - 0.5) * 0.3,
+                    vy: 0,
+                    g: 0.3 + Math.random() * 1.0
+                });
             }
+            if (!emojiAnimId) emojiAnimId = requestAnimationFrame(animateEmojis);
         }
 
         function closeAccountModal() {
@@ -5576,6 +5749,29 @@
                 }
             }
         });
+
+        // Meme popup for touch devices (no hover available)
+        if (!window.matchMedia('(hover: hover)').matches) {
+            document.getElementById('clockOutBtn').addEventListener('click', function () {
+                if (!areMemesEnabled()) return;
+                var meme = document.querySelector('.clock-out-meme');
+                if (meme) {
+                    meme.classList.add('show');
+                    setTimeout(function () { meme.classList.remove('show'); }, 5000);
+                }
+            });
+        }
+
+        // Meme popup on disable button for touch devices
+        if (!window.matchMedia('(hover: hover)').matches) {
+            document.getElementById('disableMemesBtn').addEventListener('click', function () {
+                var meme = document.querySelector('.disable-memes-meme');
+                if (meme) {
+                    meme.classList.add('show');
+                    setTimeout(function () { meme.classList.remove('show'); }, 5000);
+                }
+            });
+        }
     </script>
 </body>
 </html>
