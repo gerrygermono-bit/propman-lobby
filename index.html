@@ -203,11 +203,6 @@
         height: 28px;
         background: linear-gradient(180deg, var(--dlsu-green), #10b981);
         border-radius: 6px;
-        box-shadow: 0 0 12px rgba(10, 92, 54, 0.25);
-    }
-
-    [data-theme="dark"] .brand-logo {
-        box-shadow: 0 0 16px rgba(16, 185, 129, 0.2);
     }
 
     .brand h1 {
@@ -310,9 +305,10 @@
         height: 6px;
         border-radius: 50%;
         background: var(--status-in);
-        box-shadow: 0 0 6px var(--status-in);
-        animation: pulseDot 2s ease-in-out infinite;
         flex-shrink: 0;
+    }
+    .occupancy-mini-box.is-zero::before {
+        background: var(--text-muted);
     }
 
     .logout-link {
@@ -500,8 +496,6 @@
         top: 45px;
         right: 0;
         background: var(--surface-card);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
         border: 1px solid var(--glass-border);
         box-shadow: var(--shadow-lg);
         display: none;
@@ -751,25 +745,9 @@
         overflow: hidden;
     }
 
-    .metric-display::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 3px;
-        background: linear-gradient(90deg, transparent, var(--dlsu-green), #10b981, transparent);
-        opacity: 0.6;
-    }
-
     [data-theme="dark"] .metric-display {
         background: linear-gradient(135deg, rgba(30, 41, 59, 0.6), rgba(15, 23, 42, 0.4));
         box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
-    }
-
-    [data-theme="dark"] .metric-display::before {
-        background: linear-gradient(90deg, transparent, #34d399, #10b981, transparent);
-        opacity: 0.4;
     }
 
     .metric-label {
@@ -1072,7 +1050,6 @@
 
     .feed-item:hover {
         background: rgba(255, 255, 255, 0.5);
-        border-left-color: var(--dlsu-green);
     }
 
     .feed-item:last-child {
@@ -1085,7 +1062,6 @@
 
     [data-theme="dark"] .feed-item:hover {
         background: rgba(255, 255, 255, 0.03);
-        border-left-color: #34d399;
     }
 
     .log-note {
@@ -1189,7 +1165,6 @@
 
     .board-user:hover, .roster-user-item:hover {
         background: rgba(255, 255, 255, 0.4);
-        border-left-color: var(--dlsu-green);
     }
 
     [data-theme="dark"] .board-user, [data-theme="dark"] .roster-user-item {
@@ -1198,7 +1173,6 @@
 
     [data-theme="dark"] .board-user:hover, [data-theme="dark"] .roster-user-item:hover {
         background: rgba(255, 255, 255, 0.03);
-        border-left-color: #34d399;
     }
 
     .board-user {
@@ -1744,16 +1718,6 @@
         font-weight: 600;
     }
 
-    .folio-stock-dot {
-        width: 7px;
-        height: 7px;
-        border-radius: 50%;
-        flex-shrink: 0;
-    }
-
-    .folio-stock-dot.high { background: var(--status-in); box-shadow: 0 0 6px var(--status-in); }
-    .folio-stock-dot.low { background: #f59e0b; box-shadow: 0 0 6px #f59e0b; }
-    .folio-stock-dot.empty { background: var(--status-out); box-shadow: 0 0 6px var(--status-out); }
 
     .folio-stock-text.high { color: var(--status-in); }
     .folio-stock-text.low { color: #d97706; }
@@ -1852,6 +1816,19 @@
 
     .folio-restricted svg {
         flex-shrink: 0;
+    }
+
+    .folio-restricted.bypass-eligible {
+        cursor: pointer;
+        transition: background 0.15s, border-color 0.15s, color 0.15s;
+    }
+    .folio-restricted.bypass-eligible .label-bypass { display: none; }
+    .folio-restricted.bypass-eligible:hover .label-bypass { display: inline; }
+    .folio-restricted.bypass-eligible:hover .label-restricted { display: none; }
+    .folio-restricted.bypass-eligible:hover {
+        background: rgba(16,185,129,0.1);
+        border-color: rgba(16,185,129,0.3);
+        color: var(--status-in);
     }
 
     /* ===== CART SUMMARY ===== */
@@ -2258,11 +2235,6 @@
         100% { background-position: 0% 50%; }
     }
 
-    @keyframes pulseDot {
-        0%, 100% { opacity: 0.4; transform: scale(0.8); }
-        50% { opacity: 1; transform: scale(1.2); }
-    }
-
     @keyframes qtyBounce {
         0% { transform: scale(1); }
         40% { transform: scale(1.35); }
@@ -2453,6 +2425,7 @@
     }
 
     [data-theme="dark"] .feedback-type-btn.feedback-active {
+        color: #34d399;
         box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     }
 
@@ -3438,6 +3411,11 @@
                     <li>Passwords reset every <strong>Saturday at 10 PM</strong>, so you'll need to set a new one each week.</li>
                     <li>If you haven't set one yet, you'll see a prompt when you log in.</li>
                 </ul>
+
+                <h5 style="margin: 0 0 4px; font-size: 0.9rem; margin-top: 12px;">Folio Bypass</h5>
+                <ul style="margin: 0 0 4px; padding-left: 20px; font-size: 0.88rem; list-style-type: disc;">
+                    <li>Hover over a <strong>DO NOT DISTRIBUTE</strong> folio — it'll show <strong>"BYPASS?"</strong>. Click it to add it to your cart.</li>
+                </ul>
             </div>
 
             <!-- ===== REMINDERS ===== -->
@@ -3844,18 +3822,18 @@
                     <h3>Office Closure Reminder</h3>
                 </div>
                 <div class="closure-modal-body">
-                    <p>You're the last member to leave! Before you go, please make sure to:</p>
+                    <p>You're one of the last few to leave the office! Before you go, please make sure to:</p>
                     <ul class="closure-checklist">
                         <li>
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14s.5-1 2-2 3-1 3-1"/><circle cx="12" cy="12" r="10"/><circle cx="12" cy="10" r="3"/><path d="M12 13v2"/></svg>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg>
                             Turn off lights
                         </li>
                         <li>
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="8" height="20" rx="1"/><rect x="14" y="6" width="8" height="16" rx="1"/></svg>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
                             Unplug extension cords
                         </li>
                         <li>
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 4V2"/><path d="M15 4V2"/><path d="M4 9h16"/><path d="M4 15h16"/></svg>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/><line x1="4.93" y1="19.07" x2="19.07" y2="4.93"/></svg>
                             Turn off air conditioner
                         </li>
                     </ul>
@@ -4050,7 +4028,7 @@
         }
         function debouncedRefresh() {
             clearTimeout(refreshTimer);
-            refreshTimer = setTimeout(function () { fetchUserData(userEmail); }, 1000);
+            refreshTimer = setTimeout(function () { fetchUserData(userEmail); }, 200);
         }
         function setFieldDisplay(id, value) {
             let el = document.getElementById(id);
@@ -4281,6 +4259,7 @@
                 document.getElementById('sidebarPanel').classList.remove('hidden');
                 document.getElementById('trackerPanel').classList.remove('hidden');
                 document.getElementById('adminContentView').classList.remove('hidden');
+                if (fullCachedPayload) populateAdminConsole(fullCachedPayload);
             }
         }
 
@@ -4332,13 +4311,9 @@
         }
 
         function fetchUserData(email, callback) {
-            console.log("DEBUG: Fetching data for:", email); // Added for visibility
-            
             fetch(`${APPS_SCRIPT_URL}?id=${encodeURIComponent(email)}&token=${encodeURIComponent(CLIENT_API_TOKEN)}`)
                 .then(res => res.json())
                 .then(data => {
-                    console.log("DEBUG: Data received from server:", data); // Added for visibility
-                    
                     if (data.status === "error") {
                         showGlobalWarning(data.message);
                         if (callback) callback();
@@ -4347,10 +4322,14 @@
                     
                     fullCachedPayload = data; 
                     
-                    // 1. Always render the shop if data is available
+                    // 1. Update folio cache; only re-render shop if data changed
                     if (data.availableFolios) {
+                        var newFolioStr = JSON.stringify(data.availableFolios);
+                        var prevFolioStr = JSON.stringify(folioDataCache);
                         folioDataCache = data.availableFolios;
-                        renderFolioShop(data.availableFolios);
+                        if (newFolioStr !== prevFolioStr) {
+                            renderFolioShop(data.availableFolios);
+                        }
                     }
                     
                     // 2. Only render the dashboard if the element is not hidden
@@ -4364,7 +4343,6 @@
                     if (callback) callback();
                 })
                 .catch(err => {
-                    console.error("DEBUG: Fetch error:", err); // Added for visibility
                     showGlobalWarning("Connectivity error: Unable to map real-time status.");
                     if (callback) callback();
                 });
@@ -4375,7 +4353,9 @@
             if (data.isAdmin) {
                 document.getElementById('adminMenuOpt').classList.remove('hidden');
                 positionText = "Admin";
-                populateAdminConsole(data);
+                if (!document.getElementById('adminContentView').classList.contains('hidden')) {
+                    populateAdminConsole(data);
+                }
                 if (data.needsPassword && !passwordPromptShown) {
                     passwordPromptShown = true;
                     setTimeout(showAdminSetPasswordPrompt, 500);
@@ -4387,6 +4367,8 @@
             let onsiteCount = data.onsiteCount || 0;
             document.getElementById('onlineCountVal').innerText = onlineCount;
             document.getElementById('onsiteCountVal').innerText = onsiteCount;
+            document.getElementById('onlineCountVal').parentElement.classList.toggle('is-zero', onlineCount === 0);
+            document.getElementById('onsiteCountVal').parentElement.classList.toggle('is-zero', onsiteCount === 0);
             document.getElementById('menuOnlineCountVal').innerText = onlineCount;
             document.getElementById('menuOnsiteCountVal').innerText = onsiteCount;
             
@@ -4412,7 +4394,7 @@
             configureTrackingInterface(data.isClockedIn, data.lastActionTimestamp);
             populateRecentLogs(data.recentLogs);
 
-            if (pendingOnsiteCheckout && data.onsiteCount === 0) {
+            if (pendingOnsiteCheckout && data.onsiteCount <= 3) {
                 pendingOnsiteCheckout = false;
                 setTimeout(showClosureReminder, 500);
             } else {
@@ -4528,6 +4510,9 @@
             }
             try {
                 await sendPostRequest(clockInPayload, `Clocked In successfully (${selectedClockInModeStr})`);
+                configureTrackingInterface(true, new Date().toISOString());
+                resetClockInUI();
+                document.getElementById('clockInNote').value = '';
             } catch (e) {
                 document.getElementById('clockInNote').value = clockNote;
             } finally {
@@ -4555,6 +4540,7 @@
                     email: userEmail,
                     mode: ""
                 }, "Clocked Out successfully");
+                configureTrackingInterface(false, null);
             } catch (e) {
                 pendingOnsiteCheckout = false;
             } finally {
@@ -5498,7 +5484,6 @@
         let cart = {};
         
         function renderFolioShop(folioData) {
-            console.log("Debug: Folio List received:", folioData);
             const container = document.getElementById('folioGrid');
             
             if (!folioData || folioData.length === 0) {
@@ -5521,7 +5506,6 @@
                     <div class="folio-card-body">
                         <div class="folio-card-name">${safeName}</div>
                         <div class="folio-stock">
-                            <span class="folio-stock-dot ${!item.canGet ? 'empty' : item.maxQty > 5 ? 'high' : 'low'}"></span>
                             <span class="folio-stock-text ${!item.canGet ? 'empty' : item.maxQty > 5 ? 'high' : 'low'}" ${item.canGet ? `data-click="setCartQuantity('${safeJsName}', ${item.maxQty})" style="cursor:pointer;" title="Fill max"` : ''}>Total: ${item.remaining}</span>
                         </div>
                         ${item.limitPerMember > 0 ? `<div class="folio-limit-badge">Limit: ${item.limitPerMember}/member</div>` : ''}
@@ -5532,15 +5516,28 @@
                                 <button class="qty-btn plus" data-click="updateCart('${safeJsName}', 1)">+</button>
                             </div>
                         ` : `
-                            <div class="folio-restricted">
+                            <div class="folio-restricted${(fullCachedPayload && fullCachedPayload.isAdmin) ? ' bypass-eligible' : ''}"${(fullCachedPayload && fullCachedPayload.isAdmin) ? ` data-click="bypassRestriction('${safeJsName}', this)"` : ''}>
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                                DO NOT DISTRIBUTE
+                                <span class="label-restricted">DO NOT DISTRIBUTE</span>
+                                <span class="label-bypass">BYPASS?</span>
                             </div>
                         `}
                     </div>
                     ${(fullCachedPayload && fullCachedPayload.isAdmin) ? `<button class="folio-edit-btn" data-click="openEditFolioModal('${safeJsName}')" title="Edit folio"><svg width="13" height="13" stroke-width="2.5"><use href="#pencil-icon"/></svg></button>` : ''}
                 </div>`;
             }).join('');
+        }
+
+        function bypassRestriction(name, el) {
+            var item = folioDataCache.find(function(f) { return f.name === name; });
+            if (!item) return;
+            item.maxQty = item.remaining || 9999;
+            var safeName = escJs(name);
+            el.outerHTML = '<div class="folio-qty-control">' +
+                '<button class="qty-btn minus" data-click="updateCart(\'' + safeName + '\', -1)">&minus;</button>' +
+                '<input class="qty-input" type="number" id="qty-' + name + '" value="0" min="0" max="' + (item.remaining || 9999) + '" data-change="setCartQuantity(\'' + safeName + '\', this.value)">' +
+                '<button class="qty-btn plus" data-click="updateCart(\'' + safeName + '\', 1)">+</button>' +
+            '</div>';
         }
 
         function updateCart(name, change) {
