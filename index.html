@@ -1831,6 +1831,747 @@
         color: var(--status-in);
     }
 
+    /* ===== APPOINTMENT SCHEDULES ===== */
+
+    #scheduleGrid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 16px;
+        width: 100%;
+        box-sizing: border-box;
+        padding: 0 0 4px;
+    }
+
+    .schedule-card {
+        background: var(--surface-card);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid var(--glass-border);
+        border-radius: 16px;
+        padding: 18px;
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                    box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                    border-color 0.3s ease;
+        animation: cardEntrance 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+    }
+
+    .schedule-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-lg);
+        border-color: rgba(16, 185, 129, 0.2);
+    }
+
+    .schedule-card-title {
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: var(--text-main);
+        margin-bottom: 8px;
+    }
+
+    .schedule-card-date {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--dlsu-green);
+        margin-bottom: 4px;
+    }
+
+    .schedule-card-time {
+        font-size: 0.82rem;
+        color: var(--text-muted);
+        margin-bottom: 4px;
+    }
+
+    .schedule-card-meta {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        margin-bottom: 12px;
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .schedule-type-badge {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 100px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    .schedule-type-badge.single {
+        background: rgba(79, 70, 229, 0.08);
+        color: #4f46e5;
+        border: 1px solid rgba(79, 70, 229, 0.15);
+    }
+
+    .schedule-type-badge.multiple {
+        background: rgba(16, 185, 129, 0.1);
+        color: var(--dlsu-green);
+        border: 1px solid rgba(16, 185, 129, 0.15);
+    }
+
+    [data-theme="dark"] .schedule-type-badge.single {
+        background: rgba(129, 140, 248, 0.12);
+        color: #818cf8;
+        border-color: rgba(129, 140, 248, 0.2);
+    }
+
+    [data-theme="dark"] .schedule-type-badge.multiple {
+        background: rgba(52, 211, 153, 0.12);
+        color: #34d399;
+        border-color: rgba(52, 211, 153, 0.2);
+    }
+
+    .schedule-slots {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 12px;
+    }
+
+    .schedule-date-block {
+        margin-bottom: 10px;
+    }
+
+    .schedule-date-block:last-child {
+        margin-bottom: 0;
+    }
+
+    .schedule-date-label {
+        font-size: 0.78rem;
+        font-weight: 700;
+        color: var(--dlsu-green);
+        margin-bottom: 6px;
+        padding-bottom: 4px;
+        border-bottom: 1px dashed rgba(16, 185, 129, 0.2);
+    }
+
+    [data-theme="dark"] .schedule-date-label {
+        color: #34d399;
+        border-bottom-color: rgba(52, 211, 153, 0.2);
+    }
+
+    .slot-btn {
+        padding: 6px 12px;
+        border-radius: 8px;
+        border: 1.5px solid var(--border-soft);
+        background: var(--bg-canvas);
+        color: var(--text-main);
+        font-size: 0.78rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .slot-btn:hover:not(.booked):not(.my-booked) {
+        border-color: var(--dlsu-green);
+        background: rgba(16, 185, 129, 0.06);
+    }
+
+    .slot-btn.booked {
+        background: rgba(244, 63, 94, 0.06);
+        border-color: rgba(244, 63, 94, 0.2);
+        color: var(--status-out);
+        cursor: not-allowed;
+        opacity: 0.7;
+    }
+
+    .slot-btn.my-booked {
+        background: rgba(16, 185, 129, 0.1);
+        border-color: rgba(16, 185, 129, 0.3);
+        color: var(--dlsu-green);
+        cursor: pointer;
+    }
+
+    [data-theme="dark"] .slot-btn.booked {
+        background: rgba(244, 63, 94, 0.12);
+        border-color: rgba(244, 63, 94, 0.3);
+        color: #fb7185;
+    }
+
+    [data-theme="dark"] .slot-btn.my-booked {
+        background: rgba(52, 211, 153, 0.12);
+        border-color: rgba(52, 211, 153, 0.3);
+        color: #34d399;
+    }
+
+    .schedule-admin-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: auto;
+        padding-top: 8px;
+        border-top: 1px solid var(--border-soft);
+    }
+
+    .booking-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 0.85rem;
+        border-radius: 6px;
+        transition: background 0.2s ease;
+    }
+
+    .booking-item:hover {
+        background: rgba(255, 255, 255, 0.5);
+    }
+
+    [data-theme="dark"] .booking-item {
+        border-bottom-color: rgba(51, 65, 85, 0.4);
+    }
+
+    [data-theme="dark"] .booking-item:hover {
+        background: rgba(255, 255, 255, 0.03);
+    }
+
+    .booking-info {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .booking-info .booking-title {
+        font-weight: 600;
+        color: var(--text-main);
+    }
+
+    .booking-info .booking-time {
+        font-size: 0.78rem;
+        color: var(--text-muted);
+    }
+
+    .booking-actions {
+        flex-shrink: 0;
+    }
+
+    .slot-preview-chip {
+        display: inline-block;
+        padding: 3px 8px;
+        border-radius: 6px;
+        font-size: 0.72rem;
+        font-weight: 600;
+        margin: 2px;
+        background: rgba(10, 92, 54, 0.08);
+        color: var(--dlsu-green);
+        border: 1px solid rgba(10, 92, 54, 0.12);
+    }
+
+    [data-theme="dark"] .slot-preview-chip {
+        background: rgba(52, 211, 153, 0.1);
+        color: #34d399;
+        border-color: rgba(52, 211, 153, 0.2);
+    }
+
+    /* ===== SCHEDULE CALENDAR GRID ===== */
+
+    .cal-grid {
+        border: 1.5px solid var(--border-soft);
+        border-radius: 12px;
+        padding: 12px;
+        background: var(--surface-card);
+        user-select: none;
+    }
+
+    .cal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .cal-header-label {
+        font-size: 0.88rem;
+        font-weight: 700;
+        color: var(--text-main);
+    }
+
+    .cal-nav-btn {
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        border: 1.5px solid var(--border-soft);
+        background: transparent;
+        color: var(--text-main);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+        font-size: 0.75rem;
+    }
+
+    .cal-nav-btn:hover {
+        border-color: var(--dlsu-green);
+        color: var(--dlsu-green);
+    }
+
+    .cal-weekdays {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 2px;
+        margin-bottom: 4px;
+    }
+
+    .cal-weekday {
+        text-align: center;
+        font-size: 0.65rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        padding: 4px 0;
+    }
+
+    .cal-days {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 2px;
+    }
+
+    .cal-day {
+        text-align: center;
+        padding: 7px 0;
+        border-radius: 8px;
+        font-size: 0.78rem;
+        font-weight: 500;
+        color: var(--text-main);
+        cursor: pointer;
+        transition: all 0.15s ease;
+        position: relative;
+    }
+
+    .cal-day:hover:not(.cal-day-past):not(.cal-day-empty) {
+        background: rgba(16, 185, 129, 0.08);
+    }
+
+    .cal-day-today {
+        font-weight: 700;
+        color: var(--dlsu-green);
+    }
+
+    .cal-day-today::after {
+        content: '';
+        position: absolute;
+        bottom: 3px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background: var(--dlsu-green);
+    }
+
+    .cal-day-selected {
+        background: var(--dlsu-green) !important;
+        color: #fff !important;
+        font-weight: 700;
+    }
+
+    .cal-day-selected.cal-day-today::after {
+        background: #fff;
+    }
+
+    .cal-day-past {
+        color: var(--text-muted);
+        opacity: 0.35;
+        cursor: not-allowed;
+    }
+
+    .cal-day-empty {
+        cursor: default;
+    }
+
+    .cal-day-other {
+        color: var(--text-muted);
+        opacity: 0.3;
+    }
+
+    [data-theme="dark"] .cal-grid {
+        background: rgba(30, 41, 59, 0.85);
+        border-color: rgba(51, 65, 85, 0.5);
+    }
+
+    [data-theme="dark"] .cal-header-label {
+        color: #f1f5f9;
+    }
+
+    [data-theme="dark"] .cal-nav-btn {
+        border-color: rgba(51, 65, 85, 0.5);
+        color: #e2e8f0;
+    }
+
+    [data-theme="dark"] .cal-nav-btn:hover {
+        border-color: #34d399;
+        color: #34d399;
+    }
+
+    [data-theme="dark"] .cal-weekday {
+        color: #94a3b8;
+    }
+
+    [data-theme="dark"] .cal-day {
+        color: #e2e8f0;
+    }
+
+    [data-theme="dark"] .cal-day:hover:not(.cal-day-past):not(.cal-day-empty) {
+        background: rgba(52, 211, 153, 0.1);
+    }
+
+    [data-theme="dark"] .cal-day-today {
+        color: #34d399;
+    }
+
+    [data-theme="dark"] .cal-day-today::after {
+        background: #34d399;
+    }
+
+    /* ===== SCHEDULE TIMELINE ===== */
+
+    .tl-container {
+        border: 1.5px solid var(--border-soft);
+        border-radius: 12px;
+        background: var(--surface-card);
+        max-height: 260px;
+        overflow-y: auto;
+        position: relative;
+        user-select: none;
+        touch-action: none;
+    }
+
+    .tl-container::-webkit-scrollbar {
+        width: 5px;
+    }
+
+    .tl-container::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .tl-container::-webkit-scrollbar-thumb {
+        background: var(--border-soft);
+        border-radius: 10px;
+    }
+
+    .tl-row {
+        display: flex;
+        align-items: center;
+        height: 32px;
+        position: relative;
+        border-bottom: 1px solid rgba(226, 232, 240, 0.3);
+        transition: background 0.1s ease;
+    }
+
+    [data-theme="dark"] .tl-row {
+        border-bottom-color: rgba(51, 65, 85, 0.25);
+    }
+
+    .tl-row-hour {
+        border-bottom: 1.5px solid var(--border-soft);
+    }
+
+    .tl-label {
+        width: 78px;
+        flex-shrink: 0;
+        font-size: 0.7rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        padding-left: 10px;
+        z-index: 2;
+    }
+
+    [data-theme="dark"] .tl-label {
+        color: #94a3b8;
+    }
+
+    [data-theme="dark"] .tl-label-selected {
+        color: #34d399;
+    }
+
+    .tl-label-selected {
+        color: var(--dlsu-green);
+        font-weight: 700;
+    }
+
+    [data-theme="dark"] .tl-label-selected {
+        color: #34d399;
+    }
+
+    .tl-track {
+        flex: 1;
+        height: 100%;
+        position: relative;
+    }
+
+    .tl-fill {
+        position: absolute;
+        top: 1px;
+        bottom: 1px;
+        left: 0;
+        right: 0;
+        border-radius: 4px;
+        pointer-events: none;
+    }
+
+    .tl-row-selected .tl-fill {
+        background: rgba(16, 185, 129, 0.12);
+    }
+
+    .tl-row-range-start .tl-fill {
+        border-top-left-radius: 8px;
+        border-bottom-left-radius: 8px;
+        background: rgba(16, 185, 129, 0.18);
+    }
+
+    .tl-row-range-end .tl-fill {
+        border-top-right-radius: 8px;
+        border-bottom-right-radius: 8px;
+        background: rgba(16, 185, 129, 0.18);
+    }
+
+    [data-theme="dark"] .tl-row-selected .tl-fill {
+        background: rgba(52, 211, 153, 0.1);
+    }
+
+    [data-theme="dark"] .tl-row-range-start .tl-fill,
+    [data-theme="dark"] .tl-row-range-end .tl-fill {
+        background: rgba(52, 211, 153, 0.15);
+    }
+
+    .tl-selection-label {
+        text-align: center;
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--dlsu-green);
+        padding: 8px 0 2px;
+        min-height: 28px;
+    }
+
+    [data-theme="dark"] .tl-selection-label {
+        color: #34d399;
+    }
+
+    .cal-or-divider {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 14px 0;
+        color: var(--text-muted);
+        font-size: 0.72rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .cal-or-divider::before,
+    .cal-or-divider::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: var(--border-soft);
+    }
+
+    .manual-inputs-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 8px;
+    }
+
+    .manual-inputs-grid .premium-field-group:last-child {
+        grid-column: 1 / -1;
+    }
+
+    .sch-time-input {
+        width: 100% !important;
+        padding: 9px 12px !important;
+        border-radius: 12px;
+        border: 1.5px solid var(--border-soft);
+        background: var(--surface-card);
+        color: var(--text-main);
+        font-family: inherit;
+        font-size: 0.82rem;
+        font-weight: 500;
+        outline: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        min-width: 0;
+        box-sizing: border-box;
+        height: 37px;
+    }
+
+    .sch-time-input:hover {
+        border-color: var(--text-muted);
+    }
+
+    .sch-time-input:focus {
+        border-color: var(--dlsu-green);
+        box-shadow: 0 0 0 3px rgba(10, 92, 54, 0.1);
+    }
+
+    [data-theme="dark"] .sch-time-input {
+        background: var(--surface-card);
+        border-color: rgba(51, 65, 85, 0.5);
+        color: #e2e8f0;
+    }
+
+    [data-theme="dark"] .sch-time-input:focus {
+        border-color: #34d399;
+        box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.12);
+    }
+
+    @media (max-width: 500px) {
+        .manual-inputs-grid {
+            grid-template-columns: 1fr;
+        }
+        .tl-label { width: 58px; font-size: 0.65rem; }
+    }
+
+    /* ===== DATE CHIPS ===== */
+
+    .sch-date-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 10px;
+        min-height: 34px;
+    }
+
+    .sch-date-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        background: rgba(16, 185, 129, 0.1);
+        border: 1.5px solid var(--dlsu-green);
+        border-radius: 8px;
+        padding: 4px 10px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--dlsu-green);
+        cursor: pointer;
+        transition: all 0.15s ease;
+    }
+
+    .sch-date-chip.active {
+        background: var(--dlsu-green);
+        color: #fff;
+    }
+
+    .sch-date-chip:hover:not(.active) {
+        background: rgba(16, 185, 129, 0.18);
+    }
+
+    [data-theme="dark"] .sch-date-chip {
+        background: rgba(52, 211, 153, 0.1);
+        border-color: #34d399;
+        color: #34d399;
+    }
+
+    [data-theme="dark"] .sch-date-chip.active {
+        background: #34d399;
+        color: #0f172a;
+    }
+
+    .sch-date-chip .chip-x {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: rgba(0,0,0,0.12);
+        font-size: 0.6rem;
+        line-height: 1;
+        transition: background 0.15s;
+    }
+
+    .sch-date-chip .chip-x:hover {
+        background: rgba(220, 38, 38, 0.25);
+        color: #dc2626;
+    }
+
+    .sch-date-chip.active .chip-x {
+        background: rgba(255,255,255,0.25);
+    }
+
+    .sch-date-chip.active .chip-x:hover {
+        background: rgba(220, 38, 38, 0.5);
+    }
+
+    .sch-no-dates-hint {
+        color: var(--text-muted);
+        font-size: 0.75rem;
+        font-style: italic;
+        padding: 6px 0;
+    }
+
+    /* ===== MULTI-RANGE TIMELINE ===== */
+
+    .tl-row-range-middle .tl-fill {
+        background: rgba(16, 185, 129, 0.12);
+        border-radius: 0;
+    }
+
+    [data-theme="dark"] .tl-row-range-middle .tl-fill {
+        background: rgba(52, 211, 153, 0.1);
+    }
+
+    .tl-range-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 6px;
+    }
+
+    .tl-range-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        background: rgba(16, 185, 129, 0.08);
+        border: 1px solid rgba(16, 185, 129, 0.25);
+        border-radius: 8px;
+        padding: 4px 10px;
+        font-size: 0.72rem;
+        font-weight: 600;
+        color: var(--dlsu-green);
+    }
+
+    [data-theme="dark"] .tl-range-badge {
+        background: rgba(52, 211, 153, 0.08);
+        border-color: rgba(52, 211, 153, 0.25);
+        color: #34d399;
+    }
+
+    .tl-range-badge .badge-x {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 13px;
+        height: 13px;
+        border-radius: 50%;
+        background: rgba(0,0,0,0.1);
+        font-size: 0.55rem;
+        cursor: pointer;
+    }
+
+    .tl-range-badge .badge-x:hover {
+        background: rgba(220, 38, 38, 0.25);
+        color: #dc2626;
+    }
+
+    .sch-selected-dates-label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--text-main);
+        margin-top: 12px;
+        margin-bottom: 4px;
+    }
+
     /* ===== CART SUMMARY ===== */
 
     #cartSummary {
@@ -3065,6 +3806,7 @@
                     <button data-click="openAccountModal()">Account Information</button>
                     <button data-click="showPanel('history')">Log History</button>
                     <button data-click="showPanel('shop')">Get a Folio</button>
+                    <button data-click="showPanel('appointments')">Appoint a Schedule</button>
                     <button class="hidden" id="adminMenuOpt" data-click="showPanel('admin')">Admin Board</button>
                     
                 </div>
@@ -3160,6 +3902,30 @@
                 <div class="history-feed-container" id="fullHistoryContainer">
                     <div class="empty-state">No operations logs found.</div>
                 </div>
+            </div>
+
+            <div class="card select-panel-view hidden" id="appointmentsContentView">
+                <div class="panel-heading">
+                    <span>Appoint a Schedule</span>
+                    <button class="action-sub-btn status-toggle hidden" id="createScheduleBtn" data-click="openCreateScheduleModal()">+ New Schedule</button>
+                </div>
+                <div id="myBookingsSection" style="margin-bottom: 16px;">
+                    <div class="panel-heading" style="font-size: 0.95rem; margin-bottom: 8px;">
+                        <span>My Upcoming Bookings</span>
+                    </div>
+                    <div id="myBookingsContainer">
+                        <div class="empty-state">You have no upcoming bookings.</div>
+                    </div>
+                </div>
+                <hr style="border: none; border-top: 1px solid var(--border-soft); margin: 0 0 16px;">
+                <div class="panel-heading" style="margin-bottom: 8px;">
+                    <span>Available Schedules</span>
+                </div>
+                <div class="folio-search-bar" style="padding: 0; margin-bottom: 16px;">
+                    <svg class="folio-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                    <input class="folio-search-input" type="text" placeholder="Search schedules..." data-input="filterSchedules(this.value)">
+                </div>
+                <div id="scheduleGrid"></div>
             </div>
 
             <div class="card select-panel-view hidden" id="adminContentView">
@@ -3767,6 +4533,94 @@
             </div>
         </div>
 
+        <!-- Create Schedule Modal -->
+        <div class="info-modal-overlay hidden" id="createScheduleModal" role="dialog" aria-modal="true">
+            <div class="info-modal" style="max-width: 520px;" data-click="event.stopPropagation()">
+                <div class="info-modal-header">
+                    <h3>Create New Schedule</h3>
+                    <button class="info-modal-close" data-click="closeCreateScheduleModal()">&times;</button>
+                </div>
+                <div class="info-modal-body">
+                    <div class="premium-field-group">
+                        <label class="premium-field-label">Schedule Title</label>
+                        <input type="text" id="schTitle" class="premium-select" style="padding: 10px 14px; width: 100%;" placeholder="e.g. Room 301 Consultation">
+                    </div>
+
+                    <label class="premium-field-label">Pick Dates (click to select multiple)</label>
+                    <div class="cal-grid" id="scheduleCalendarGrid"></div>
+                    <div class="sch-date-chips" id="schDateChips"></div>
+
+                    <div class="premium-field-group" style="margin-top: 14px;">
+                        <label class="premium-field-label">Slot Duration</label>
+                        <div class="premium-select-wrapper">
+                            <select id="schSlotDuration" class="premium-select" style="padding: 9px 12px; font-size: 0.82rem;">
+                                <option value="15">15 minutes</option>
+                                <option value="30" selected>30 minutes</option>
+                                <option value="60">60 minutes</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div style="display:flex; align-items:center; justify-content:space-between; margin-top:14px;">
+                        <label class="premium-field-label" style="margin:0;">Select Time Range (drag to add, double-click to remove one slot)</label>
+                        <button class="premium-btn premium-btn-ghost" style="font-size:0.7rem; padding:4px 10px; white-space:nowrap;" data-click="tlClearAllRanges()">Clear all</button>
+                    </div>
+                    <div class="tl-container" id="scheduleTimeline"></div>
+                    <div class="tl-selection-label" id="timelineSelectionLabel"></div>
+                    <div class="tl-range-badges" id="timelineRangeBadges"></div>
+
+                    <div class="sch-selected-dates-label" id="schActiveDateLabel">Select a date chip above to edit its time range</div>
+
+                    <div class="manual-inputs-grid" style="margin-top: 6px; grid-template-columns: 1fr 1fr;">
+                        <div class="premium-field-group">
+                            <label class="premium-field-label">Start</label>
+                            <input type="time" id="schStartTime" class="sch-time-input">
+                        </div>
+                        <div class="premium-field-group">
+                            <label class="premium-field-label">End</label>
+                            <input type="time" id="schEndTime" class="sch-time-input">
+                        </div>
+                    </div>
+
+                    <div class="premium-field-group" style="margin-top: 8px;">
+                        <label class="premium-field-label">Booking Type</label>
+                        <div class="premium-select-wrapper">
+                            <select id="schBookingType" class="premium-select" style="padding: 9px 12px; font-size: 0.82rem;">
+                                <option value="single">Single (1 per slot)</option>
+                                <option value="multiple">Multiple (unlimited)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="premium-field-group" style="margin-top: 12px;">
+                        <label class="premium-field-label">Slot Preview</label>
+                        <div id="schSlotPreview" style="padding: 10px 14px; border-radius: 12px; border: 1.5px solid var(--border-soft); background: var(--bg-canvas); color: var(--text-muted); font-size: 0.82rem; max-height: 120px; overflow-y: auto;">Select dates and set time ranges to preview slots.</div>
+                    </div>
+                    <div class="premium-actions" style="margin-top: 18px;">
+                        <button class="premium-btn premium-btn-primary" data-click="submitCreateSchedule()">Create Schedule</button>
+                        <button class="premium-btn premium-btn-ghost" data-click="closeCreateScheduleModal()">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Book Slot Modal -->
+        <div class="bug-modal-overlay hidden" id="bookSlotModal" data-click="closeBookSlotModal()" role="dialog" aria-modal="true">
+            <div class="bug-modal" data-click="event.stopPropagation()" style="max-width: 420px;">
+                <div class="bug-modal-header">
+                    <h3 id="bookSlotModalTitle">Book Time Slot</h3>
+                    <button class="bug-modal-close" data-click="closeBookSlotModal()">&times;</button>
+                </div>
+                <div class="bug-modal-body">
+                    <div id="bookSlotDetails" style="margin-bottom: 16px; font-size: 0.9rem; color: var(--text-main);"></div>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="action-sub-btn delete" data-click="closeBookSlotModal()" style="flex: 1; padding: 10px;">Cancel</button>
+                        <button class="cart-checkout-btn" data-click="confirmBookSlot()" style="flex: 1; padding: 10px;">Confirm Booking</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Bug Report / Feedback Modal -->
         <div class="bug-modal-overlay hidden" id="bugModal" data-click="closeBugModal()" role="dialog" aria-modal="true">
             <div class="bug-modal" data-click="event.stopPropagation()">
@@ -3989,6 +4843,9 @@
         let lastFocusedEl = null;
         let refreshTimer = null;
         let passwordPromptShown = false;
+        let scheduleDataCache = [];
+        let myBookingsCache = [];
+        let pendingBookSlot = null;
         const FOCUSABLE = 'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])';
         var cursorX = -9999;
         var cursorY = -9999;
@@ -4254,6 +5111,14 @@
                 document.getElementById('sidebarPanel').classList.add('hidden');
                 document.getElementById('historyContentView').classList.remove('hidden');
                 if (fullCachedPayload) populateFullHistory(fullCachedPayload.fullHistory);
+            } else if (panelName === 'appointments') {
+                dashboardLayout.classList.add('full-width-layout');
+                document.getElementById('sidebarPanel').classList.add('hidden');
+                document.getElementById('appointmentsContentView').classList.remove('hidden');
+                if (fullCachedPayload) {
+                    renderAppointmentSchedules(fullCachedPayload.activeSchedules || []);
+                    renderMyBookings(fullCachedPayload.myBookings || [], fullCachedPayload.activeSchedules || []);
+                }
             } else if (panelName === 'admin') {
                 dashboardLayout.classList.remove('full-width-layout');
                 document.getElementById('sidebarPanel').classList.remove('hidden');
@@ -4352,6 +5217,7 @@
             let positionText = "Member";
             if (data.isAdmin) {
                 document.getElementById('adminMenuOpt').classList.remove('hidden');
+                document.getElementById('createScheduleBtn').classList.remove('hidden');
                 positionText = "Admin";
                 if (!document.getElementById('adminContentView').classList.contains('hidden')) {
                     populateAdminConsole(data);
@@ -4393,6 +5259,13 @@
 
             configureTrackingInterface(data.isClockedIn, data.lastActionTimestamp);
             populateRecentLogs(data.recentLogs);
+
+            scheduleDataCache = data.activeSchedules || [];
+            myBookingsCache = data.myBookings || [];
+            if (!document.getElementById('appointmentsContentView').classList.contains('hidden')) {
+                renderAppointmentSchedules(scheduleDataCache);
+                renderMyBookings(myBookingsCache, scheduleDataCache);
+            }
 
             if (pendingOnsiteCheckout && data.onsiteCount <= 3) {
                 pendingOnsiteCheckout = false;
@@ -5638,6 +6511,7 @@
             cart = {};
             document.querySelectorAll('[id^="qty-"]').forEach(el => {
                 el.value = '0';
+                
                 el.classList.remove('bounce');
             });
             document.getElementById('cartItemsList').innerHTML = '<div class="cart-empty">Your cart is empty</div>';
@@ -5687,6 +6561,730 @@
             sendPostRequest(payload, folioName + ' updated!');
         }
 
+        // ===== APPOINTMENT SCHEDULING =====
+
+        function renderAppointmentSchedules(schedules) {
+            var container = document.getElementById('scheduleGrid');
+            if (!schedules || schedules.length === 0) {
+                container.innerHTML = '<div class="empty-state" style="padding: 40px 0;">No active schedules available.</div>';
+                return;
+            }
+            var isAdmin = fullCachedPayload && fullCachedPayload.isAdmin;
+            var myBookingMap = {};
+            (myBookingsCache || []).forEach(function(bk) { myBookingMap[bk.scheduleId + '|' + bk.slotStart] = bk.bookingId; });
+
+            container.innerHTML = schedules.map(function(sch, idx) {
+                var dates = sch.dates || [];
+                var isCreator = isAdmin && sch.createdBy === userEmail;
+                var slotsHtml = '';
+
+                dates.forEach(function(dateEntry) {
+                    var dateStr = dateEntry.date;
+                    var ranges = dateEntry.ranges || [];
+                    var daySlotHtml = '<div class="schedule-date-block"><div class="schedule-date-label">' + formatScheduleDate(dateStr) + '</div><div class="schedule-slots">';
+                    ranges.forEach(function(range) {
+                        var slots = generateTimeSlots(range.start, range.end, sch.slotDuration);
+                        slots.forEach(function(slot) {
+                            var slotStartDT = dateStr + 'T' + slot.start + ':00';
+                            var slotEndDT = dateStr + 'T' + slot.end + ':00';
+                            var bookingKey = sch.scheduleId + '|' + slotStartDT;
+                            var bookingsForSlot = (sch.slotBookings && sch.slotBookings[slotStartDT]) || [];
+                            var isBooked = sch.bookingType === 'single' && bookingsForSlot.length > 0;
+                            var isMyBooking = myBookingMap[bookingKey];
+
+                            if (isMyBooking) {
+                                daySlotHtml += '<button class="slot-btn my-booked" data-click="cancelMyBooking(\'' + escJs(isMyBooking) + '\')" title="Click to cancel">' + slot.label + ' (yours)</button>';
+                            } else if (isBooked) {
+                                daySlotHtml += '<button class="slot-btn booked" disabled>' + slot.label + ' (taken)</button>';
+                            } else {
+                                daySlotHtml += '<button class="slot-btn" data-click="openBookSlotModal(\'' + escJs(sch.scheduleId) + '\', \'' + escJs(slotStartDT) + '\', \'' + escJs(slotEndDT) + '\', \'' + escJs(sch.title) + '\', \'' + escJs(slot.label) + '\')">' + slot.label + '</button>';
+                            }
+                        });
+                    });
+                    daySlotHtml += '</div></div>';
+                    slotsHtml += daySlotHtml;
+                });
+
+                var adminActionsHtml = '';
+                if (isCreator) {
+                    adminActionsHtml = '<div class="schedule-admin-actions"><button class="action-sub-btn delete" data-click="cancelSchedule(\'' + escJs(sch.scheduleId) + '\')">Cancel Schedule</button></div>';
+                }
+
+                var dateCountLabel = dates.length === 1 ? '1 date' : dates.length + ' dates';
+
+                return '<div class="schedule-card" style="animation-delay: ' + (idx * 0.05) + 's">' +
+                    '<div class="schedule-card-title">' + escHtml(sch.title) + '</div>' +
+                    '<div class="schedule-card-meta">' +
+                        '<span class="schedule-type-badge ' + sch.bookingType + '">' + sch.bookingType + '</span>' +
+                        '<span>' + dateCountLabel + ' &middot; ' + sch.slotDuration + ' min slots</span>' +
+                    '</div>' +
+                    slotsHtml +
+                    adminActionsHtml +
+                '</div>';
+            }).join('');
+        }
+
+        function generateTimeSlots(start, end, durationMin) {
+            var slots = [];
+            var parts = start.split(':');
+            var endParts = end.split(':');
+            var curMin = parseInt(parts[0]) * 60 + parseInt(parts[1]);
+            var endMin = parseInt(endParts[0]) * 60 + parseInt(endParts[1]);
+            while (curMin + durationMin <= endMin) {
+                var sH = Math.floor(curMin / 60);
+                var sM = curMin % 60;
+                var eH = Math.floor((curMin + durationMin) / 60);
+                var eM = (curMin + durationMin) % 60;
+                var startStr = String(sH).padStart(2, '0') + ':' + String(sM).padStart(2, '0');
+                var endStr = String(eH).padStart(2, '0') + ':' + String(eM).padStart(2, '0');
+                slots.push({ start: startStr, end: endStr, label: formatTime12(startStr) + ' - ' + formatTime12(endStr) });
+                curMin += durationMin;
+            }
+            return slots;
+        }
+
+        function formatTime12(timeStr) {
+            var parts = timeStr.split(':');
+            var h = parseInt(parts[0]);
+            var m = parts[1];
+            var ampm = h >= 12 ? 'PM' : 'AM';
+            var h12 = h % 12 || 12;
+            return h12 + ':' + m + ' ' + ampm;
+        }
+
+        function formatScheduleDate(dateStr) {
+            if (!dateStr) return '';
+            var parts = dateStr.split('-');
+            var d = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+            return d.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        }
+
+        function renderMyBookings(bookings, schedules) {
+            var container = document.getElementById('myBookingsContainer');
+            if (!bookings || bookings.length === 0) {
+                container.innerHTML = '<div class="empty-state">You have no upcoming bookings.</div>';
+                return;
+            }
+            var schMap = {};
+            (schedules || []).forEach(function(s) { schMap[s.scheduleId] = s; });
+
+            container.innerHTML = bookings.map(function(bk) {
+                var sch = schMap[bk.scheduleId] || {};
+                var startDT = new Date(bk.slotStart);
+                var endDT = new Date(bk.slotEnd);
+                var startTime = startDT.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+                var endTime = endDT.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+                var dateStr = startDT.toLocaleDateString('en-US', { month: 'short', day: 'numeric', weekday: 'short' });
+
+                return '<div class="booking-item">' +
+                    '<div class="booking-info">' +
+                        '<span class="booking-title">' + escHtml(sch.title || 'Appointment') + '</span>' +
+                        '<span class="booking-time">' + dateStr + ' | ' + startTime + ' - ' + endTime + '</span>' +
+                    '</div>' +
+                    '<div class="booking-actions">' +
+                        '<button class="action-sub-btn delete" data-click="cancelMyBooking(\'' + escJs(bk.bookingId) + '\')" style="font-size:0.7rem; padding:5px 8px;">Cancel</button>' +
+                    '</div>' +
+                '</div>';
+            }).join('');
+        }
+
+        var filterSchedules = (function() {
+            var timer = null;
+            return function(searchTerm) {
+                clearTimeout(timer);
+                timer = setTimeout(function() {
+                    var term = searchTerm.toLowerCase().trim();
+                    renderAppointmentSchedules(
+                        term ? scheduleDataCache.filter(function(s) { return s.title.toLowerCase().includes(term); }) : scheduleDataCache
+                    );
+                }, 200);
+            };
+        })();
+
+        // ===== BOOKING FLOW =====
+
+        function openBookSlotModal(scheduleId, slotStart, slotEnd, title, slotLabel) {
+            pendingBookSlot = { scheduleId: scheduleId, slotStart: slotStart, slotEnd: slotEnd };
+            document.getElementById('bookSlotModalTitle').textContent = 'Book: ' + title;
+            document.getElementById('bookSlotDetails').innerHTML =
+                '<p><strong>Slot:</strong> ' + escHtml(slotLabel) + '</p>' +
+                '<p><strong>Schedule:</strong> ' + escHtml(title) + '</p>' +
+                '<p style="font-size:0.82rem; color: var(--text-muted); margin-top: 8px;">A Google Calendar event will be created automatically.</p>';
+            document.getElementById('bookSlotModal').classList.remove('hidden');
+        }
+
+        function closeBookSlotModal() {
+            document.getElementById('bookSlotModal').classList.add('hidden');
+            pendingBookSlot = null;
+        }
+
+        function confirmBookSlot() {
+            if (!pendingBookSlot) return;
+            var slot = pendingBookSlot;
+            closeBookSlotModal();
+            sendPostRequest({
+                token: CLIENT_API_TOKEN,
+                action: "Book Slot",
+                email: userEmail,
+                scheduleId: slot.scheduleId,
+                slotStart: slot.slotStart,
+                slotEnd: slot.slotEnd
+            }, "Slot booked successfully! Added to Google Calendar.");
+        }
+
+        function cancelMyBooking(bookingId) {
+            showConfirm('Cancel this booking? The calendar event will also be removed.').then(function(confirmed) {
+                if (!confirmed) return;
+                sendPostRequest({
+                    token: CLIENT_API_TOKEN,
+                    action: "Cancel Booking",
+                    email: userEmail,
+                    bookingId: bookingId
+                }, "Booking cancelled.");
+            });
+        }
+
+        // ===== CREATE SCHEDULE (ADMIN) =====
+
+        var calViewYear, calViewMonth;
+        var schSelectedDates = [];
+        var schActiveDate = null;
+        var schDateRanges = {};
+        var tlStartIdx = null, tlEndIdx = null, tlDragging = false;
+
+        function openCreateScheduleModal() {
+            document.getElementById('schTitle').value = '';
+            document.getElementById('schStartTime').value = '';
+            document.getElementById('schEndTime').value = '';
+            document.getElementById('schSlotDuration').value = '30';
+            document.getElementById('schBookingType').value = 'single';
+            document.getElementById('schSlotPreview').innerHTML = '<span style="color: var(--text-muted);">Select dates and set time ranges to preview slots.</span>';
+
+            var now = new Date();
+            calViewYear = now.getFullYear();
+            calViewMonth = now.getMonth();
+            schSelectedDates = [];
+            schActiveDate = null;
+            schDateRanges = {};
+            tlStartIdx = null;
+            tlEndIdx = null;
+
+            renderCalendarGrid();
+            renderDateChips();
+            renderTimeline();
+            renderRangeBadges();
+            document.getElementById('timelineSelectionLabel').textContent = '';
+            document.getElementById('schActiveDateLabel').textContent = 'Select a date chip above to edit its time range';
+
+            document.getElementById('createScheduleModal').classList.remove('hidden');
+            document.getElementById('navMenu').classList.remove('show');
+
+            ['schStartTime', 'schEndTime', 'schSlotDuration'].forEach(function(id) {
+                document.getElementById(id).removeEventListener('change', onManualInputChange);
+                document.getElementById(id).addEventListener('change', onManualInputChange);
+            });
+        }
+
+        function closeCreateScheduleModal() {
+            document.getElementById('createScheduleModal').classList.add('hidden');
+        }
+
+        // ===== CALENDAR GRID =====
+
+        function renderCalendarGrid() {
+            var container = document.getElementById('scheduleCalendarGrid');
+            var monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+            var weekdays = ['Mo','Tu','We','Th','Fr','Sa','Su'];
+
+            var firstDay = new Date(calViewYear, calViewMonth, 1);
+            var lastDay = new Date(calViewYear, calViewMonth + 1, 0);
+            var startDow = (firstDay.getDay() + 6) % 7;
+            var daysInMonth = lastDay.getDate();
+            var today = new Date();
+            var todayStr = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
+
+            var html = '<div class="cal-header">' +
+                '<button class="cal-nav-btn" data-click="calNavigateMonth(-1)">&#8249;</button>' +
+                '<span class="cal-header-label">' + monthNames[calViewMonth] + ' ' + calViewYear + '</span>' +
+                '<button class="cal-nav-btn" data-click="calNavigateMonth(1)">&#8250;</button>' +
+                '</div>';
+            html += '<div class="cal-weekdays">';
+            for (var w = 0; w < 7; w++) html += '<div class="cal-weekday">' + weekdays[w] + '</div>';
+            html += '</div><div class="cal-days">';
+
+            for (var e = 0; e < startDow; e++) html += '<div class="cal-day cal-day-empty"></div>';
+
+            for (var d = 1; d <= daysInMonth; d++) {
+                var ds = calViewYear + '-' + String(calViewMonth+1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
+                var cls = 'cal-day';
+                var dateObj = new Date(calViewYear, calViewMonth, d);
+                var isPast = dateObj < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+                if (ds === todayStr) cls += ' cal-day-today';
+                if (schSelectedDates.indexOf(ds) !== -1) cls += ' cal-day-selected';
+                if (isPast) cls += ' cal-day-past';
+                var clickAttr = isPast ? '' : ' data-click="calToggleDate(\'' + ds + '\')"';
+                html += '<div class="' + cls + '"' + clickAttr + '>' + d + '</div>';
+            }
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        function calNavigateMonth(delta) {
+            calViewMonth += delta;
+            if (calViewMonth > 11) { calViewMonth = 0; calViewYear++; }
+            if (calViewMonth < 0) { calViewMonth = 11; calViewYear--; }
+            renderCalendarGrid();
+        }
+
+        function calToggleDate(dateStr) {
+            var idx = schSelectedDates.indexOf(dateStr);
+            if (idx === -1) {
+                schSelectedDates.push(dateStr);
+                schSelectedDates.sort();
+                schActiveDate = dateStr;
+                if (!schDateRanges[dateStr]) schDateRanges[dateStr] = [];
+                tlStartIdx = null;
+                tlEndIdx = null;
+                loadRangesForActiveDate();
+            } else {
+                schSelectedDates.splice(idx, 1);
+                delete schDateRanges[dateStr];
+                if (schActiveDate === dateStr) {
+                    schActiveDate = schSelectedDates.length > 0 ? schSelectedDates[0] : null;
+                    tlStartIdx = null;
+                    tlEndIdx = null;
+                    loadRangesForActiveDate();
+                }
+            }
+            renderCalendarGrid();
+            renderDateChips();
+            renderRangeBadges();
+            updateSlotPreview();
+        }
+
+        function renderDateChips() {
+            var container = document.getElementById('schDateChips');
+            if (schSelectedDates.length === 0) {
+                container.innerHTML = '<span class="sch-no-dates-hint">No dates selected yet</span>';
+                return;
+            }
+            container.innerHTML = schSelectedDates.map(function(ds) {
+                var isActive = ds === schActiveDate;
+                var label = formatScheduleDateShort(ds);
+                return '<div class="sch-date-chip' + (isActive ? ' active' : '') + '" data-click="schSelectDateChip(\'' + ds + '\')">' +
+                    label + '<span class="chip-x" data-click="event.stopPropagation(); calToggleDate(\'' + ds + '\')">&times;</span></div>';
+            }).join('');
+        }
+
+        function formatScheduleDateShort(dateStr) {
+            var parts = dateStr.split('-');
+            var d = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+            return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        }
+
+        function schSelectDateChip(dateStr) {
+            schActiveDate = dateStr;
+            tlStartIdx = null;
+            tlEndIdx = null;
+            loadRangesForActiveDate();
+            renderDateChips();
+            renderRangeBadges();
+            renderTimeline();
+            updateSlotPreview();
+        }
+
+        function loadRangesForActiveDate() {
+            var ranges = schDateRanges[schActiveDate] || [];
+            if (ranges.length > 0) {
+                var last = ranges[ranges.length - 1];
+                document.getElementById('schStartTime').value = last.start;
+                document.getElementById('schEndTime').value = last.end;
+                syncTlFromInputs();
+            } else {
+                document.getElementById('schStartTime').value = '';
+                document.getElementById('schEndTime').value = '';
+                tlStartIdx = null;
+                tlEndIdx = null;
+            }
+            renderTimeline();
+            updateTlLabel();
+        }
+
+        function renderRangeBadges() {
+            var container = document.getElementById('timelineRangeBadges');
+            var label = document.getElementById('schActiveDateLabel');
+            if (!schActiveDate) {
+                container.innerHTML = '';
+                label.textContent = 'Select a date chip above to edit its time range';
+                return;
+            }
+            var ranges = schDateRanges[schActiveDate] || [];
+            label.textContent = 'Ranges for ' + formatScheduleDate(schActiveDate) + ':';
+            if (ranges.length === 0) {
+                container.innerHTML = '<span class="sch-no-dates-hint">No ranges set — drag on timeline or type times below</span>';
+                return;
+            }
+            container.innerHTML = ranges.map(function(r, i) {
+                return '<div class="tl-range-badge">' + formatTime12(r.start) + ' - ' + formatTime12(r.end) +
+                    '<span class="badge-x" data-click="tlRemoveRange(' + i + ')">&times;</span></div>';
+            }).join('');
+        }
+
+        function tlRemoveRange(idx) {
+            if (!schActiveDate || !schDateRanges[schActiveDate]) return;
+            schDateRanges[schActiveDate].splice(idx, 1);
+            tlStartIdx = null;
+            tlEndIdx = null;
+            loadRangesForActiveDate();
+            renderRangeBadges();
+            updateSlotPreview();
+        }
+
+        function tlClearAllRanges() {
+            if (!schActiveDate) return;
+            schDateRanges[schActiveDate] = [];
+            tlStartIdx = null;
+            tlEndIdx = null;
+            document.getElementById('schStartTime').value = '';
+            document.getElementById('schEndTime').value = '';
+            renderTimeline();
+            renderRangeBadges();
+            updateTlLabel();
+            updateSlotPreview();
+        }
+
+        // ===== TIMELINE =====
+
+        function renderTimeline() {
+            var container = document.getElementById('scheduleTimeline');
+            var dur = parseInt(document.getElementById('schSlotDuration').value) || 30;
+            var startHour = 6, endHour = 22;
+            var slotsPerHour = 60 / dur;
+            var totalSlots = (endHour - startHour) * slotsPerHour;
+            var rows = [];
+
+            var existingRanges = schActiveDate ? (schDateRanges[schActiveDate] || []) : [];
+            var filledSlots = new Set();
+            existingRanges.forEach(function(r) {
+                var sParts = r.start.split(':');
+                var eParts = r.end.split(':');
+                var sMin = parseInt(sParts[0]) * 60 + parseInt(sParts[1]);
+                var eMin = parseInt(eParts[0]) * 60 + parseInt(eParts[1]);
+                var sIdx = Math.round((sMin - startHour * 60) / dur);
+                var eIdx = Math.round((eMin - startHour * 60) / dur) - 1;
+                for (var j = sIdx; j <= eIdx; j++) filledSlots.add(j);
+            });
+
+            for (var i = 0; i < totalSlots; i++) {
+                var totalMin = startHour * 60 + i * dur;
+                var h = Math.floor(totalMin / 60);
+                var m = totalMin % 60;
+                var isHour = m === 0;
+                var isHourBoundary = !isHour && ((i + 1) % slotsPerHour === 0);
+                var ampm = h >= 12 ? 'PM' : 'AM';
+                var h12 = h % 12 || 12;
+                var label = h12 + ':' + String(m).padStart(2,'0') + ' ' + ampm;
+
+                var isDragging = tlStartIdx !== null && tlEndIdx !== null && i >= Math.min(tlStartIdx, tlEndIdx) && i <= Math.max(tlStartIdx, tlEndIdx);
+                var isDragStart = tlStartIdx !== null && tlEndIdx !== null && i === Math.min(tlStartIdx, tlEndIdx);
+                var isDragEnd = tlStartIdx !== null && tlEndIdx !== null && i === Math.max(tlStartIdx, tlEndIdx);
+
+                var isFilled = filledSlots.has(i) && !isDragging;
+
+                var rowCls = 'tl-row' + (isHourBoundary ? ' tl-row-hour' : '');
+                if (isDragging) rowCls += ' tl-row-selected';
+                if (isDragStart) rowCls += ' tl-row-range-start';
+                if (isDragEnd) rowCls += ' tl-row-range-end';
+                if (isFilled) rowCls += ' tl-row-range-middle';
+
+                var showLabel = isHour || (dur <= 30 && m === 30) || (dur === 15 && (m === 15 || m === 30 || m === 45));
+                var labelCls = 'tl-label' + ((isDragging || isFilled) ? ' tl-label-selected' : '');
+
+                rows.push('<div class="' + rowCls + '" data-tl-idx="' + i + '">' +
+                    '<span class="' + labelCls + '">' + (showLabel ? label : '') + '</span>' +
+                    '<div class="tl-track"><div class="tl-fill"></div></div></div>');
+            }
+
+            container.innerHTML = rows.join('');
+
+            container.removeEventListener('pointerdown', tlOnPointerDown);
+            container.addEventListener('pointerdown', tlOnPointerDown);
+            document.removeEventListener('pointermove', tlOnPointerMove);
+            document.addEventListener('pointermove', tlOnPointerMove);
+            document.removeEventListener('pointerup', tlOnPointerUp);
+            document.addEventListener('pointerup', tlOnPointerUp);
+        }
+
+        function tlGetIdxFromEvent(e) {
+            var row = e.target.closest('.tl-row');
+            if (!row) return null;
+            return parseInt(row.getAttribute('data-tl-idx'));
+        }
+
+        var tlLastPointerTime = 0;
+        var tlLastPointerIdx = null;
+        var TL_DBLCLICK_MS = 350;
+
+        function tlOnPointerDown(e) {
+            if (!schActiveDate) return;
+            var idx = tlGetIdxFromEvent(e);
+            if (idx === null) return;
+            e.preventDefault();
+
+            var now = Date.now();
+            var isDblClick = (now - tlLastPointerTime < TL_DBLCLICK_MS) && tlLastPointerIdx === idx;
+            tlLastPointerTime = now;
+            tlLastPointerIdx = idx;
+
+            if (isDblClick) {
+                var dur = parseInt(document.getElementById('schSlotDuration').value) || 30;
+                var startHour = 6;
+                var clickMin = startHour * 60 + idx * dur;
+                var clickEndMin = clickMin + dur;
+                var clickStart = toHHMM(clickMin);
+                var clickEnd = toHHMM(clickEndMin);
+                var ranges = schDateRanges[schActiveDate] || [];
+                var replaced = false;
+                for (var ri = 0; ri < ranges.length; ri++) {
+                    var r = ranges[ri];
+                    if (clickStart >= r.start && clickEnd <= r.end) {
+                        var parts = [];
+                        if (r.start < clickStart) parts.push({ start: r.start, end: clickStart });
+                        if (clickEnd < r.end) parts.push({ start: clickEnd, end: r.end });
+                        ranges.splice(ri, 1);
+                        for (var pi = 0; pi < parts.length; pi++) ranges.splice(ri + pi, 0, parts[pi]);
+                        replaced = true;
+                        break;
+                    }
+                }
+                if (replaced) {
+                    tlStartIdx = null;
+                    tlEndIdx = null;
+                    var remaining = schDateRanges[schActiveDate] || [];
+                    if (remaining.length > 0) {
+                        var last = remaining[remaining.length - 1];
+                        document.getElementById('schStartTime').value = last.start;
+                        document.getElementById('schEndTime').value = last.end;
+                    } else {
+                        document.getElementById('schStartTime').value = '';
+                        document.getElementById('schEndTime').value = '';
+                    }
+                    renderTimeline();
+                    renderRangeBadges();
+                    updateTlLabel();
+                    updateSlotPreview();
+                }
+                return;
+            }
+
+            tlDragging = true;
+            tlStartIdx = idx;
+            tlEndIdx = idx;
+            renderTimeline();
+            updateTlLabel();
+        }
+
+        function tlOnPointerMove(e) {
+            if (!tlDragging) return;
+            var idx = tlGetIdxFromEvent(e);
+            if (idx === null) return;
+            if (idx !== tlEndIdx) {
+                tlEndIdx = idx;
+                renderTimeline();
+                updateTlLabel();
+            }
+        }
+
+        function tlOnPointerUp(e) {
+            if (!tlDragging) return;
+            tlDragging = false;
+            if (tlStartIdx === null || tlEndIdx === null) return;
+            var dur = parseInt(document.getElementById('schSlotDuration').value) || 30;
+            var startHour = 6;
+            var minA = startHour * 60 + Math.min(tlStartIdx, tlEndIdx) * dur;
+            var minB = startHour * 60 + (Math.max(tlStartIdx, tlEndIdx) + 1) * dur;
+            var rangeStart = toHHMM(minA);
+            var rangeEnd = toHHMM(minB);
+
+            if (!schActiveDate) return;
+
+            var ranges = schDateRanges[schActiveDate] || [];
+            var dominated = false;
+            for (var ri = 0; ri < ranges.length; ri++) {
+                if (ranges[ri].start === rangeStart && ranges[ri].end === rangeEnd) { dominated = true; break; }
+            }
+            if (!dominated) {
+                if (!schDateRanges[schActiveDate]) schDateRanges[schActiveDate] = [];
+                schDateRanges[schActiveDate].push({ start: rangeStart, end: rangeEnd });
+                schDateRanges[schActiveDate].sort(function(a, b) { return a.start.localeCompare(b.start); });
+                mergeOverlappingRanges(schActiveDate);
+            }
+
+            document.getElementById('schStartTime').value = rangeStart;
+            document.getElementById('schEndTime').value = rangeEnd;
+
+            tlStartIdx = null;
+            tlEndIdx = null;
+            renderTimeline();
+            renderRangeBadges();
+            updateTlLabel();
+            updateSlotPreview();
+        }
+
+        function mergeOverlappingRanges(dateKey) {
+            var ranges = schDateRanges[dateKey];
+            if (!ranges || ranges.length < 2) return;
+            ranges.sort(function(a, b) { return a.start.localeCompare(b.start); });
+            var merged = [ranges[0]];
+            for (var mi = 1; mi < ranges.length; mi++) {
+                var last = merged[merged.length - 1];
+                if (ranges[mi].start <= last.end) {
+                    last.end = last.end > ranges[mi].end ? last.end : ranges[mi].end;
+                } else {
+                    merged.push(ranges[mi]);
+                }
+            }
+            schDateRanges[dateKey] = merged;
+        }
+
+        function updateTlLabel() {
+            var label = document.getElementById('timelineSelectionLabel');
+            if (tlStartIdx === null || tlEndIdx === null) {
+                label.textContent = '';
+                return;
+            }
+            var dur = parseInt(document.getElementById('schSlotDuration').value) || 30;
+            var startHour = 6;
+            var minA = startHour * 60 + Math.min(tlStartIdx, tlEndIdx) * dur;
+            var minB = startHour * 60 + (Math.max(tlStartIdx, tlEndIdx) + 1) * dur;
+            label.textContent = formatTime12(toHHMM(minA)) + ' - ' + formatTime12(toHHMM(minB));
+        }
+
+        function toHHMM(totalMin) {
+            var h = Math.floor(totalMin / 60);
+            var m = totalMin % 60;
+            return String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
+        }
+
+        // ===== BIDIRECTIONAL SYNC =====
+
+        function onManualInputChange(e) {
+            if (e.target.id === 'schStartTime' || e.target.id === 'schEndTime') {
+                syncTlFromInputs();
+            } else if (e.target.id === 'schSlotDuration') {
+                var oldStart = document.getElementById('schStartTime').value;
+                var oldEnd = document.getElementById('schEndTime').value;
+                renderTimeline();
+                if (oldStart && oldEnd) {
+                    syncTlFromInputs();
+                }
+            }
+            updateSlotPreview();
+        }
+
+        function syncTlFromInputs() {
+            var startVal = document.getElementById('schStartTime').value;
+            var endVal = document.getElementById('schEndTime').value;
+            if (!startVal || !endVal) { tlStartIdx = null; tlEndIdx = null; renderTimeline(); updateTlLabel(); return; }
+            var dur = parseInt(document.getElementById('schSlotDuration').value) || 30;
+            var startHour = 6;
+            var sParts = startVal.split(':');
+            var eParts = endVal.split(':');
+            var sMin = parseInt(sParts[0]) * 60 + parseInt(sParts[1]);
+            var eMin = parseInt(eParts[0]) * 60 + parseInt(eParts[1]);
+            tlStartIdx = Math.round((sMin - startHour * 60) / dur);
+            tlEndIdx = Math.round((eMin - startHour * 60) / dur) - 1;
+            if (tlStartIdx < 0) tlStartIdx = 0;
+            renderTimeline();
+            updateTlLabel();
+        }
+
+        function updateSlotPreview() {
+            var dur = parseInt(document.getElementById('schSlotDuration').value) || 30;
+            var previewEl = document.getElementById('schSlotPreview');
+            if (schSelectedDates.length === 0) {
+                previewEl.innerHTML = '<span style="color: var(--text-muted);">Select dates and set time ranges to preview slots.</span>';
+                return;
+            }
+            var hasAnyRange = false;
+            schSelectedDates.forEach(function(ds) {
+                if ((schDateRanges[ds] || []).length > 0) hasAnyRange = true;
+            });
+            if (!hasAnyRange) {
+                previewEl.innerHTML = '<span style="color: var(--text-muted);">Set time ranges for the selected dates to preview slots.</span>';
+                return;
+            }
+            var totalSlots = 0;
+            var html = '';
+            schSelectedDates.forEach(function(ds) {
+                var ranges = schDateRanges[ds] || [];
+                if (ranges.length === 0) return;
+                var daySlots = [];
+                ranges.forEach(function(r) {
+                    var daySlotsForRange = generateTimeSlots(r.start, r.end, dur);
+                    daySlots = daySlots.concat(daySlotsForRange);
+                });
+                totalSlots += daySlots.length;
+                html += '<div style="margin-bottom:6px;"><strong style="font-size:0.72rem;">' + formatScheduleDateShort(ds) + ':</strong> ';
+                html += daySlots.map(function(s) { return '<span class="slot-preview-chip">' + s.label + '</span>'; }).join(' ');
+                html += '</div>';
+            });
+            html += '<span style="font-size:0.72rem; color: var(--text-muted); margin-top:4px; display:block;">' + totalSlots + ' slot(s) across ' + schSelectedDates.length + ' date(s)</span>';
+            previewEl.innerHTML = html;
+        }
+
+        function submitCreateSchedule() {
+            var title = document.getElementById('schTitle').value.trim();
+            var slotDuration = document.getElementById('schSlotDuration').value;
+            var bookingType = document.getElementById('schBookingType').value;
+
+            if (!title) { showAlert('Please enter a schedule title.'); return; }
+            if (schSelectedDates.length === 0) { showAlert('Please select at least one date.'); return; }
+
+            var datesArr = [];
+            var validDates = [];
+            schSelectedDates.forEach(function(ds) {
+                var ranges = schDateRanges[ds] || [];
+                if (ranges.length === 0) {
+                    validDates.push(false);
+                    return;
+                }
+                validDates.push(true);
+                datesArr.push({ date: ds, ranges: ranges });
+            });
+
+            var allValid = true;
+            schSelectedDates.forEach(function(ds, i) {
+                if (!validDates[i]) allValid = false;
+            });
+            if (!allValid) { showAlert('Each selected date must have at least one time range. Remove dates with no ranges, or add ranges via the timeline.'); return; }
+
+            var datesJson = JSON.stringify(datesArr);
+
+            closeCreateScheduleModal();
+            sendPostRequest({
+                token: CLIENT_API_TOKEN,
+                action: "Create Schedule",
+                email: userEmail,
+                title: title,
+                datesJson: datesJson,
+                slotDuration: slotDuration,
+                bookingType: bookingType
+            }, "Schedule created successfully!");
+        }
+
+        function cancelSchedule(scheduleId) {
+            showConfirm('Cancel this schedule? All bookings will be removed and calendar events deleted.').then(function(confirmed) {
+                if (!confirmed) return;
+                sendPostRequest({
+                    token: CLIENT_API_TOKEN,
+                    action: "Cancel Schedule",
+                    email: userEmail,
+                    scheduleId: scheduleId
+                }, "Schedule cancelled.");
+            });
+        }
+
         document.addEventListener('click', function (e) {
             let el = e.target.closest('[data-click]');
             if (el) {
@@ -5723,6 +7321,8 @@
             }
         });
         document.addEventListener('keydown', function (e) {
+            var inputTag = e.target.tagName;
+            if (inputTag === 'INPUT' || inputTag === 'TEXTAREA' || inputTag === 'SELECT') return;
             var el = e.target.closest('[data-click]');
             if ((e.key === 'Enter' || e.key === ' ') && el) {
                 e.preventDefault();
@@ -5731,7 +7331,7 @@
                 return;
             }
             if (e.key === 'Tab') {
-                let modal = document.querySelector('.bug-modal-overlay:not(.hidden), .info-modal-overlay:not(.hidden), .image-preview-overlay:not(.hidden), #accountModal:not(.hidden), #alertModal:not(.hidden), #confirmModal:not(.hidden), #ebPasswordModal:not(.hidden), #adminSetPasswordModal:not(.hidden), #editFolioModal:not(.hidden), .closure-modal:not(.hidden)');
+                let modal = document.querySelector('.bug-modal-overlay:not(.hidden), .info-modal-overlay:not(.hidden), .image-preview-overlay:not(.hidden), #accountModal:not(.hidden), #alertModal:not(.hidden), #confirmModal:not(.hidden), #ebPasswordModal:not(.hidden), #adminSetPasswordModal:not(.hidden), #editFolioModal:not(.hidden), .closure-modal:not(.hidden), #createScheduleModal:not(.hidden), #bookSlotModal:not(.hidden)');
                 if (!modal) return;
                 let focusable = modal.querySelectorAll(FOCUSABLE);
                 if (!focusable.length) return;
