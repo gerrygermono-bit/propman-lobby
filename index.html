@@ -1834,9 +1834,9 @@
     /* ===== APPOINTMENT SCHEDULES ===== */
 
     #scheduleGrid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
         width: 100%;
         box-sizing: border-box;
         padding: 0 0 4px;
@@ -2380,10 +2380,6 @@
         gap: 8px;
     }
 
-    .manual-inputs-grid .premium-field-group:last-child {
-        grid-column: 1 / -1;
-    }
-
     .sch-time-input {
         width: 100% !important;
         padding: 9px 12px !important;
@@ -2423,6 +2419,10 @@
     [data-theme="dark"] .sch-time-input:focus {
         border-color: #34d399;
         box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.12);
+    }
+
+    [data-theme="dark"] .sch-time-input::-webkit-calendar-picker-indicator {
+        filter: invert(0.8);
     }
 
     @media (max-width: 500px) {
@@ -2570,6 +2570,446 @@
         color: var(--text-main);
         margin-top: 12px;
         margin-bottom: 4px;
+    }
+
+    /* ===== GOOGLE-STYLE 2-STEP BOOKING ===== */
+
+    .apt-schedule-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .apt-schedule-item {
+        background: var(--surface-card);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1.5px solid var(--border-soft);
+        border-radius: 14px;
+        padding: 18px 20px;
+        cursor: pointer;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        animation: cardEntrance 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+    }
+
+    .apt-schedule-item:hover {
+        border-color: rgba(16, 185, 129, 0.3);
+        box-shadow: var(--shadow-md);
+        transform: translateY(-2px);
+    }
+
+    .apt-schedule-item-title {
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: var(--text-main);
+        margin-bottom: 6px;
+    }
+
+    .apt-schedule-item-meta {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .apt-schedule-item-meta .apt-meta-dot {
+        width: 3px;
+        height: 3px;
+        border-radius: 50%;
+        background: var(--text-muted);
+        flex-shrink: 0;
+    }
+
+    .apt-step2-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 16px;
+    }
+
+    .apt-back-btn {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        background: none;
+        border: none;
+        color: var(--dlsu-green);
+        font-family: inherit;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        padding: 6px 10px;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+    }
+
+    .apt-back-btn:hover {
+        background: rgba(16, 185, 129, 0.08);
+    }
+
+    [data-theme="dark"] .apt-back-btn {
+        color: #34d399;
+    }
+
+    [data-theme="dark"] .apt-back-btn:hover {
+        background: rgba(52, 211, 153, 0.1);
+    }
+
+    .apt-schedule-info-card {
+        background: var(--surface-card);
+        border: 1.5px solid var(--border-soft);
+        border-radius: 14px;
+        padding: 18px 20px;
+        margin-bottom: 16px;
+    }
+
+    .apt-schedule-info-title {
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: var(--text-main);
+        margin-bottom: 4px;
+    }
+
+    .apt-schedule-info-meta {
+        font-size: 0.82rem;
+        color: var(--text-muted);
+    }
+
+    .apt-booking-calendar {
+        border: 1.5px solid var(--border-soft);
+        border-radius: 14px;
+        padding: 14px;
+        background: var(--surface-card);
+        margin-bottom: 16px;
+    }
+
+    .apt-cal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+    }
+
+    .apt-cal-title {
+        font-size: 0.92rem;
+        font-weight: 700;
+        color: var(--text-main);
+    }
+
+    .apt-cal-nav {
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
+        border: 1.5px solid var(--border-soft);
+        background: transparent;
+        color: var(--text-main);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+        transition: all 0.2s ease;
+    }
+
+    .apt-cal-nav:hover {
+        border-color: var(--dlsu-green);
+        color: var(--dlsu-green);
+    }
+
+    .apt-cal-weekdays {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 2px;
+        margin-bottom: 4px;
+    }
+
+    .apt-cal-weekday {
+        text-align: center;
+        font-size: 0.68rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        padding: 4px 0;
+    }
+
+    .apt-cal-days {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 2px;
+    }
+
+    .apt-cal-day {
+        text-align: center;
+        padding: 8px 0;
+        border-radius: 8px;
+        font-size: 0.82rem;
+        font-weight: 500;
+        color: var(--text-main);
+        cursor: pointer;
+        transition: all 0.15s ease;
+        position: relative;
+    }
+
+    .apt-cal-day:hover:not(.apt-cal-day-past):not(.apt-cal-day-empty):not(.apt-cal-day-no-slots) {
+        background: rgba(16, 185, 129, 0.08);
+    }
+
+    .apt-cal-day-today {
+        font-weight: 700;
+        color: var(--dlsu-green);
+    }
+
+    .apt-cal-day-today::after {
+        content: '';
+        position: absolute;
+        bottom: 3px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background: var(--dlsu-green);
+    }
+
+    .apt-cal-day-selected {
+        background: var(--dlsu-green) !important;
+        color: #fff !important;
+        font-weight: 700;
+    }
+
+    .apt-cal-day-selected.cal-day-today::after {
+        background: #fff;
+    }
+
+    .apt-cal-day-past {
+        color: var(--text-muted);
+        opacity: 0.35;
+        cursor: not-allowed;
+    }
+
+    .apt-cal-day-empty {
+        cursor: default;
+    }
+
+    .apt-cal-day-no-slots {
+        color: var(--text-muted);
+        opacity: 0.3;
+        cursor: not-allowed;
+    }
+
+    .apt-cal-day-has-slots::before {
+        content: '';
+        position: absolute;
+        bottom: 4px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: var(--dlsu-green);
+    }
+
+    .apt-cal-day-selected.apt-cal-day-has-slots::before {
+        background: #fff;
+    }
+
+    [data-theme="dark"] .apt-cal-day-has-slots::before {
+        background: #34d399;
+    }
+
+    [data-theme="dark"] .apt-cal-day-selected.apt-cal-day-has-slots::before {
+        background: #fff;
+    }
+
+    [data-theme="dark"] .apt-cal-nav:hover {
+        border-color: #34d399;
+        color: #34d399;
+    }
+
+    .apt-slots-container {
+        margin-top: 4px;
+    }
+
+    .apt-slots-date-label {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--text-main);
+        margin-bottom: 10px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid var(--border-soft);
+    }
+
+    .apt-slot-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        max-height: 320px;
+        overflow-y: auto;
+        padding-right: 4px;
+    }
+
+    .apt-slot-list::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .apt-slot-list::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .apt-slot-list::-webkit-scrollbar-thumb {
+        background: var(--border-soft);
+        border-radius: 10px;
+    }
+
+    .apt-slot-btn {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        padding: 12px 16px;
+        border: 1.5px solid var(--border-soft);
+        border-radius: 10px;
+        background: var(--surface-card);
+        color: var(--text-main);
+        font-family: inherit;
+        font-size: 0.88rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .apt-slot-btn:hover:not(.apt-slot-btn-booked):not(.apt-slot-btn-my) {
+        border-color: var(--dlsu-green);
+        background: rgba(16, 185, 129, 0.04);
+    }
+
+    .apt-slot-btn-time {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .apt-slot-btn-time svg {
+        flex-shrink: 0;
+        color: var(--dlsu-green);
+    }
+
+    [data-theme="dark"] .apt-slot-btn-time svg {
+        color: #34d399;
+    }
+
+    .apt-slot-btn-booked {
+        background: rgba(244, 63, 94, 0.04);
+        border-color: rgba(244, 63, 94, 0.2);
+        color: var(--text-muted);
+        cursor: not-allowed;
+        opacity: 0.65;
+    }
+
+    .apt-slot-btn-booked .apt-slot-status {
+        color: var(--status-out);
+        font-size: 0.75rem;
+        font-weight: 700;
+    }
+
+    [data-theme="dark"] .apt-slot-btn-booked {
+        background: rgba(244, 63, 94, 0.08);
+        border-color: rgba(244, 63, 94, 0.25);
+    }
+
+    [data-theme="dark"] .apt-slot-btn-booked .apt-slot-status {
+        color: #fb7185;
+    }
+
+    .apt-slot-btn-my {
+        background: rgba(16, 185, 129, 0.08);
+        border-color: rgba(16, 185, 129, 0.3);
+        color: var(--dlsu-green);
+        cursor: pointer;
+    }
+
+    .apt-slot-btn-my .apt-slot-status {
+        color: var(--dlsu-green);
+        font-size: 0.75rem;
+        font-weight: 700;
+    }
+
+    [data-theme="dark"] .apt-slot-btn-my {
+        background: rgba(52, 211, 153, 0.08);
+        border-color: rgba(52, 211, 153, 0.25);
+    }
+
+    [data-theme="dark"] .apt-slot-btn-my .apt-slot-status {
+        color: #34d399;
+    }
+
+    .apt-slot-available {
+        color: var(--dlsu-green);
+        font-size: 0.78rem;
+    }
+
+    [data-theme="dark"] .apt-slot-available {
+        color: #34d399;
+    }
+
+    [data-theme="dark"] .apt-cal-day-today {
+        color: #34d399;
+    }
+
+    [data-theme="dark"] .apt-cal-day-today::after {
+        background: #34d399;
+    }
+
+    [data-theme="dark"] .apt-cal-day-selected {
+        background: #059669 !important;
+    }
+
+    [data-theme="dark"] .apt-slot-btn:hover:not(.apt-slot-btn-booked):not(.apt-slot-btn-my) {
+        border-color: rgba(52, 211, 153, 0.4);
+        background: rgba(52, 211, 153, 0.06);
+    }
+
+    .apt-slot-btn-late {
+        background: rgba(245, 158, 11, 0.06);
+        border-color: rgba(245, 158, 11, 0.25);
+        color: var(--text-muted);
+        cursor: not-allowed;
+        opacity: 0.7;
+    }
+
+    .apt-slot-btn-late .apt-slot-status {
+        color: #f59e0b;
+        font-size: 0.75rem;
+        font-weight: 700;
+    }
+
+    [data-theme="dark"] .apt-slot-btn-late {
+        background: rgba(245, 158, 11, 0.08);
+        border-color: rgba(245, 158, 11, 0.3);
+    }
+
+    [data-theme="dark"] .apt-slot-btn-late .apt-slot-status {
+        color: #fbbf24;
+    }
+
+    .apt-no-slots-msg {
+        text-align: center;
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        padding: 32px 16px;
+    }
+
+    .apt-select-date-hint {
+        text-align: center;
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        padding: 24px 16px;
+        border: 1.5px dashed var(--border-soft);
+        border-radius: 12px;
+        margin-top: 8px;
     }
 
     /* ===== CART SUMMARY ===== */
@@ -3905,10 +4345,6 @@
             </div>
 
             <div class="card select-panel-view hidden" id="appointmentsContentView">
-                <div class="panel-heading">
-                    <span>Appoint a Schedule</span>
-                    <button class="action-sub-btn status-toggle hidden" id="createScheduleBtn" data-click="openCreateScheduleModal()">+ New Schedule</button>
-                </div>
                 <div id="myBookingsSection" style="margin-bottom: 16px;">
                     <div class="panel-heading" style="font-size: 0.95rem; margin-bottom: 8px;">
                         <span>My Upcoming Bookings</span>
@@ -3918,14 +4354,40 @@
                     </div>
                 </div>
                 <hr style="border: none; border-top: 1px solid var(--border-soft); margin: 0 0 16px;">
-                <div class="panel-heading" style="margin-bottom: 8px;">
-                    <span>Available Schedules</span>
+
+                <!-- Step 1: Schedule List -->
+                <div id="aptStep1">
+                    <div class="panel-heading">
+                        <span>Available Schedules</span>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <div class="folio-search-bar" style="padding: 6px 10px; margin: 0; border-radius: 8px;">
+                                <svg class="folio-search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                                <input class="folio-search-input" type="text" placeholder="Search schedules..." data-input="filterSchedules(this.value)" style="font-size: 0.88rem;">
+                            </div>
+                            <button class="action-sub-btn status-toggle hidden" id="createScheduleBtn" data-click="openCreateScheduleModal()">+ New Schedule</button>
+                        </div>
+                    </div>
+                    <div id="scheduleGrid" class="apt-schedule-list"></div>
                 </div>
-                <div class="folio-search-bar" style="padding: 0; margin-bottom: 16px;">
-                    <svg class="folio-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-                    <input class="folio-search-input" type="text" placeholder="Search schedules..." data-input="filterSchedules(this.value)">
+
+                <!-- Step 2: Date + Slot Picker -->
+                <div id="aptStep2" class="hidden">
+                    <div class="apt-step2-header">
+                        <button class="apt-back-btn" data-click="aptGoBack()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                            Back to schedules
+                        </button>
+                    </div>
+                    <div class="apt-schedule-info-card">
+                        <div class="apt-schedule-info-title" id="aptInfoTitle"></div>
+                        <div class="apt-schedule-info-meta" id="aptInfoMeta"></div>
+                        <div id="aptAdminActions" class="hidden" style="margin-top: 10px;"></div>
+                    </div>
+                    <div class="apt-booking-calendar" id="aptBookingCalendar"></div>
+                    <div class="apt-slots-container" id="aptSlotsContainer">
+                        <div class="apt-select-date-hint">Select a date above to view available time slots</div>
+                    </div>
                 </div>
-                <div id="scheduleGrid"></div>
             </div>
 
             <div class="card select-panel-view hidden" id="adminContentView">
@@ -4553,19 +5015,28 @@
                     <div class="premium-field-group" style="margin-top: 14px;">
                         <label class="premium-field-label">Slot Duration</label>
                         <div class="premium-select-wrapper">
-                            <select id="schSlotDuration" class="premium-select" style="padding: 9px 12px; font-size: 0.82rem;">
+                            <select id="schSlotDuration" class="premium-select" style="padding: 9px 12px; font-size: 0.82rem;" onchange="document.getElementById('schSlotDurationCustom').style.display = this.value === 'custom' ? 'block' : 'none';">
                                 <option value="15">15 minutes</option>
                                 <option value="30" selected>30 minutes</option>
-                                <option value="60">60 minutes</option>
+                                <option value="45">45 minutes</option>
+                                <option value="60">1 hour</option>
+                                <option value="90">1 hour 30 minutes</option>
+                                <option value="120">2 hours</option>
+                                <option value="custom">Custom...</option>
                             </select>
                         </div>
+                        <input type="number" id="schSlotDurationCustom" class="sch-time-input" placeholder="Minutes" min="5" max="480" style="display: none; margin-top: 8px;">
                     </div>
 
-                    <div style="display:flex; align-items:center; justify-content:space-between; margin-top:14px;">
-                        <label class="premium-field-label" style="margin:0;">Select Time Range (drag to add, double-click to remove one slot)</label>
-                        <button class="premium-btn premium-btn-ghost" style="font-size:0.7rem; padding:4px 10px; white-space:nowrap;" data-click="tlClearAllRanges()">Clear all</button>
+                    <div style="display:flex; align-items:center; justify-content:space-between; margin-top:14px; margin-bottom: 8px;">
+                        <label class="premium-field-label" style="margin:0;">Select Time Range</label>
+                        <div style="display:flex; align-items:center; gap:6px;">
+                            <button class="premium-btn premium-btn-ghost" id="tlApplyAllBtn" style="font-size:0.7rem; padding:4px 10px; white-space:nowrap; flex:none; display:none;" data-click="tlApplyToAllDates()">Apply to all dates</button>
+                            <button class="premium-btn premium-btn-ghost" style="font-size:0.7rem; padding:4px 10px; white-space:nowrap; flex:none;" data-click="tlClearAllRanges()">Clear all</button>
+                        </div>
                     </div>
                     <div class="tl-container" id="scheduleTimeline"></div>
+                    <div id="tlHint" style="font-size: 0.7rem; color: var(--text-muted); margin-top: 4px; padding: 0 2px;">Click or drag to select a time range · Double-click a slot to remove it</div>
                     <div class="tl-selection-label" id="timelineSelectionLabel"></div>
                     <div class="tl-range-badges" id="timelineRangeBadges"></div>
 
@@ -4606,13 +5077,19 @@
 
         <!-- Book Slot Modal -->
         <div class="bug-modal-overlay hidden" id="bookSlotModal" data-click="closeBookSlotModal()" role="dialog" aria-modal="true">
-            <div class="bug-modal" data-click="event.stopPropagation()" style="max-width: 420px;">
+            <div class="bug-modal" data-click="event.stopPropagation()" style="max-width: 440px;">
                 <div class="bug-modal-header">
                     <h3 id="bookSlotModalTitle">Book Time Slot</h3>
                     <button class="bug-modal-close" data-click="closeBookSlotModal()">&times;</button>
                 </div>
                 <div class="bug-modal-body">
-                    <div id="bookSlotDetails" style="margin-bottom: 16px; font-size: 0.9rem; color: var(--text-main);"></div>
+                    <div id="bookSlotDetails" style="margin-bottom: 16px;"></div>
+                    <div style="background: var(--bg-canvas); border: 1px solid var(--border-soft); border-radius: 12px; padding: 14px 16px; margin-bottom: 16px;">
+                        <div style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 8px;">Booking as</div>
+                        <div style="font-size: 0.9rem; font-weight: 600; color: var(--text-main);" id="bookSlotUserName"></div>
+                        <div style="font-size: 0.82rem; color: var(--text-muted);" id="bookSlotUserEmail"></div>
+                    </div>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 14px;">A Google Calendar event will be created and a confirmation email will be sent.</p>
                     <div style="display: flex; gap: 10px;">
                         <button class="action-sub-btn delete" data-click="closeBookSlotModal()" style="flex: 1; padding: 10px;">Cancel</button>
                         <button class="cart-checkout-btn" data-click="confirmBookSlot()" style="flex: 1; padding: 10px;">Confirm Booking</button>
@@ -5053,7 +5530,7 @@
         function updateThemeIcon(theme) {
             const icon = document.getElementById('themeIcon');
             if (theme === 'dark') {
-                icon.innerHTML = `<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="18.36" x2="5.64" y2="19.78"></line><line x1="18.36" y1="4.22" x2="19.78" y2="5.64"></line>`;
+                icon.innerHTML = `<circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path>`;
             } else {
                 icon.innerHTML = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>`;
             }
@@ -5115,6 +5592,11 @@
                 dashboardLayout.classList.add('full-width-layout');
                 document.getElementById('sidebarPanel').classList.add('hidden');
                 document.getElementById('appointmentsContentView').classList.remove('hidden');
+                // Reset to step 1
+                document.getElementById('aptStep1').classList.remove('hidden');
+                document.getElementById('aptStep2').classList.add('hidden');
+                aptSelectedSchedule = null;
+                aptSelectedDate = null;
                 if (fullCachedPayload) {
                     renderAppointmentSchedules(fullCachedPayload.activeSchedules || []);
                     renderMyBookings(fullCachedPayload.myBookings || [], fullCachedPayload.activeSchedules || []);
@@ -5265,6 +5747,18 @@
             if (!document.getElementById('appointmentsContentView').classList.contains('hidden')) {
                 renderAppointmentSchedules(scheduleDataCache);
                 renderMyBookings(myBookingsCache, scheduleDataCache);
+                // Refresh step 2 if visible
+                if (!document.getElementById('aptStep2').classList.contains('hidden') && aptSelectedSchedule) {
+                    // Re-sync selected schedule data from cache
+                    for (var si = 0; si < scheduleDataCache.length; si++) {
+                        if (scheduleDataCache[si].scheduleId === aptSelectedSchedule.scheduleId) {
+                            aptSelectedSchedule = scheduleDataCache[si];
+                            break;
+                        }
+                    }
+                    aptRenderBookingCalendar();
+                    if (aptSelectedDate) aptRenderTimeSlots();
+                }
             }
 
             if (pendingOnsiteCheckout && data.onsiteCount <= 3) {
@@ -6561,7 +7055,11 @@
             sendPostRequest(payload, folioName + ' updated!');
         }
 
-        // ===== APPOINTMENT SCHEDULING =====
+        // ===== APPOINTMENT SCHEDULING (Google-style 2-step) =====
+
+        var aptSelectedSchedule = null;
+        var aptSelectedDate = null;
+        var aptCalYear, aptCalMonth;
 
         function renderAppointmentSchedules(schedules) {
             var container = document.getElementById('scheduleGrid');
@@ -6569,59 +7067,232 @@
                 container.innerHTML = '<div class="empty-state" style="padding: 40px 0;">No active schedules available.</div>';
                 return;
             }
-            var isAdmin = fullCachedPayload && fullCachedPayload.isAdmin;
-            var myBookingMap = {};
-            (myBookingsCache || []).forEach(function(bk) { myBookingMap[bk.scheduleId + '|' + bk.slotStart] = bk.bookingId; });
 
             container.innerHTML = schedules.map(function(sch, idx) {
                 var dates = sch.dates || [];
-                var isCreator = isAdmin && sch.createdBy === userEmail;
-                var slotsHtml = '';
-
-                dates.forEach(function(dateEntry) {
-                    var dateStr = dateEntry.date;
-                    var ranges = dateEntry.ranges || [];
-                    var daySlotHtml = '<div class="schedule-date-block"><div class="schedule-date-label">' + formatScheduleDate(dateStr) + '</div><div class="schedule-slots">';
-                    ranges.forEach(function(range) {
-                        var slots = generateTimeSlots(range.start, range.end, sch.slotDuration);
-                        slots.forEach(function(slot) {
-                            var slotStartDT = dateStr + 'T' + slot.start + ':00';
-                            var slotEndDT = dateStr + 'T' + slot.end + ':00';
-                            var bookingKey = sch.scheduleId + '|' + slotStartDT;
-                            var bookingsForSlot = (sch.slotBookings && sch.slotBookings[slotStartDT]) || [];
-                            var isBooked = sch.bookingType === 'single' && bookingsForSlot.length > 0;
-                            var isMyBooking = myBookingMap[bookingKey];
-
-                            if (isMyBooking) {
-                                daySlotHtml += '<button class="slot-btn my-booked" data-click="cancelMyBooking(\'' + escJs(isMyBooking) + '\')" title="Click to cancel">' + slot.label + ' (yours)</button>';
-                            } else if (isBooked) {
-                                daySlotHtml += '<button class="slot-btn booked" disabled>' + slot.label + ' (taken)</button>';
-                            } else {
-                                daySlotHtml += '<button class="slot-btn" data-click="openBookSlotModal(\'' + escJs(sch.scheduleId) + '\', \'' + escJs(slotStartDT) + '\', \'' + escJs(slotEndDT) + '\', \'' + escJs(sch.title) + '\', \'' + escJs(slot.label) + '\')">' + slot.label + '</button>';
-                            }
-                        });
+                var dateCountLabel = dates.length === 1 ? '1 date' : dates.length + ' dates';
+                var slotCount = 0;
+                dates.forEach(function(d) {
+                    var ranges = d.ranges || [];
+                    ranges.forEach(function(r) {
+                        slotCount += generateTimeSlots(r.start, r.end, sch.slotDuration).length;
                     });
-                    daySlotHtml += '</div></div>';
-                    slotsHtml += daySlotHtml;
                 });
 
-                var adminActionsHtml = '';
-                if (isCreator) {
-                    adminActionsHtml = '<div class="schedule-admin-actions"><button class="action-sub-btn delete" data-click="cancelSchedule(\'' + escJs(sch.scheduleId) + '\')">Cancel Schedule</button></div>';
-                }
-
-                var dateCountLabel = dates.length === 1 ? '1 date' : dates.length + ' dates';
-
-                return '<div class="schedule-card" style="animation-delay: ' + (idx * 0.05) + 's">' +
-                    '<div class="schedule-card-title">' + escHtml(sch.title) + '</div>' +
-                    '<div class="schedule-card-meta">' +
+                return '<div class="apt-schedule-item" style="animation-delay: ' + (idx * 0.06) + 's" data-click="aptSelectSchedule(\'' + escJs(sch.scheduleId) + '\')">' +
+                    '<div class="apt-schedule-item-title">' + escHtml(sch.title) + '</div>' +
+                    '<div class="apt-schedule-item-meta">' +
                         '<span class="schedule-type-badge ' + sch.bookingType + '">' + sch.bookingType + '</span>' +
-                        '<span>' + dateCountLabel + ' &middot; ' + sch.slotDuration + ' min slots</span>' +
+                        '<span class="apt-meta-dot"></span>' +
+                        '<span>' + dateCountLabel + '</span>' +
+                        '<span class="apt-meta-dot"></span>' +
+                        '<span>' + sch.slotDuration + ' min slots</span>' +
+                        '<span class="apt-meta-dot"></span>' +
+                        '<span>' + slotCount + ' slot' + (slotCount !== 1 ? 's' : '') + ' available</span>' +
                     '</div>' +
-                    slotsHtml +
-                    adminActionsHtml +
                 '</div>';
             }).join('');
+        }
+
+        function aptSelectSchedule(scheduleId) {
+            var schedules = scheduleDataCache || [];
+            aptSelectedSchedule = null;
+            for (var i = 0; i < schedules.length; i++) {
+                if (schedules[i].scheduleId === scheduleId) {
+                    aptSelectedSchedule = schedules[i];
+                    break;
+                }
+            }
+            if (!aptSelectedSchedule) return;
+
+            // Show step 2, hide step 1
+            document.getElementById('aptStep1').classList.add('hidden');
+            document.getElementById('aptStep2').classList.remove('hidden');
+
+            // Populate schedule info
+            document.getElementById('aptInfoTitle').textContent = aptSelectedSchedule.title;
+            var dates = aptSelectedSchedule.dates || [];
+            var meta = aptSelectedSchedule.slotDuration + ' min slots';
+            if (aptSelectedSchedule.bookingType === 'single') meta += ' · Single booking';
+            else meta += ' · Multiple bookings allowed';
+            meta += ' · ' + (dates.length === 1 ? '1 date' : dates.length + ' dates');
+            document.getElementById('aptInfoMeta').textContent = meta;
+
+            // Show admin cancel button if applicable
+            var isAdmin = fullCachedPayload && fullCachedPayload.isAdmin;
+            var isCreator = isAdmin && aptSelectedSchedule.createdBy === userEmail;
+            var adminActionsEl = document.getElementById('aptAdminActions');
+            if (isCreator) {
+                adminActionsEl.classList.remove('hidden');
+                adminActionsEl.innerHTML = '<button class="action-sub-btn delete" data-click="cancelSchedule(\'' + escJs(aptSelectedSchedule.scheduleId) + '\')" style="font-size: 0.75rem; padding: 6px 12px;">Cancel Schedule</button>';
+            } else {
+                adminActionsEl.classList.add('hidden');
+                adminActionsEl.innerHTML = '';
+            }
+
+            // Init calendar
+            var now = new Date();
+            aptCalYear = now.getFullYear();
+            aptCalMonth = now.getMonth();
+            aptSelectedDate = null;
+
+            aptRenderBookingCalendar();
+            document.getElementById('aptSlotsContainer').innerHTML = '<div class="apt-select-date-hint">Select a date above to view available time slots</div>';
+        }
+
+        function aptGoBack() {
+            document.getElementById('aptStep1').classList.remove('hidden');
+            document.getElementById('aptStep2').classList.add('hidden');
+            aptSelectedSchedule = null;
+            aptSelectedDate = null;
+        }
+
+        function aptRenderBookingCalendar() {
+            if (!aptSelectedSchedule) return;
+            var container = document.getElementById('aptBookingCalendar');
+            var monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+            var weekdays = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+
+            var firstDay = new Date(aptCalYear, aptCalMonth, 1);
+            var lastDay = new Date(aptCalYear, aptCalMonth + 1, 0);
+            var startDow = firstDay.getDay();
+            var daysInMonth = lastDay.getDate();
+            var today = new Date();
+            var todayStr = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
+
+            // Build set of available dates
+            var availableDates = {};
+            var dates = aptSelectedSchedule.dates || [];
+            dates.forEach(function(d) { availableDates[d.date] = true; });
+
+            var html = '<div class="apt-cal-header">' +
+                '<button class="apt-cal-nav" data-click="aptCalNav(-1)">&#8249;</button>' +
+                '<span class="apt-cal-title">' + monthNames[aptCalMonth] + ' ' + aptCalYear + '</span>' +
+                '<button class="apt-cal-nav" data-click="aptCalNav(1)">&#8250;</button>' +
+            '</div>';
+            html += '<div class="apt-cal-weekdays">';
+            for (var w = 0; w < 7; w++) html += '<div class="apt-cal-weekday">' + weekdays[w] + '</div>';
+            html += '</div><div class="apt-cal-days">';
+
+            for (var e = 0; e < startDow; e++) html += '<div class="apt-cal-day apt-cal-day-empty"></div>';
+
+            for (var d = 1; d <= daysInMonth; d++) {
+                var ds = aptCalYear + '-' + String(aptCalMonth+1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
+                var cls = 'apt-cal-day';
+                var dateObj = new Date(aptCalYear, aptCalMonth, d);
+                var isPast = dateObj < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+                var hasSlots = availableDates[ds];
+
+                if (ds === todayStr) cls += ' apt-cal-day-today';
+                if (aptSelectedDate === ds) cls += ' apt-cal-day-selected';
+                if (isPast) cls += ' apt-cal-day-past';
+                else if (hasSlots) cls += ' apt-cal-day-has-slots';
+                else cls += ' apt-cal-day-no-slots';
+
+                var clickAttr = (!isPast && hasSlots) ? ' data-click="aptSelectDate(\'' + ds + '\')"' : '';
+                html += '<div class="' + cls + '"' + clickAttr + '>' + d + '</div>';
+            }
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        function aptCalNav(delta) {
+            aptCalMonth += delta;
+            if (aptCalMonth > 11) { aptCalMonth = 0; aptCalYear++; }
+            if (aptCalMonth < 0) { aptCalMonth = 11; aptCalYear--; }
+            aptRenderBookingCalendar();
+        }
+
+        function aptSelectDate(dateStr) {
+            aptSelectedDate = dateStr;
+            aptRenderBookingCalendar();
+            aptRenderTimeSlots();
+        }
+
+        function aptRenderTimeSlots() {
+            if (!aptSelectedSchedule || !aptSelectedDate) return;
+            var container = document.getElementById('aptSlotsContainer');
+            var dates = aptSelectedSchedule.dates || [];
+            var dateEntry = null;
+            for (var i = 0; i < dates.length; i++) {
+                if (dates[i].date === aptSelectedDate) { dateEntry = dates[i]; break; }
+            }
+            if (!dateEntry) {
+                container.innerHTML = '<div class="apt-no-slots-msg">No slots available for this date.</div>';
+                return;
+            }
+
+            var ranges = dateEntry.ranges || [];
+            if (ranges.length === 0) {
+                container.innerHTML = '<div class="apt-no-slots-msg">No slots available for this date.</div>';
+                return;
+            }
+
+            // Build all slots for this date
+            var allSlots = [];
+            ranges.forEach(function(range) {
+                var slots = generateTimeSlots(range.start, range.end, aptSelectedSchedule.slotDuration);
+                allSlots = allSlots.concat(slots);
+            });
+
+            if (allSlots.length === 0) {
+                container.innerHTML = '<div class="apt-no-slots-msg">No slots available for this date.</div>';
+                return;
+            }
+
+            // Build booking map
+            var myBookingMap = {};
+            (myBookingsCache || []).forEach(function(bk) { myBookingMap[bk.scheduleId + '|' + bk.slotStart] = bk.bookingId; });
+
+            var dateLabel = formatScheduleDate(aptSelectedDate);
+            var html = '<div class="apt-slots-date-label">' + dateLabel + '</div>';
+            html += '<div class="apt-slot-list">';
+
+            var now = new Date();
+            var isAdmin = fullCachedPayload && fullCachedPayload.isAdmin;
+            var cutoffMs = 24 * 60 * 60 * 1000;
+
+            allSlots.forEach(function(slot) {
+                var slotStartDT = aptSelectedDate + 'T' + slot.start + ':00';
+                var slotEndDT = aptSelectedDate + 'T' + slot.end + ':00';
+                var bookingKey = aptSelectedSchedule.scheduleId + '|' + slotStartDT;
+                var bookingsForSlot = (aptSelectedSchedule.slotBookings && aptSelectedSchedule.slotBookings[slotStartDT]) || [];
+                var isBooked = aptSelectedSchedule.bookingType === 'single' && bookingsForSlot.length > 0;
+                var isMyBooking = myBookingMap[bookingKey];
+                var isTooLate = (new Date(slotStartDT) - now) < cutoffMs;
+
+                var clockSvg = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>';
+
+                if (isMyBooking) {
+                    html += '<button class="apt-slot-btn apt-slot-btn-my" data-click="cancelMyBooking(\'' + escJs(isMyBooking) + '\')">' +
+                        '<span class="apt-slot-btn-time">' + clockSvg + escHtml(slot.label) + '</span>' +
+                        '<span class="apt-slot-status">Your booking · Cancel</span>' +
+                    '</button>';
+                } else if (isTooLate && !isAdmin) {
+                    html += '<div class="apt-slot-btn apt-slot-btn-late">' +
+                        '<span class="apt-slot-btn-time">' + clockSvg + escHtml(slot.label) + '</span>' +
+                        '<span class="apt-slot-status">Too late to book</span>' +
+                    '</div>';
+                } else if (isBooked) {
+                    html += '<div class="apt-slot-btn apt-slot-btn-booked">' +
+                        '<span class="apt-slot-btn-time">' + clockSvg + escHtml(slot.label) + '</span>' +
+                        '<span class="apt-slot-status">Taken</span>' +
+                    '</div>';
+                } else if (isTooLate && isAdmin) {
+                    html += '<button class="apt-slot-btn" data-click="openBookSlotModal(\'' + escJs(aptSelectedSchedule.scheduleId) + '\', \'' + escJs(slotStartDT) + '\', \'' + escJs(slotEndDT) + '\', \'' + escJs(aptSelectedSchedule.title) + '\', \'' + escJs(slot.label) + '\')">' +
+                        '<span class="apt-slot-btn-time">' + clockSvg + escHtml(slot.label) + '</span>' +
+                        '<span class="apt-slot-status" style="color: #f59e0b; font-size: 0.75rem;">Book → <24h</span>' +
+                    '</button>';
+                } else {
+                    html += '<button class="apt-slot-btn" data-click="openBookSlotModal(\'' + escJs(aptSelectedSchedule.scheduleId) + '\', \'' + escJs(slotStartDT) + '\', \'' + escJs(slotEndDT) + '\', \'' + escJs(aptSelectedSchedule.title) + '\', \'' + escJs(slot.label) + '\')">' +
+                        '<span class="apt-slot-btn-time">' + clockSvg + escHtml(slot.label) + '</span>' +
+                        '<span class="apt-slot-status apt-slot-available">Book →</span>' +
+                    '</button>';
+                }
+            });
+
+            html += '</div>';
+            container.innerHTML = html;
         }
 
         function generateTimeSlots(start, end, durationMin) {
@@ -6637,7 +7308,7 @@
                 var eM = (curMin + durationMin) % 60;
                 var startStr = String(sH).padStart(2, '0') + ':' + String(sM).padStart(2, '0');
                 var endStr = String(eH).padStart(2, '0') + ':' + String(eM).padStart(2, '0');
-                slots.push({ start: startStr, end: endStr, label: formatTime12(startStr) + ' - ' + formatTime12(endStr) });
+                slots.push({ start: startStr, end: endStr, label: formatTime12(startStr) + ' – ' + formatTime12(endStr) });
                 curMin += durationMin;
             }
             return slots;
@@ -6679,7 +7350,7 @@
                 return '<div class="booking-item">' +
                     '<div class="booking-info">' +
                         '<span class="booking-title">' + escHtml(sch.title || 'Appointment') + '</span>' +
-                        '<span class="booking-time">' + dateStr + ' | ' + startTime + ' - ' + endTime + '</span>' +
+                        '<span class="booking-time">' + dateStr + ' · ' + startTime + ' – ' + endTime + '</span>' +
                     '</div>' +
                     '<div class="booking-actions">' +
                         '<button class="action-sub-btn delete" data-click="cancelMyBooking(\'' + escJs(bk.bookingId) + '\')" style="font-size:0.7rem; padding:5px 8px;">Cancel</button>' +
@@ -6704,13 +7375,39 @@
         // ===== BOOKING FLOW =====
 
         function openBookSlotModal(scheduleId, slotStart, slotEnd, title, slotLabel) {
-            pendingBookSlot = { scheduleId: scheduleId, slotStart: slotStart, slotEnd: slotEnd };
-            document.getElementById('bookSlotModalTitle').textContent = 'Book: ' + title;
-            document.getElementById('bookSlotDetails').innerHTML =
-                '<p><strong>Slot:</strong> ' + escHtml(slotLabel) + '</p>' +
-                '<p><strong>Schedule:</strong> ' + escHtml(title) + '</p>' +
-                '<p style="font-size:0.82rem; color: var(--text-muted); margin-top: 8px;">A Google Calendar event will be created automatically.</p>';
-            document.getElementById('bookSlotModal').classList.remove('hidden');
+            var isTooLate = (new Date(slotStart) - new Date()) < (24 * 60 * 60 * 1000);
+            var isAdmin = fullCachedPayload && fullCachedPayload.isAdmin;
+
+            if (isTooLate && !isAdmin) {
+                showAlert('This slot starts in less than 24 hours. Bookings must be made at least 1 day in advance.');
+                return;
+            }
+
+            var proceedWithModal = function() {
+                pendingBookSlot = { scheduleId: scheduleId, slotStart: slotStart, slotEnd: slotEnd };
+                document.getElementById('bookSlotModalTitle').textContent = 'Book: ' + title;
+                document.getElementById('bookSlotDetails').innerHTML =
+                    '<div style="display:flex; align-items:center; gap:10px; padding:12px 14px; background: rgba(16,185,129,0.06); border:1px solid rgba(16,185,129,0.15); border-radius:10px; margin-bottom:4px;">' +
+                        '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--dlsu-green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' +
+                        '<div><div style="font-weight:700; color:var(--text-main); font-size:0.92rem;">' + escHtml(slotLabel) + '</div>' +
+                        '<div style="font-size:0.8rem; color:var(--text-muted);">' + formatScheduleDate(slotStart.split('T')[0]) + '</div></div>' +
+                    '</div>';
+
+                var userName = (fullCachedPayload && fullCachedPayload.fullName) || userEmail.split('@')[0];
+                document.getElementById('bookSlotUserName').textContent = userName;
+                document.getElementById('bookSlotUserEmail').textContent = userEmail;
+
+                document.getElementById('bookSlotModal').classList.remove('hidden');
+            };
+
+            if (isTooLate && isAdmin) {
+                showConfirm('This slot starts in less than 24 hours. Book anyway?').then(function(confirmed) {
+                    if (confirmed) proceedWithModal();
+                });
+                return;
+            }
+
+            proceedWithModal();
         }
 
         function closeBookSlotModal() {
@@ -6721,6 +7418,7 @@
         function confirmBookSlot() {
             if (!pendingBookSlot) return;
             var slot = pendingBookSlot;
+            var userName = (fullCachedPayload && fullCachedPayload.fullName) || userEmail.split('@')[0];
             closeBookSlotModal();
             sendPostRequest({
                 token: CLIENT_API_TOKEN,
@@ -6728,8 +7426,9 @@
                 email: userEmail,
                 scheduleId: slot.scheduleId,
                 slotStart: slot.slotStart,
-                slotEnd: slot.slotEnd
-            }, "Slot booked successfully! Added to Google Calendar.");
+                slotEnd: slot.slotEnd,
+                userName: userName
+            }, "Slot booked! Confirmation email sent.");
         }
 
         function cancelMyBooking(bookingId) {
@@ -6794,11 +7493,11 @@
         function renderCalendarGrid() {
             var container = document.getElementById('scheduleCalendarGrid');
             var monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-            var weekdays = ['Mo','Tu','We','Th','Fr','Sa','Su'];
+            var weekdays = ['Su','Mo','Tu','We','Th','Fr','Sa'];
 
             var firstDay = new Date(calViewYear, calViewMonth, 1);
             var lastDay = new Date(calViewYear, calViewMonth + 1, 0);
-            var startDow = (firstDay.getDay() + 6) % 7;
+            var startDow = firstDay.getDay();
             var daysInMonth = lastDay.getDate();
             var today = new Date();
             var todayStr = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
@@ -6916,18 +7615,21 @@
             if (!schActiveDate) {
                 container.innerHTML = '';
                 label.textContent = 'Select a date chip above to edit its time range';
+                updateApplyAllBtn();
                 return;
             }
             var ranges = schDateRanges[schActiveDate] || [];
             label.textContent = 'Ranges for ' + formatScheduleDate(schActiveDate) + ':';
             if (ranges.length === 0) {
                 container.innerHTML = '<span class="sch-no-dates-hint">No ranges set — drag on timeline or type times below</span>';
+                updateApplyAllBtn();
                 return;
             }
             container.innerHTML = ranges.map(function(r, i) {
                 return '<div class="tl-range-badge">' + formatTime12(r.start) + ' - ' + formatTime12(r.end) +
                     '<span class="badge-x" data-click="tlRemoveRange(' + i + ')">&times;</span></div>';
             }).join('');
+            updateApplyAllBtn();
         }
 
         function tlRemoveRange(idx) {
@@ -6951,6 +7653,30 @@
             renderRangeBadges();
             updateTlLabel();
             updateSlotPreview();
+        }
+
+        function tlApplyToAllDates() {
+            if (!schActiveDate) return;
+            var sourceRanges = schDateRanges[schActiveDate];
+            if (!sourceRanges || sourceRanges.length === 0) { showAlert('Set a time range on the current date first.'); return; }
+            var count = 0;
+            schSelectedDates.forEach(function(ds) {
+                if (ds === schActiveDate) return;
+                schDateRanges[ds] = sourceRanges.map(function(r) { return { start: r.start, end: r.end }; });
+                count++;
+            });
+            renderRangeBadges();
+            updateSlotPreview();
+            showAlert('Applied to ' + count + ' other date' + (count !== 1 ? 's' : '') + '.');
+        }
+
+        function updateApplyAllBtn() {
+            var btn = document.getElementById('tlApplyAllBtn');
+            if (schSelectedDates.length > 1 && schActiveDate && schDateRanges[schActiveDate] && schDateRanges[schActiveDate].length > 0) {
+                btn.style.display = '';
+            } else {
+                btn.style.display = 'none';
+            }
         }
 
         // ===== TIMELINE =====
@@ -6997,7 +7723,7 @@
                 if (isDragEnd) rowCls += ' tl-row-range-end';
                 if (isFilled) rowCls += ' tl-row-range-middle';
 
-                var showLabel = isHour || (dur <= 30 && m === 30) || (dur === 15 && (m === 15 || m === 30 || m === 45));
+                var showLabel = isHour || dur > 30 || (dur === 30 && m === 30) || (dur === 15 && (m === 15 || m === 30 || m === 45));
                 var labelCls = 'tl-label' + ((isDragging || isFilled) ? ' tl-label-selected' : '');
 
                 rows.push('<div class="' + rowCls + '" data-tl-idx="' + i + '">' +
@@ -7006,6 +7732,15 @@
             }
 
             container.innerHTML = rows.join('');
+
+            var hintEl = document.getElementById('tlHint');
+            if (dur > 60) {
+                hintEl.textContent = 'Click a row to select that slot · Double-click to remove it';
+            } else if (dur > 30) {
+                hintEl.textContent = 'Click or drag to select a range · Double-click a slot to remove it';
+            } else {
+                hintEl.textContent = 'Click or drag to select a time range · Double-click a slot to remove it';
+            }
 
             container.removeEventListener('pointerdown', tlOnPointerDown);
             container.addEventListener('pointerdown', tlOnPointerDown);
@@ -7157,7 +7892,9 @@
             var startHour = 6;
             var minA = startHour * 60 + Math.min(tlStartIdx, tlEndIdx) * dur;
             var minB = startHour * 60 + (Math.max(tlStartIdx, tlEndIdx) + 1) * dur;
-            label.textContent = formatTime12(toHHMM(minA)) + ' - ' + formatTime12(toHHMM(minB));
+            var slotCount = Math.abs(tlEndIdx - tlStartIdx) + 1;
+            var slotText = slotCount === 1 ? '1 slot' : slotCount + ' slots';
+            label.textContent = formatTime12(toHHMM(minA)) + ' – ' + formatTime12(toHHMM(minB)) + '  ·  ' + slotText;
         }
 
         function toHHMM(totalMin) {
@@ -7235,10 +7972,16 @@
 
         function submitCreateSchedule() {
             var title = document.getElementById('schTitle').value.trim();
-            var slotDuration = document.getElementById('schSlotDuration').value;
+            var slotDurationVal = document.getElementById('schSlotDuration').value;
+            if (slotDurationVal === 'custom') {
+                slotDurationVal = document.getElementById('schSlotDurationCustom').value;
+            }
+            var slotDuration = slotDurationVal;
             var bookingType = document.getElementById('schBookingType').value;
 
             if (!title) { showAlert('Please enter a schedule title.'); return; }
+            if (!slotDurationVal) { showAlert('Please enter a valid slot duration.'); return; }
+            if (parseInt(slotDurationVal) < 5 || parseInt(slotDurationVal) > 480) { showAlert('Slot duration must be between 5 and 480 minutes.'); return; }
             if (schSelectedDates.length === 0) { showAlert('Please select at least one date.'); return; }
 
             var datesArr = [];
@@ -7281,7 +8024,9 @@
                     action: "Cancel Schedule",
                     email: userEmail,
                     scheduleId: scheduleId
-                }, "Schedule cancelled.");
+                }, "Schedule cancelled.").then(function() {
+                    aptGoBack();
+                });
             });
         }
 
