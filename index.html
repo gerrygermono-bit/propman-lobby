@@ -856,6 +856,19 @@
         color: #64748b;
     }
 
+    .smart-btn.clock-in:disabled {
+        background: linear-gradient(135deg, #10b981, #059669) !important;
+        color: #ffffff;
+        box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+        opacity: 0.85;
+    }
+
+    [data-theme="dark"] .smart-btn.clock-in:disabled {
+        background: linear-gradient(135deg, #10b981, #34d399) !important;
+        color: #ffffff;
+        opacity: 0.85;
+    }
+
     .mode-selection-container {
         display: flex;
         flex-direction: column;
@@ -1317,7 +1330,6 @@
         -webkit-backdrop-filter: blur(8px);
         color: #065f46;
         border: 1px solid rgba(167, 243, 208, 0.5);
-        border-left: 4px solid #10b981;
         padding: 16px 20px;
         border-radius: 14px;
         font-weight: 600;
@@ -1332,7 +1344,6 @@
         -webkit-backdrop-filter: blur(8px);
         color: #d1fae5;
         border-color: rgba(4, 120, 87, 0.3);
-        border-left-color: #34d399;
     }
 
     @media(min-width: 576px) {
@@ -3141,6 +3152,12 @@
         transform: scale(0.97);
     }
 
+    button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+
     [data-theme="dark"] .cart-checkout-btn {
         box-shadow: 0 3px 10px rgba(16, 185, 129, 0.2);
     }
@@ -4209,13 +4226,17 @@
                 </button>
                 <button class="bug-btn" data-click="openBugModal()" title="Send Feedback / Report Bug">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="5" r="2"/>
-                        <path d="M10 3.5 L7 1.5 M14 3.5 L17 1.5"/>
-                        <ellipse cx="12" cy="13" rx="6" ry="5.5"/>
-                        <line x1="12" y1="7" x2="12" y2="19"/>
-                        <path d="M6 10 L3 9 M18 10 L21 9"/>
-                        <path d="M6 13 L3 14 M18 13 L21 14"/>
-                        <path d="M7 17 L4 19 M17 17 L20 19"/>
+                        <path d="M12 20v-9"></path>
+                        <path d="M14 7a4 4 0 0 1 4 4v3a6 6 0 0 1-12 0v-3a4 4 0 0 1 4-4z"></path>
+                        <path d="M14.12 3.88 16 2"></path>
+                        <path d="M21 21a4 4 0 0 0-3.81-4"></path>
+                        <path d="M21 5a4 4 0 0 1-3.55 3.97"></path>
+                        <path d="M22 13h-4"></path>
+                        <path d="M3 21a4 4 0 0 1 3.81-4"></path>
+                        <path d="M3 5a4 4 0 0 0 3.55 3.97"></path>
+                        <path d="M6 13H2"></path>
+                        <path d="m8 2 1.88 1.88"></path>
+                        <path d="M9 7.13V6a3 3 0 1 1 6 0v1.13"></path>
                     </svg>
                 </button>
                 <button class="help-btn" data-click="openInfoModal()" title="Guidelines">
@@ -4472,7 +4493,7 @@
             <!-- Welcome banner -->
             <div style="background: linear-gradient(135deg, var(--dlsu-green), #10b981); padding: 18px 20px; border-radius: 14px; color: #fff;">
                 <h4 style="color: #fff; margin: 0 0 6px; font-size: 1.1rem;">Welcome to the PropMan Lobby!</h4>
-                <p style="font-size: 0.88rem; opacity: 0.92; margin: 0; line-height: 1.5;">This guide covers everything — from tracking residency hours to requesting folios. Use the quick-jump below or scroll through.</p>
+                <p style="font-size: 0.88rem; opacity: 0.92; margin: 0; line-height: 1.5;">This guide covers everything — from tracking residency hours to requesting folios and booking appointments. Use the quick-jump below or scroll through.</p>
             </div>
 
             <!-- Quick-jump pills -->
@@ -4480,6 +4501,7 @@
                 <button data-click="document.getElementById('guide-getting-started').scrollIntoView({behavior:'smooth',block:'start'})" style="padding: 5px 12px; border-radius: 100px; font-size: 0.72rem; font-weight: 700; background: rgba(16,185,129,0.1); color: var(--status-in); border: 1px solid rgba(16,185,129,0.2); cursor: pointer; transition: opacity 0.2s;" class="guide-nav-btn">Getting Started</button>
                 <button data-click="document.getElementById('guide-tracker').scrollIntoView({behavior:'smooth',block:'start'})" style="padding: 5px 12px; border-radius: 100px; font-size: 0.72rem; font-weight: 700; background: rgba(139,92,246,0.1); color: #7c3aed; border: 1px solid rgba(139,92,246,0.2); cursor: pointer; transition: opacity 0.2s;" class="guide-nav-btn">Tracker</button>
                 <button data-click="document.getElementById('guide-folio').scrollIntoView({behavior:'smooth',block:'start'})" style="padding: 5px 12px; border-radius: 100px; font-size: 0.72rem; font-weight: 700; background: rgba(245,158,11,0.1); color: #d97706; border: 1px solid rgba(245,158,11,0.2); cursor: pointer; transition: opacity 0.2s;" class="guide-nav-btn">Folio Shop</button>
+                <button data-click="document.getElementById('guide-appointments').scrollIntoView({behavior:'smooth',block:'start'})" style="padding: 5px 12px; border-radius: 100px; font-size: 0.72rem; font-weight: 700; background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2); cursor: pointer; transition: opacity 0.2s;" class="guide-nav-btn">Appointments</button>
                 <button data-click="document.getElementById('guide-passwords').scrollIntoView({behavior:'smooth',block:'start'})" style="padding: 5px 12px; border-radius: 100px; font-size: 0.72rem; font-weight: 700; background: rgba(139,92,246,0.1); color: #7c3aed; border: 1px solid rgba(139,92,246,0.2); cursor: pointer; transition: opacity 0.2s;" class="guide-nav-btn">Passwords</button>
                 <button data-click="document.getElementById('guide-feedback').scrollIntoView({behavior:'smooth',block:'start'})" style="padding: 5px 12px; border-radius: 100px; font-size: 0.72rem; font-weight: 700; background: rgba(var(--status-out-rgb), 0.1); color: var(--status-out); border: 1px solid rgba(var(--status-out-rgb), 0.2); cursor: pointer; transition: opacity 0.2s;" class="guide-nav-btn">Feedback</button>
                 <button data-click="document.getElementById('ebGuideSection').scrollIntoView({behavior:'smooth',block:'start'})" style="padding: 5px 12px; border-radius: 100px; font-size: 0.72rem; font-weight: 700; background: rgba(79,70,229,0.1); color: #4f46e5; border: 1px solid rgba(79,70,229,0.2); cursor: pointer; transition: opacity 0.2s;" class="guide-nav-btn">Admin</button>
@@ -4488,7 +4510,7 @@
             <!-- ===== GETTING STARTED ===== -->
             <div id="guide-getting-started" style="border-left: 3px solid var(--dlsu-green); padding-left: 16px;">
                 <h4 style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--dlsu-green);"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #10b981;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
                     Getting Started
                 </h4>
                 <ul style="margin: 0 0 8px; padding-left: 20px; font-size: 0.9rem; list-style-type: disc;">
@@ -4496,6 +4518,7 @@
                     <li style="margin-bottom: 4px;">Toggle between <strong>Light</strong> and <strong>Dark</strong> mode using the sun/moon icon in the header.</li>
                     <li style="margin-bottom: 4px;">The <strong>Online</strong> and <strong>Onsite</strong> mini-boxes show how many people are currently active.</li>
                     <li style="margin-bottom: 4px;">Open the <strong>Account Information</strong> menu to edit your profile — Position, Section, Full Name, Nickname, Pronouns, and ID Number.</li>
+                    <li style="margin-bottom: 4px;">Use <strong>Get a Folio</strong> to request folios and <strong>Appoint a Schedule</strong> to book time slots with EBs.</li>
                     <li style="margin-bottom: 4px;">Use the <strong>Send Feedback / Report Bug</strong> button (bug icon) to submit ratings, feedback, or bug reports.</li>
                 </ul>
             </div>
@@ -4510,6 +4533,7 @@
                 <h5 style="margin: 0 0 4px; font-size: 0.9rem;">Clocking In</h5>
                 <ul style="margin: 0 0 12px; padding-left: 20px; font-size: 0.88rem; list-style-type: disc;">
                     <li>Click the green <strong>Clock In</strong> button, then choose <strong>Onsite</strong> or <strong>Online</strong>.</li>
+                    <li>Optionally type what you're working on in the <strong>"What are you working on?"</strong> field — it's saved with your clock-in log.</li>
                     <li>A live duration counter will appear showing how long you've been clocked in.</li>
                 </ul>
 
@@ -4530,13 +4554,13 @@
                 <div style="background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.2); padding: 10px 14px; border-radius: 8px; margin-bottom: 12px; font-size: 0.82rem;">
                     <div style="display: flex; align-items: flex-start; gap: 8px;">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 1px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                        <span><strong>Important:</strong> Always remember to <strong>clock out</strong> when you leave the office! If you forget, the system will auto-clock you out at the end of the day, but it's better to do it yourself so your hours are recorded accurately.</span>
+                        <span><strong>Important:</strong> Always remember to <strong>clock out</strong> when you leave the office! If you forget, the system will auto-clock you out at <strong>10 PM</strong>, but it's better to do it yourself so your hours are recorded accurately.</span>
                     </div>
                 </div>
 
                 <h5 style="margin: 0 0 4px; font-size: 0.9rem;">Tracking Your Activity</h5>
                 <ul style="margin: 0 0 4px; padding-left: 20px; font-size: 0.88rem; list-style-type: disc;">
-                    <li>Your main panel shows your <strong>last 5 logs</strong> — clock-ins and outs with mode (Online/Onsite).</li>
+                    <li>Your main panel shows your <strong>last 5 logs</strong> — clock-ins and outs with mode (Online/Onsite) and any notes you added.</li>
                     <li>Select <strong>Log History</strong> from the menu to see your complete record with dates and timestamps.</li>
                 </ul>
             </div>
@@ -4550,21 +4574,21 @@
 
                 <h5 style="margin: 0 0 4px; font-size: 0.9rem;">Browsing</h5>
                 <ul style="margin: 0 0 12px; padding-left: 20px; font-size: 0.88rem; list-style-type: disc;">
-                    <li>Each folio card shows an <strong>image</strong>, the <strong>folio name</strong>, the <strong>total stock</strong>, and the <strong>per-member limit</strong>.</li>
+                    <li>Each folio card shows an <strong>image</strong>, the <strong>folio name</strong>, the <strong>remaining stock</strong> (labeled <strong>Total</strong>), and the <strong>per-member limit</strong>.</li>
                     <li>Use the <strong>search bar</strong> to filter folios by name.</li>
                     <li>Click on a folio image to open a full-size preview.</li>
                 </ul>
 
                 <h5 style="margin: 0 0 4px; font-size: 0.9rem;">Ordering</h5>
                 <ul style="margin: 0 0 12px; padding-left: 20px; font-size: 0.88rem; list-style-type: disc;">
-                    <li>Use the <strong>+</strong> and <strong>&minus;</strong> buttons to set the quantity for each folio. Each folio has a <strong>per-order maximum</strong> enforced by the input's limit.</li>
+                    <li>Use the <strong>+</strong> and <strong>&minus;</strong> buttons to set the quantity for each folio. The input caps at the <strong>remaining stock</strong>, so you can't order more than what's left.</li>
                     <li>Your <strong>cart</strong> shows a summary of all selected items with quantities.</li>
                     <li>Click <strong>Get Selected</strong> to submit your request.</li>
                 </ul>
 
                 <h5 style="margin: 0 0 4px; font-size: 0.9rem;">Quantity Limits &amp; EB Password</h5>
                 <ul style="margin: 0 0 12px; padding-left: 20px; font-size: 0.88rem; list-style-type: disc;">
-                    <li>Each folio type has a <strong>per-member limit</strong> set by the EBs. If a folio has a limit of 3, you can only take up to 3 of that folio type total.</li>
+                    <li>Each folio type has a <strong>per-member limit</strong> set by the EBs. If a folio has a limit of 3, you can only take up to 3 of that folio type in total.</li>
                     <li>If you want more than the per-member limit, you'll need an <strong>EB password</strong> to proceed.</li>
                     <li>Once verified, the approval lasts for your entire session — you won't need to re-enter it.</li>
                 </ul>
@@ -4576,6 +4600,37 @@
                         <span>Folios marked <strong>DO NOT DISTRIBUTE</strong> are not available for distribution. <strong>Contact an EB</strong> if you think this is a mistake.</span>
                     </div>
                 </div>
+            </div>
+
+            <!-- ===== APPOINTMENTS & BOOKINGS ===== -->
+            <div id="guide-appointments" style="border-left: 3px solid #10b981; padding-left: 16px;">
+                <h4 style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px; color: #10b981;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    Appointments &amp; Bookings
+                </h4>
+                <p style="font-size: 0.88rem; margin-bottom: 12px;">Book your own time slots with the <strong>Appoint a Schedule</strong> option in the menu. EBs post schedules with dates and time slots, and you grab the slot you want.</p>
+
+                <h5 style="margin: 0 0 4px; font-size: 0.9rem;">How Booking Works</h5>
+                <ul style="margin: 0 0 12px; padding-left: 20px; font-size: 0.88rem; list-style-type: disc;">
+                    <li style="margin-bottom: 4px;">Open <strong>Appoint a Schedule</strong> from the menu to see <strong>Available Schedules</strong>. Use the search bar to find one by name.</li>
+                    <li style="margin-bottom: 4px;">Each schedule shows its <strong>type</strong> (<strong>single</strong> = one person per slot, <strong>multiple</strong> = anyone can book), how many <strong>dates</strong> it has, the <strong>slot duration</strong>, and how many slots are free.</li>
+                    <li style="margin-bottom: 4px;">Click a schedule, pick a <strong>date</strong> on the calendar, then tap a time slot to book it.</li>
+                    <li style="margin-bottom: 4px;">Slot labels: <strong>Book →</strong> (available), <strong>Your booking · Cancel</strong> (yours), <strong>Taken</strong> (already booked on single schedules), <strong>Too late to book</strong> (starts in under 24 hours).</li>
+                    <li style="margin-bottom: 4px;">Bookings must be made <strong>at least 24 hours (1 day) in advance</strong>. Bookings made closer to the start time are only available to EBs.</li>
+                </ul>
+
+                <div style="background: rgba(16,185,129,0.06); border: 1px solid rgba(16,185,129,0.2); padding: 10px 14px; border-radius: 8px; margin-bottom: 12px; font-size: 0.82rem;">
+                    <div style="display: flex; align-items: flex-start; gap: 8px;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 1px;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                        <span>When you confirm a booking, a <strong>Google Calendar event</strong> is created and a <strong>confirmation email</strong> is sent to you. The schedule creator also gets a notification.</span>
+                    </div>
+                </div>
+
+                <h5 style="margin: 0 0 4px; font-size: 0.9rem;">Your Upcoming Bookings</h5>
+                <ul style="margin: 0 0 4px; padding-left: 20px; font-size: 0.88rem; list-style-type: disc;">
+                    <li><strong>My Upcoming Bookings</strong> lists everything you've reserved, with the date and time.</li>
+                    <li>Hit <strong>Cancel</strong> to free the slot — the calendar event is removed too.</li>
+                </ul>
             </div>
 
             <!-- ===== EB PASSWORD SYSTEM ===== -->
@@ -4595,13 +4650,14 @@
             <!-- ===== FEEDBACK & BUGS ===== -->
             <div id="guide-feedback" style="border-left: 3px solid var(--status-out); padding-left: 16px;">
                 <h4 style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px; color: var(--status-out);">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a7 7 0 0 1 7 7v1h1a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-1v1a5 5 0 0 1-5 5h-4a5 5 0 0 1-5-5v-1H4a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h1V9a7 7 0 0 1 7-7z"/><path d="M9 14h.01"/><path d="M15 14h.01"/><path d="M9 18a3 3 0 0 0 3 3h0a3 3 0 0 0 3-3"/></svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20v-9"/><path d="M14 7a4 4 0 0 1 4 4v3a6 6 0 0 1-12 0v-3a4 4 0 0 1 4-4z"/><path d="M14.12 3.88 16 2"/><path d="M21 21a4 4 0 0 0-3.81-4"/><path d="M21 5a4 4 0 0 1-3.55 3.97"/><path d="M22 13h-4"/><path d="M3 21a4 4 0 0 1 3.81-4"/><path d="M3 5a4 4 0 0 0 3.55 3.97"/><path d="M6 13H2"/><path d="m8 2 1.88 1.88"/><path d="M9 7.13V6a3 3 0 1 1 6 0v1.13"/></svg>
                     Feedback &amp; Bug Reports
                 </h4>
                 <ul style="margin: 0 0 8px; padding-left: 20px; font-size: 0.88rem; list-style-type: disc;">
                     <li style="margin-bottom: 4px;">Click the <strong>bug icon</strong> in the header to open the feedback modal.</li>
                     <li style="margin-bottom: 4px;">Switch between <strong>Feedback</strong> (with star ratings) or <strong>Bug Report</strong> mode.</li>
-                    <li style="margin-bottom: 4px;">Rate your experience and how you found the website.</li>
+                    <li style="margin-bottom: 4px;">For feedback, rate your experience and how you found the website — both star ratings are required.</li>
+                    <li style="margin-bottom: 4px;">For bug reports, describe the bug you encountered and include steps to reproduce if possible.</li>
                     <li style="margin-bottom: 4px;">Write a message and hit <strong>Submit</strong> — we read every submission!</li>
                 </ul>
             </div>
@@ -4615,7 +4671,7 @@
                 <p style="font-size: 0.88rem; margin-bottom: 12px;">The <strong>Admin Board</strong> option in the menu gives you extra tools to manage the roster and members.</p>
 
                 <h5 style="margin: 0 0 4px; font-size: 0.9rem;">Active Sessions</h5>
-                <p style="font-size: 0.88rem; margin-bottom: 12px;">Displays a live list of everyone currently clocked in, their email, and start time (with Online/Onsite mode).</p>
+                <p style="font-size: 0.88rem; margin-bottom: 12px;">Displays a live list of everyone currently clocked in, their email, and start time (with Online/Onsite mode). Use <strong>Clock Out All</strong> to force clock out every active member at once.</p>
 
                 <h5 style="margin: 0 0 4px; font-size: 0.9rem;">Roster Management</h5>
                 <ul style="margin: 0 0 12px; padding-left: 20px; font-size: 0.88rem; list-style-type: disc;">
@@ -4640,6 +4696,21 @@
                     <li>If you haven't set one yet, you'll see a prompt when you log in.</li>
                 </ul>
 
+                <h5 style="margin: 0 0 4px; font-size: 0.9rem; margin-top: 12px;">Create &amp; Manage Schedules</h5>
+                <ul style="margin: 0 0 12px; padding-left: 20px; font-size: 0.88rem; list-style-type: disc;">
+                    <li>In <strong>Appoint a Schedule</strong>, click <strong>+ New Schedule</strong> to post a schedule. Give it a <strong>title</strong>, pick <strong>one or more dates</strong>, choose the <strong>slot duration</strong>, and set the <strong>time ranges</strong> (drag on the timeline or type the start/end times).</li>
+                    <li>Choose a <strong>booking type</strong>: <strong>Single</strong> (one person per slot) or <strong>Multiple</strong> (anyone can book a slot).</li>
+                    <li>You can <strong>Cancel Schedule</strong> on a schedule you created — all its bookings and calendar events are removed.</li>
+                    <li>EBs can book slots that start in <strong>under 24 hours</strong> (shown as <strong>"Book → &lt;24h"</strong>), while members must book at least a day ahead.</li>
+                </ul>
+
+                <h5 style="margin: 0 0 4px; font-size: 0.9rem;">Manage the Folio Shop</h5>
+                <ul style="margin: 0 0 12px; padding-left: 20px; font-size: 0.88rem; list-style-type: disc;">
+                    <li>Click the <strong>pencil icon</strong> on any folio card to open the <strong>Edit Folio</strong> modal.</li>
+                    <li>You can update the <strong>Beginning Qty</strong>, <strong>Limit per Member</strong>, <strong>Location</strong>, <strong>Note</strong>, and <strong>Image URL</strong>.</li>
+                    <li>Use <strong>Update Folio</strong> to refresh the folio inventory or correct a folio's details.</li>
+                </ul>
+
                 <h5 style="margin: 0 0 4px; font-size: 0.9rem; margin-top: 12px;">Folio Bypass</h5>
                 <ul style="margin: 0 0 4px; padding-left: 20px; font-size: 0.88rem; list-style-type: disc;">
                     <li>Hover over a <strong>DO NOT DISTRIBUTE</strong> folio — it'll show <strong>"BYPASS?"</strong>. Click it to add it to your cart.</li>
@@ -4654,6 +4725,7 @@
                 </h4>
                 <ul style="margin: 0; padding-left: 20px; font-size: 0.88rem; list-style-type: disc;">
                     <li style="margin-bottom: 6px;"><strong>Always clock out</strong> when you leave the office! The system does auto-clock-out at 10 PM as a safety net, but manual clock-out ensures your hours are most accurate.</li>
+                    <li style="margin-bottom: 6px;">When only a few people are left in the office, an <strong>Office Closure Reminder</strong> may appear after someone clocks out — it asks you to turn off the lights, unplug extension cords, and switch off the air conditioner before you go.</li>
                     <li style="margin-bottom: 6px;">If your total hours or occupancy numbers don't update immediately, <strong>refresh the page</strong> to pull the latest data.</li>
                     <li style="margin-bottom: 6px;">Think something is wrong? <strong>Contact an EB</strong> or submit a <strong>Bug Report</strong> from the header.</li>
                 </ul>
@@ -5089,6 +5161,11 @@
                         <div style="font-size: 0.9rem; font-weight: 600; color: var(--text-main);" id="bookSlotUserName"></div>
                         <div style="font-size: 0.82rem; color: var(--text-muted);" id="bookSlotUserEmail"></div>
                     </div>
+                    <div style="background: var(--bg-canvas); border: 1px solid var(--border-soft); border-radius: 12px; padding: 14px 16px; margin-bottom: 16px;">
+                        <div style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 8px;">Booking with</div>
+                        <div style="font-size: 0.9rem; font-weight: 600; color: var(--text-main);" id="bookSlotCreatorName"></div>
+                        <div style="font-size: 0.82rem; color: var(--text-muted);" id="bookSlotCreatorEmail"></div>
+                    </div>
                     <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 14px;">A Google Calendar event will be created and a confirmation email will be sent.</p>
                     <div style="display: flex; gap: 10px;">
                         <button class="action-sub-btn delete" data-click="closeBookSlotModal()" style="flex: 1; padding: 10px;">Cancel</button>
@@ -5305,7 +5382,7 @@
         </div>
 
     <script>
-        const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwRPyUfRVK7MTuqzdf-T8901TnKrN_4mO_B8SImg0YGLqzhOG_Uet_apqmZzdIFYUNYGg/exec"; 
+        const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyQjxHlfiiul1f6hTlRxzIBVErFn504Y8vaVqPiUKcEAYONsLsBxOP_A08ZE2-cp2bwkg/exec"; 
         const CLIENT_API_TOKEN = "Residency_Secure_Token_2026";
         const SYSTEM_API_TOKEN = "Residency_Secure_Token_2026";
 
@@ -5315,6 +5392,9 @@
         let fullCachedPayload = null;
         let lastSessionMode = "";
         let pendingOnsiteCheckout = false;
+        let lastKnownOnsiteCount = -1;
+        let closureReminderShown = false;
+        let pollTimer = null;
         let folioDataCache = [];
         let appBootstrapped = false;
         let lastFocusedEl = null;
@@ -5323,6 +5403,7 @@
         let scheduleDataCache = [];
         let myBookingsCache = [];
         let pendingBookSlot = null;
+        let lastClickedBtn = null;
         const FOCUSABLE = 'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])';
         var cursorX = -9999;
         var cursorY = -9999;
@@ -5655,6 +5736,16 @@
             if (fullCachedPayload) {
                 renderFetchedData(fullCachedPayload);
             }
+
+            if (!pollTimer) {
+                pollTimer = setInterval(pollUserData, 30000);
+            }
+        }
+
+        function pollUserData() {
+            if (userEmail && fullCachedPayload && fullCachedPayload.isClockedIn) {
+                fetchUserData(userEmail);
+            }
         }
 
         function fetchUserData(email, callback) {
@@ -5761,12 +5852,18 @@
                 }
             }
 
-            if (pendingOnsiteCheckout && data.onsiteCount <= 3) {
-                pendingOnsiteCheckout = false;
-                setTimeout(showClosureReminder, 500);
-            } else {
-                pendingOnsiteCheckout = false;
+            var justClockedOutOnsite = pendingOnsiteCheckout;
+            pendingOnsiteCheckout = false;
+
+            var countDroppedIntoLastFew = data.onsiteCount <= 3 && data.onsiteCount < lastKnownOnsiteCount;
+            if (!closureReminderShown && ((justClockedOutOnsite && data.onsiteCount <= 3) || (data.isClockedIn && countDroppedIntoLastFew))) {
+                closureReminderShown = true;
+                showClosureReminder();
             }
+            if (data.onsiteCount > 3) {
+                closureReminderShown = false;
+            }
+            lastKnownOnsiteCount = data.onsiteCount;
         }
 
         function configureTrackingInterface(isClockedIn, lastTimestampIso) {
@@ -5930,6 +6027,9 @@
                     throw new Error(resData.message);
                 }
                 showToast(successMessage);
+                if (resData.emailFailed) {
+                    showAlert('Your booking was saved, but the confirmation email could not be sent. Please check your email settings.', 'Email Not Sent');
+                }
                 debouncedRefresh();
             })
             .catch(err => {
@@ -7088,7 +7188,7 @@
                         '<span class="apt-meta-dot"></span>' +
                         '<span>' + sch.slotDuration + ' min slots</span>' +
                         '<span class="apt-meta-dot"></span>' +
-                        '<span>' + slotCount + ' slot' + (slotCount !== 1 ? 's' : '') + ' available</span>' +
+                        '<span>' + slotCount + ' time slot' + (slotCount !== 1 ? 's' : '') + ' available</span>' +
                     '</div>' +
                 '</div>';
             }).join('');
@@ -7397,6 +7497,11 @@
                 document.getElementById('bookSlotUserName').textContent = userName;
                 document.getElementById('bookSlotUserEmail').textContent = userEmail;
 
+                var creatorName = aptSelectedSchedule.createdByName || aptSelectedSchedule.createdBy.split('@')[0];
+                var creatorEmail = aptSelectedSchedule.createdBy || '';
+                document.getElementById('bookSlotCreatorName').textContent = creatorName;
+                document.getElementById('bookSlotCreatorEmail').textContent = creatorEmail;
+
                 document.getElementById('bookSlotModal').classList.remove('hidden');
             };
 
@@ -7417,6 +7522,9 @@
 
         function confirmBookSlot() {
             if (!pendingBookSlot) return;
+            var btn = document.querySelector('#bookSlotModal .cart-checkout-btn');
+            if (btn && btn.disabled) return;
+            if (btn) btn.disabled = true;
             var slot = pendingBookSlot;
             var userName = (fullCachedPayload && fullCachedPayload.fullName) || userEmail.split('@')[0];
             closeBookSlotModal();
@@ -7428,18 +7536,25 @@
                 slotStart: slot.slotStart,
                 slotEnd: slot.slotEnd,
                 userName: userName
-            }, "Slot booked! Confirmation email sent.");
+            }, "Slot booked! Confirmation email sent.").catch(function() {
+                if (btn) btn.disabled = false;
+            });
         }
 
         function cancelMyBooking(bookingId) {
             showConfirm('Cancel this booking? The calendar event will also be removed.').then(function(confirmed) {
                 if (!confirmed) return;
+                var btn = lastClickedBtn;
+                lastClickedBtn = null;
+                if (btn) btn.disabled = true;
                 sendPostRequest({
                     token: CLIENT_API_TOKEN,
                     action: "Cancel Booking",
                     email: userEmail,
                     bookingId: bookingId
-                }, "Booking cancelled.");
+                }, "Booking cancelled.").catch(function() {
+                    if (btn) btn.disabled = false;
+                });
             });
         }
 
@@ -8019,6 +8134,9 @@
         function cancelSchedule(scheduleId) {
             showConfirm('Cancel this schedule? All bookings will be removed and calendar events deleted.').then(function(confirmed) {
                 if (!confirmed) return;
+                var btn = lastClickedBtn;
+                lastClickedBtn = null;
+                if (btn) btn.disabled = true;
                 sendPostRequest({
                     token: CLIENT_API_TOKEN,
                     action: "Cancel Schedule",
@@ -8026,6 +8144,8 @@
                     scheduleId: scheduleId
                 }, "Schedule cancelled.").then(function() {
                     aptGoBack();
+                }).catch(function() {
+                    if (btn) btn.disabled = false;
                 });
             });
         }
@@ -8033,6 +8153,7 @@
         document.addEventListener('click', function (e) {
             let el = e.target.closest('[data-click]');
             if (el) {
+                lastClickedBtn = e.target.closest('button');
                 let code = el.getAttribute('data-click');
                 if (code) (new Function('e', 'event', code)).call(el, e, e);
             }
